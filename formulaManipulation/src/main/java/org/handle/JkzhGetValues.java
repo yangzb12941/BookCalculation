@@ -90,7 +90,7 @@ public class JkzhGetValues extends DefaultGetValues{
                     if(this.model == JkzhGetValueModelEnum.主动土压力计算){
                         String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
                         valueArray[index] = hdValue;
-                    }else if(this.model == JkzhGetValueModelEnum.被动土压力计算 || this.model == JkzhGetValueModelEnum.土压力零点计算){
+                    }else if(this.model == JkzhGetValueModelEnum.被动土压力计算 || this.model == JkzhGetValueModelEnum.土压力零点所在土层){
                         Double addm = 0.0;
                         if(floor == jkzhContext.getJkzhBasicParam().getAtLand()){
                             for (int i = 1; i <= floor;i++) {
@@ -102,7 +102,18 @@ public class JkzhGetValues extends DefaultGetValues{
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
                             valueArray[index] = hdValue;
                         }
-                    }else if(this.model == JkzhGetValueModelEnum.支撑轴力计算) {
+                    }else if(this.model == JkzhGetValueModelEnum.土压力零点深度计算){
+                        if(floor == jkzhContext.getJkzhBasicParam().getAtZoneLand()){
+                            valueArray[index] = "x";
+                        }else{
+                            String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
+                            valueArray[index] = hdValue;
+                        }
+                    }
+                    else if(this.model == JkzhGetValueModelEnum.支撑轴力计算) {
+                        String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
+                        valueArray[index] = hdValue;
+                    }else{
                         String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
                         valueArray[index] = hdValue;
                     }

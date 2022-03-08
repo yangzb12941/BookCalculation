@@ -9,19 +9,29 @@ import org.config.JkzhGetValueModelEnum;
 import org.context.JkzhContext;
 import org.entity.Param;
 import org.enumUtils.StringUtil;
+import org.equationSolving.PrintEquationSet;
 import org.handle.JkzhFromulaHandle;
 import org.handle.JkzhGetValues;
 import org.junit.Test;
+import org.latexTranslation.LatexUserString;
+import org.latexTranslation.VariableIDDynamicTable;
 import org.show.JkzhILayout;
+import org.solutions.Solution;
+import org.solveableManipulationBehavior.EquationManipulateBehavior;
+import org.solveableManipulationBehavior.SolveableManipulateBehavior;
+import org.solveables.Equation;
+import org.solveables.Solveable;
+import org.symbolComponents.CalcNumber;
+import org.symbols.Expression;
+import org.symbols.Variable;
 import org.table.JkzhBasicParam;
 import org.table.SoilPressureTable;
 import org.table.SoilQualityTable;
-
+import org.symbols.Symbol;
 import java.util.*;
 
-//@SpringBootTest
 @Slf4j
-class YhCalSheetApplicationTests {
+public class YhCalSheetApplicationTests {
     static {
         //装配角度转换函数
         AviatorEvaluator.addFunction(new MathRadiansFunction());
@@ -31,7 +41,7 @@ class YhCalSheetApplicationTests {
      * 计算过程
      */
     @Test
-    void calculation(){
+    public void calculation(){
         //①、生成土压力系数表
         JkzhContext jkzhContext = new JkzhContext();
         HashMap<String,String> formate = new HashMap<>();
@@ -95,7 +105,7 @@ class YhCalSheetApplicationTests {
         }
         //④、计算土压力零点
         jkzhGetValues = new JkzhGetValues();
-        jkzhGetValues.setModel(JkzhGetValueModelEnum.土压力零点计算);
+        jkzhGetValues.setModel(JkzhGetValueModelEnum.土压力零点所在土层);
         String  latexCalUp = jkzhFromulaHandle.getLatexCalExpression(jkzhContext, jkzhFromulaHandle,atLand-1,1,atLand, jkzhILayout, JkzhConfigEnum.主动土压力.getLatexCal(),jkzhGetValues);
         String  calUp = jkzhFromulaHandle.getCalculateExpression(jkzhContext, jkzhFromulaHandle,atLand-1,1,atLand, JkzhConfigEnum.主动土压力.getCalculate(),jkzhGetValues);
         Double zdCalRtUp = (Double) AviatorEvaluator.execute(calUp);
@@ -113,16 +123,126 @@ class YhCalSheetApplicationTests {
         //第二种情况判断
         //主动土压力上端-被动土压力上端<0 并且主动土压力低端-被动土压力低端>0。同样1情况处理。
         //土压力零点所在 土层
-        int zoneLand = 0;
-        zoneLand = firstCase(jkzhContext.getJkzhBasicParam().getAtLand(), jkzhContext.getJkzhBasicParam().getAllLands(), formate);
+        int zoneLand = firstCase(jkzhContext.getJkzhBasicParam().getAtLand(), jkzhContext.getJkzhBasicParam().getAllLands(), formate);
         if(zoneLand != 0){
+            jkzhContext.getJkzhBasicParam().setAtZoneLand(zoneLand);
+            //表明找到土压力零点所在土层
+            //那么就已这一层的主动底+被动底，厚度都已x替换，解出x即可。
+            //例如：计算出在第4层，那么计算公式如下：
+            // 第4层主动底(20+18*0.7+18.9*1.9+1.8*18.7+18X)*0.67-2*15.9*0.82
+            //底4层被动底18x*1.46+2*15.9*1.21
+            jkzhGetValues = new JkzhGetValues();
+            jkzhGetValues.setModel(JkzhGetValueModelEnum.土压力零点深度计算);
+            //主动土压力底层：
+            String zdlatexCalDown = jkzhFromulaHandle.getLatexCalExpression(
+                    jkzhContext,
+                    jkzhFromulaHandle,
+                    zoneLand,
+                    1,
+                    zoneLand,
+                    jkzhILayout,
+                    JkzhConfigEnum.主动土压力.getLatexCal(),
+                    jkzhGetValues);
+            String  zdCalDown = jkzhFromulaHandle.getCalculateExpression(
+                    jkzhContext,
+                    jkzhFromulaHandle,
+                    zoneLand,
+                    1,
+                    zoneLand,
+                    JkzhConfigEnum.主动土压力.getCalculate(),
+                    jkzhGetValues);
+            log.info("第{}层展示公式-下:{}={}",zoneLand,zdlatexCalDown,zdCalDown);
 
+            //被动土压力底层：
+            String bdLatexCalDown = jkzhFromulaHandle.getLatexCalExpression(jkzhContext,
+                    jkzhFromulaHandle,
+                    zoneLand - jkzhContext.getJkzhBasicParam().getAtLand(),
+                    jkzhContext.getJkzhBasicParam().getAtLand(),
+                    zoneLand,
+                    jkzhILayout,
+                    JkzhConfigEnum.被动土压力.getLatexCal(),
+                    jkzhGetValues);
+            String  bdCalDown = jkzhFromulaHandle.getCalculateExpression(jkzhContext,
+                    jkzhFromulaHandle,
+                    zoneLand - jkzhContext.getJkzhBasicParam().getAtLand(),
+                    jkzhContext.getJkzhBasicParam().getAtLand(),
+                    zoneLand,
+                    JkzhConfigEnum.被动土压力.getCalculate(),
+                    jkzhGetValues);
+            log.info("第{}层展示公式-下:{}={}",zoneLand,bdLatexCalDown,bdCalDown);
+            //解方程
+            VariableIDDynamicTable manager = new VariableIDDynamicTable();
+            Variable v = new Variable(new CalcNumber(1));
+            Symbol left = new LatexUserString(zdCalDown).toExpression().toSymbol(manager);
+            Symbol right = new LatexUserString(bdCalDown).toExpression().toSymbol(manager);
+            StringBuilder build = new StringBuilder();
+
+            Expression leftE, rightE;
+            leftE = new Expression(left);
+            rightE = new Expression(right);
+
+            Equation eq = new Equation(leftE, rightE, v, new SolveableManipulateBehavior());
+
+            log.info("解方程:{}",eq.printSolveable(manager));
+            Solveable finalS = eq.fullSolve();
+            Solution s = finalS.reachedSolution();
+            log.info("结果:{}",s.printLatex(manager));
         }else{
             //第三种情况判断
             //若是土层分解处按照不同层公式计算出险一正一负，那么就以这一土层分界切面为土压力零点。
             // 例如：第三层土底层公式计算为正，以第四层土层公式计算为负。那么土压力零点就在这一处。
             zoneLand = secondCase(jkzhContext.getJkzhBasicParam().getAtLand(),jkzhContext.getJkzhBasicParam().getAllLands(),formate);
-            if(zoneLand == 0){
+            if(zoneLand != 0){
+                //表明土压力零点就是这个切面深度
+                jkzhContext.getJkzhBasicParam().setAtZoneLand(zoneLand);
+                jkzhContext.getJkzhBasicParam().setAtZoneLand(zoneLand);
+                //表明找到土压力零点所在土层
+                //那么就已这一层的主动底+被动底，厚度都已x替换，解出x即可。
+                //例如：计算出在第4层，那么计算公式如下：
+                // 第4层主动底(20+18*0.7+18.9*1.9+1.8*18.7+18X)*0.67-2*15.9*0.82
+                //底4层被动底18x*1.46+2*15.9*1.21
+                jkzhGetValues = new JkzhGetValues();
+                jkzhGetValues.setModel(JkzhGetValueModelEnum.土压力零点深度计算);
+                //主动土压力底层：
+                String zdlatexCalDown = jkzhFromulaHandle.getLatexCalExpression(jkzhContext, jkzhFromulaHandle, zoneLand, 1,zoneLand, jkzhILayout, JkzhConfigEnum.主动土压力.getLatexCal(),jkzhGetValues);
+                String  zdCalDown = jkzhFromulaHandle.getCalculateExpression(jkzhContext, jkzhFromulaHandle, zoneLand, 1,zoneLand, JkzhConfigEnum.主动土压力.getCalculate(),jkzhGetValues);
+                log.info("第{}层展示公式-下:{}={}",zoneLand,zdlatexCalDown,zdCalDown);
+
+                //被动土压力底层：
+                String bdLatexCalDown = jkzhFromulaHandle.getLatexCalExpression(jkzhContext,
+                        jkzhFromulaHandle,
+                        zoneLand - jkzhContext.getJkzhBasicParam().getAtLand(),
+                        jkzhContext.getJkzhBasicParam().getAtLand(),
+                        zoneLand,
+                        jkzhILayout,
+                        JkzhConfigEnum.被动土压力.getLatexCal(),
+                        jkzhGetValues);
+                String  bdCalDown = jkzhFromulaHandle.getCalculateExpression(jkzhContext,
+                        jkzhFromulaHandle,
+                        zoneLand - jkzhContext.getJkzhBasicParam().getAtLand(),
+                        jkzhContext.getJkzhBasicParam().getAtLand(),
+                        zoneLand,
+                        JkzhConfigEnum.被动土压力.getLatexCal(),
+                        jkzhGetValues);
+                log.info("第{}层展示公式-下:{}={}",zoneLand,bdLatexCalDown,bdCalDown);
+                //解方程
+                VariableIDDynamicTable manager = new VariableIDDynamicTable();
+                Variable v = new Variable(new CalcNumber(1));
+                Symbol left = new LatexUserString(zdCalDown).toExpression().toSymbol(manager);
+                Symbol right = new LatexUserString(bdCalDown).toExpression().toSymbol(manager);
+                StringBuilder build = new StringBuilder();
+
+                Expression leftE, rightE;
+                leftE = new Expression(left);
+                rightE = new Expression(right);
+
+                Equation eq = new Equation(leftE, rightE, v, new SolveableManipulateBehavior());
+
+                log.info("解方程:{}",eq.printSolveable(manager));
+                Solveable finalS = eq.fullSolve();
+                Solution s = finalS.reachedSolution();
+                log.info("结果:{}",s.printLatex(manager));
+            }else{
                 //第四种情况判断
                 //若是1、2、3 都不出现，那么就按无土压力零点判断。默认取开挖深度1.2倍处作为土压力零点。
                 // 例如：开挖深度6米，6×1.2 = 7.2米。即开挖深度下1.2米作为土压力零点。
@@ -160,15 +280,25 @@ class YhCalSheetApplicationTests {
         return result;
     }
 
+    /**
+     * 3、若是土层分界处按照不同层公式计算出现一正一负，那么就以这一土层分界切面为土压力零点。
+     * 例如：第三层土底层公式计算为正，以第四层土上层公式计算为负。那么土压力零点就在这一处。
+     * @param atLayer
+     * @param allLands
+     * @param formate
+     * @return
+     */
     private int secondCase(int atLayer,int allLands,HashMap<String,String> formate){
         int result = 0;
         for (int i = atLayer; i <= allLands; i++) {
-            //主动土压力上端-被动土压力上端
-            Double bdUp = Double.valueOf(formate.get("主动土压力"+atLayer+"上"));
-            //主动土压力下端-被动土压力下端
-            Double zdDown = Double.valueOf(formate.get("主动土压力"+atLayer+"下"));
-            Double tmpe = (zdDown * bdUp);
-            if(tmpe.compareTo(0.0)<=0){
+            //第i+1层主动土压力上端
+            String zdDownTwos = formate.get("主动土压力" + (atLayer + 1) + "上");
+            Double zdDownTwo = Double.valueOf(Objects.nonNull(zdDownTwos)?zdDownTwos:"0.0");
+            //第i层主动土压力下端
+            String zdDownOnes = formate.get("主动土压力" + atLayer + "下");
+            Double zdDownOne = Double.valueOf(Objects.nonNull(zdDownOnes)?zdDownOnes:"0.0");
+            Double tmpe = (zdDownTwo * zdDownOne);
+            if(tmpe.compareTo(0.0)<0){
                 result = i;
                 break;
             }
@@ -197,7 +327,7 @@ class YhCalSheetApplicationTests {
      * 测试计算过程公式带入数值和计算结果公式带入数值
      */
     @Test
-    void valueFillCal(){
+    public void valueFillCal(){
         JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
         for (JkzhConfigEnum source : JkzhConfigEnum.values()) {
             String[] values = new String[] {"1","2","3","4","5","6","7","8","9","10","11","12","13"};
@@ -222,7 +352,7 @@ class YhCalSheetApplicationTests {
     }
 
     @Test
-    void latexEquation(){
+    public void latexEquation(){
         JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
         JkzhILayout jkzhLayout = new JkzhILayout();
         //①、解析公式，把公式展开
@@ -237,7 +367,7 @@ class YhCalSheetApplicationTests {
         }
     }
     @Test
-    void getParamTest(){
+    public void getParamTest(){
         String fromula = "(地面堆载_{5}+重度_{1} \\times 厚度_{1}+重度_{2} \\times 厚度_{2}+重度_{3} \\times 厚度_{3}+重度_{4} \\times 厚度_{4}+重度_{5} \\times 厚度_{5}) \\times 主动土压力系数_{5}- 2 \\times 内聚力_{5} \\times \\sqrt{主动土压力系数_{5}}";
         List<Param> params = getParam(fromula);
         log.info("元素:{}",params);

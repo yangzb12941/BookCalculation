@@ -36,8 +36,11 @@ public class JkzhBasicParam {
 	//计算层次
 	private int allLands;
 
-	//开挖深度所在层次
+	//开挖深度所在土层
 	private int atLand;
+
+	//土压力零点所在土层
+	private int atZoneLand;
 
 	public int getAllLands(){
 		return soilQualityTable.getTable().length;
