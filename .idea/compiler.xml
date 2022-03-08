@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="writeTemplate" />
+        <module name="formulaManipulation" />
+        <module name="bootstrap" />
+        <module name="solveEquations" />
+        <module name="webControl" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="BookCalculation" target="1.5" />
+      <module name="bootstrap" target="1.7" />
+      <module name="formulaManipulation" target="8" />
+      <module name="solveEquations" target="1.7" />
+      <module name="webControl" target="1.7" />
+      <module name="writeTemplate" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

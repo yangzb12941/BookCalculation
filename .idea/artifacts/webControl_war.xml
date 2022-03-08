@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="webControl:war">
+    <output-path>$PROJECT_DIR$/webControl/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>webControl</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="webControl.war">
+      <element id="artifact" artifact-name="webControl:war exploded" />
+    </root>
+  </artifact>
+</component>

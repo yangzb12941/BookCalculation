@@ -1,0 +1,31 @@
+-------------------------------------------------------------------------------
+Test set: org.java.com.yh.calsheet.YhCalSheetApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 9, Failures: 0, Errors: 9, Skipped: 0, Time elapsed: 0.059 s <<< FAILURE! - in org.java.com.yh.calsheet.YhCalSheetApplicationTests
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0.002 s  <<< ERROR!
+java.lang.Exception: Test class should have exactly one public constructor
+
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Class org.java.com.yh.calsheet.YhCalSheetApplicationTests should be public
+
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Method calculation() should be public
+
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Class org.java.com.yh.calsheet.YhCalSheetApplicationTests should be public
+
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Method valueFillCal() should be public
+
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Class org.java.com.yh.calsheet.YhCalSheetApplicationTests should be public
+
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Method latexEquation() should be public
+
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Class org.java.com.yh.calsheet.YhCalSheetApplicationTests should be public
+
+initializationError(org.java.com.yh.calsheet.YhCalSheetApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Method getParamTest() should be public
+
