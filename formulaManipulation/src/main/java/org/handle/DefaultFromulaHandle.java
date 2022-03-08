@@ -129,6 +129,12 @@ public class DefaultFromulaHandle extends FromulaHandle{
                 }
             }
         }
+        if(!deque.isEmpty()){
+            do{
+                result.append(deque.pollLast());
+            }while (!deque.isEmpty());
+            result.append("_{n}");
+        }
         return result.toString();
     }
 

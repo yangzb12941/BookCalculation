@@ -17,7 +17,6 @@ import org.latexTranslation.LatexUserString;
 import org.latexTranslation.VariableIDDynamicTable;
 import org.show.JkzhILayout;
 import org.solutions.Solution;
-import org.solveableManipulationBehavior.EquationManipulateBehavior;
 import org.solveableManipulationBehavior.SolveableManipulateBehavior;
 import org.solveables.Equation;
 import org.solveables.Solveable;
@@ -241,7 +240,9 @@ public class YhCalSheetApplicationTests {
                 log.info("解方程:{}",eq.printSolveable(manager));
                 Solveable finalS = eq.fullSolve();
                 Solution s = finalS.reachedSolution();
-                log.info("结果:{}",s.printLatex(manager));
+                String pressureZero = s.printLatex(manager);
+                jkzhContext.getJkzhBasicParam().setPressureZero(Double.valueOf(pressureZero));
+                log.info("结果:{}",pressureZero);
             }else{
                 //第四种情况判断
                 //若是1、2、3 都不出现，那么就按无土压力零点判断。默认取开挖深度1.2倍处作为土压力零点。

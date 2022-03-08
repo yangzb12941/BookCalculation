@@ -15,7 +15,8 @@ public class JkzhILayout implements ILayout {
 
     public JkzhILayout() {
         this.layoutChar = new String[]{"地面堆载", "重度", "厚度", "内聚力", "内摩擦角", "主动土压力系数",
-                "被动土压力系数", "主动土压力合力", "主动土作用点位置", "被动土压力合力",
+                "被动土压力系数","根号主动土压力系数","根号被动土压力系数",
+                "主动土压力合力", "主动土作用点位置", "被动土压力合力",
                 "被动土作用点位置", "主动土层至土压力零点距离","被动土层至土压力零点距离", "土压力零点", "支撑的轴线",
                 "主动土压力","被动土压力"};
 
@@ -41,6 +42,12 @@ public class JkzhILayout implements ILayout {
 
         //被动土压力系数
         this.layoutMap.put("被动土压力系数","Kp_{n}");
+
+        //主动土压力系数
+        this.layoutMap.put("根号主动土压力系数","Ka_{n}");
+
+        //被动土压力系数
+        this.layoutMap.put("根号被动土压力系数","Kp_{n}");
 
         //主动土压力合力
         this.layoutMap.put("主动土压力合力","E_{an}");

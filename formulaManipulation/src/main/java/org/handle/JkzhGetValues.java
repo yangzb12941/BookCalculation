@@ -138,6 +138,14 @@ public class JkzhGetValues extends DefaultGetValues{
                     String bdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(param.getIndex()),4);
                     valueArray[index] = bdtylxsValue;
                     break;
+                case "根号主动土压力系数":
+                    String ghZdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(param.getIndex()),3);
+                    valueArray[index] = ghZdtylxsValue;
+                    break;
+                case "根号被动土压力系数":
+                    String ghBdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(param.getIndex()),5);
+                    valueArray[index] = ghBdtylxsValue;
+                    break;
                 case "主动土压力合力":
                 case "主动土作用点位置":
                 case "被动土压力合力":
