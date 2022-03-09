@@ -19,10 +19,12 @@ import org.symbolComponents.CalcNumber;
 import org.symbols.Expression;
 import org.symbols.Symbol;
 import org.symbols.Variable;
-
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * 基坑支护计算
+ */
 @Slf4j
 public class JkzhCalculation extends DefaultCalculation{
     private ICalculation iCalculation;
@@ -240,6 +242,7 @@ public class JkzhCalculation extends DefaultCalculation{
             }
         }
     }
+
     /**
      * 第一种情况判断
      * 主动土压力上端-被动土压力上端>0 并且主动土压力低端-被动土压力低端<0。那么这个土压力零点就在这一层土。
@@ -382,13 +385,12 @@ public class JkzhCalculation extends DefaultCalculation{
         return Double.valueOf(latexResult);
     }
 
-
     /**
      * 获取某一层土的厚度
      * @param land 土层
      * @return
      */
-    public Double getLandThickness(int land){
+    private Double getLandThickness(int land){
         String hdValue = "0.0";
         try {
             hdValue = jkzhContext.getJkzhBasicParam().getSoilQualityTable().getTable()[land][2];
