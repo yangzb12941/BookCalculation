@@ -5,7 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.context.IContext;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Stack;
 
 @Slf4j
 public class JkzhFromulaHandle extends DefaultFromulaHandle{

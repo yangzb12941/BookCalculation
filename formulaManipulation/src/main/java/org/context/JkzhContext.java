@@ -4,7 +4,7 @@ import lombok.Data;
 import org.table.JkzhBasicParam;
 import org.table.SoilPressureTable;
 
-import java.util.Map;
+import java.util.HashMap;
 
 /**
  * 基坑支护计算上下文对象
@@ -18,5 +18,5 @@ public class JkzhContext extends IContext{
     private SoilPressureTable soilPressureTable;
 
     //计算过程的中间结果保存
-    private Map<String,String> formate;
+    private HashMap<String,String> formate;
 }

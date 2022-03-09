@@ -8,7 +8,11 @@ import org.entity.Param;
 import org.enumUtils.StringUtil;
 import org.table.SoilPressureTable;
 import org.table.SoilQualityTable;
-import java.util.*;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Data
@@ -74,7 +78,7 @@ public class JkzhGetValues extends DefaultGetValues{
             Param param = params.get(index);
             switch (param.getName()){
                 case "地面堆载":
-                    valueArray[index] = jkzhContext.getJkzhBasicParam().getSurcharge();
+                    valueArray[index] = jkzhContext.getJkzhBasicParam().getSurcharge().toString();
                     break;
                 case "支撑的轴线":
                     valueArray[index] = jkzhContext.getJkzhBasicParam().getAxis().toString();
@@ -93,11 +97,11 @@ public class JkzhGetValues extends DefaultGetValues{
                     }else if(this.model == JkzhGetValueModelEnum.被动土压力计算 || this.model == JkzhGetValueModelEnum.土压力零点所在土层){
                         Double addm = 0.0;
                         if(floor == jkzhContext.getJkzhBasicParam().getAtLand()){
-                            for (int i = 1; i <= floor;i++) {
+                            for (int i = 1; i < floor;i++) {
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
                                 addm += Double.valueOf(hdValue);
                             }
-                            valueArray[index] = String.valueOf(addm-Double.valueOf(jkzhContext.getJkzhBasicParam().getDepth()));
+                            valueArray[index] = String.valueOf(Double.valueOf(jkzhContext.getJkzhBasicParam().getDepth())-addm);
                         }else{
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
                             valueArray[index] = hdValue;
@@ -222,6 +226,4 @@ public class JkzhGetValues extends DefaultGetValues{
         String value = valueMap.get(key);
         return value;
     }
-
-
 }

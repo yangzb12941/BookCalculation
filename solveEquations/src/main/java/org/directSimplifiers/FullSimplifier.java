@@ -4,8 +4,6 @@ import org.symbols.Expression;
 import org.symbols.Symbol;
 import org.utils.MutableBoolean;
 
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 ///Responsible for the simplification of symbols parameters,

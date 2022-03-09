@@ -3,9 +3,10 @@ package org.symbolStandarizers;
 
 import org.symbols.Symbol;
 import org.symbols.SymbolStandarizer;
+import org.utils.ListUtils;
 import org.utils.MutableBoolean;
+
 import java.util.List;
-import org.utils.*;
 
 public class StandarizeSet extends SymbolStandarizer {
 	private List<SymbolStandarizer> standarizers;

@@ -16,7 +16,7 @@ public class JkzhBasicParam {
 	private SoilQualityTable soilQualityTable;
 
 	//地面堆载
-	private String Surcharge = "20";
+	private Double Surcharge = 20.0;
 
 	//第一层支撑的轴线
 	private Double Axis = 0.4;

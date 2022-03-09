@@ -1,6 +1,5 @@
 package org.java.com.yh.calsheet;
 
-import com.alibaba.fastjson.JSON;
 import com.googlecode.aviator.AviatorEvaluator;
 import lombok.extern.slf4j.Slf4j;
 import org.aviatorPlugins.MathRadiansFunction;
@@ -9,7 +8,6 @@ import org.config.JkzhGetValueModelEnum;
 import org.context.JkzhContext;
 import org.entity.Param;
 import org.enumUtils.StringUtil;
-import org.equationSolving.PrintEquationSet;
 import org.handle.JkzhFromulaHandle;
 import org.handle.JkzhGetValues;
 import org.junit.Test;
@@ -22,11 +20,11 @@ import org.solveables.Equation;
 import org.solveables.Solveable;
 import org.symbolComponents.CalcNumber;
 import org.symbols.Expression;
+import org.symbols.Symbol;
 import org.symbols.Variable;
 import org.table.JkzhBasicParam;
-import org.table.SoilPressureTable;
 import org.table.SoilQualityTable;
-import org.symbols.Symbol;
+
 import java.util.*;
 
 @Slf4j
@@ -128,7 +126,7 @@ public class YhCalSheetApplicationTests {
             //表明找到土压力零点所在土层
             //那么就已这一层的主动底+被动底，厚度都已x替换，解出x即可。
             //例如：计算出在第4层，那么计算公式如下：
-            // 第4层主动底(20+18*0.7+18.9*1.9+1.8*18.7+18X)*0.67-2*15.9*0.82
+            //第4层主动底(20+18*0.7+18.9*1.9+1.8*18.7+18X)*0.67-2*15.9*0.82
             //底4层被动底18x*1.46+2*15.9*1.21
             jkzhGetValues = new JkzhGetValues();
             jkzhGetValues.setModel(JkzhGetValueModelEnum.土压力零点深度计算);
@@ -174,7 +172,6 @@ public class YhCalSheetApplicationTests {
             Variable v = new Variable(new CalcNumber(1));
             Symbol left = new LatexUserString(zdCalDown).toExpression().toSymbol(manager);
             Symbol right = new LatexUserString(bdCalDown).toExpression().toSymbol(manager);
-            StringBuilder build = new StringBuilder();
 
             Expression leftE, rightE;
             leftE = new Expression(left);
@@ -229,7 +226,6 @@ public class YhCalSheetApplicationTests {
                 Variable v = new Variable(new CalcNumber(1));
                 Symbol left = new LatexUserString(zdCalDown).toExpression().toSymbol(manager);
                 Symbol right = new LatexUserString(bdCalDown).toExpression().toSymbol(manager);
-                StringBuilder build = new StringBuilder();
 
                 Expression leftE, rightE;
                 leftE = new Expression(left);
@@ -251,7 +247,6 @@ public class YhCalSheetApplicationTests {
                 jkzhContext.getJkzhBasicParam().setPressureZero(pressureZero);
             }
         }
-
         //⑤、主动土压力的合力
 
         //⑥、主动作用点位置计算
@@ -312,9 +307,7 @@ public class YhCalSheetApplicationTests {
     }
 
     private void createSoilPressureTable(JkzhContext jkzhContext,JkzhFromulaHandle jkzhFromulaHandle){
-        SoilPressureTable soilPressureTable = new SoilPressureTable(jkzhContext,jkzhFromulaHandle);
-        jkzhContext.setSoilPressureTable(soilPressureTable);
-        log.info("{}", JSON.toJSONString(soilPressureTable));
+
     }
 
     private void zdPressureCal(){}

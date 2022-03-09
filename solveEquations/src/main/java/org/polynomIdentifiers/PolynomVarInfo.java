@@ -2,6 +2,7 @@ package org.polynomIdentifiers;
 
 
 import org.symbols.Variable;
+
 import java.util.LinkedList;
 import java.util.List;
 
