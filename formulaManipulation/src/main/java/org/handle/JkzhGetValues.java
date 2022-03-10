@@ -67,10 +67,10 @@ public class JkzhGetValues extends DefaultGetValues{
     @Override
     public String[] matchValues(List<Param> params, Object... values) {
         JkzhContext jkzhContext = null;
-        String flag = null;
         for(Object vs: values){
             if (vs instanceof JkzhContext) {
                 jkzhContext = (JkzhContext) vs;
+                break;
             }
         }
         String[] valueArray = new String[params.size()];
@@ -96,12 +96,12 @@ public class JkzhGetValues extends DefaultGetValues{
                         valueArray[index] = hdValue;
                     }else if(this.model == JkzhGetValueModelEnum.被动土压力计算 || this.model == JkzhGetValueModelEnum.土压力零点所在土层){
                         Double addm = 0.0;
-                        if(floor == jkzhContext.getJkzhBasicParam().getAtLand()){
-                            for (int i = 1; i < floor;i++) {
+                        if(floor == jkzhContext.getJkzhBasicParam().getAtDepthLand()){
+                            for (int i = 1; i <= floor;i++) {
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
                                 addm += Double.valueOf(hdValue);
                             }
-                            valueArray[index] = String.valueOf(Double.valueOf(jkzhContext.getJkzhBasicParam().getDepth())-addm);
+                            valueArray[index] = String.valueOf(addm-jkzhContext.getJkzhBasicParam().getDepth());
                         }else{
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
                             valueArray[index] = hdValue;
@@ -113,11 +113,37 @@ public class JkzhGetValues extends DefaultGetValues{
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
                             valueArray[index] = hdValue;
                         }
-                    }
-                    else if(this.model == JkzhGetValueModelEnum.支撑轴力计算) {
-                        String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
-                        valueArray[index] = hdValue;
-                    }else{
+                    }else  if(this.model == JkzhGetValueModelEnum.主动土压力合力计算 || this.model == JkzhGetValueModelEnum.主动作用点位置){
+                        Double addm = 0.0;
+                        if(floor == jkzhContext.getJkzhBasicParam().getAtZoneLand()){
+                            for (int i = 1; i < floor;i++) {
+                                String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
+                                addm += Double.valueOf(hdValue);
+                            }
+                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-addm);
+                        }else{
+                            String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
+                            valueArray[index] = hdValue;
+                        }
+                    }else  if(this.model == JkzhGetValueModelEnum.被动土压力合力计算 || this.model == JkzhGetValueModelEnum.被动作用点位置){
+                        Double addm = 0.0;
+                        if(floor == jkzhContext.getJkzhBasicParam().getAtZoneLand()){
+                            //若是开挖深度所在土层跟土压力零点是在同一个土层，那么真是的土厚度
+                            if(jkzhContext.getJkzhBasicParam().getAtZoneLand() == jkzhContext.getJkzhBasicParam().getAtDepthLand()){
+                                //土压力零点位置 - 开挖深度
+                                valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-jkzhContext.getJkzhBasicParam().getDepth());
+                            }else{
+                                for (int i = 1; i < floor;i++) {
+                                    String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
+                                    addm += Double.valueOf(hdValue);
+                                }
+                                valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getDepth()-addm);
+                            }
+                        }else{
+                            String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
+                            valueArray[index] = hdValue;
+                        }
+                    }else if(this.model == JkzhGetValueModelEnum.支撑轴力计算){
                         String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
                         valueArray[index] = hdValue;
                     }
