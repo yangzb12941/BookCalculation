@@ -10,7 +10,10 @@ import org.enumUtils.StringUtil;
 import org.handle.JkzhFromulaHandle;
 import org.junit.Test;
 import org.show.JkzhILayout;
-import java.util.*;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class YhCalSheetApplicationTests {
@@ -25,8 +28,8 @@ public class YhCalSheetApplicationTests {
     @Test
     public void calculation(){
         JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
-        //JkzhCreateContextHandle JkzhCreateContextHandle = new JkzhCreateContextHandle();
-        //JkzhCalculation JkzhCalculation = new JkzhCalculation();
+        JkzhCalculation JkzhCalculation = new JkzhCalculation(jkzhFromulaHandle);
+        JkzhCalculation.zdPositionAction();
     }
 
     /**

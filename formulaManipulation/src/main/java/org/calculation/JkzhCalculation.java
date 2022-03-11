@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
 import org.context.JkzhContext;
-import org.handle.JkzhFromulaHandle;
 import org.getValue.JkzhGetValues;
+import org.handle.JkzhFromulaHandle;
 import org.latexTranslation.LatexUserString;
 import org.latexTranslation.VariableIDDynamicTable;
 import org.show.JkzhILayout;
@@ -18,6 +18,7 @@ import org.symbolComponents.CalcNumber;
 import org.symbols.Expression;
 import org.symbols.Symbol;
 import org.symbols.Variable;
+
 import java.util.HashMap;
 import java.util.Objects;
 
