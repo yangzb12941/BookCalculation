@@ -25,8 +25,8 @@ public class YhCalSheetApplicationTests {
     @Test
     public void calculation(){
         JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
-        JkzhCreateContextHandle JkzhCreateContextHandle = new JkzhCreateContextHandle();
-        JkzhCalculation JkzhCalculation = new JkzhCalculation();
+        //JkzhCreateContextHandle JkzhCreateContextHandle = new JkzhCreateContextHandle();
+        //JkzhCalculation JkzhCalculation = new JkzhCalculation();
     }
 
     /**
