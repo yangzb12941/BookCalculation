@@ -3,28 +3,13 @@ package org.java.com.yh.calsheet;
 import com.googlecode.aviator.AviatorEvaluator;
 import lombok.extern.slf4j.Slf4j;
 import org.aviatorPlugins.MathRadiansFunction;
+import org.calculation.JkzhCalculation;
 import org.config.JkzhConfigEnum;
-import org.config.JkzhGetValueModelEnum;
-import org.context.JkzhContext;
 import org.entity.Param;
 import org.enumUtils.StringUtil;
 import org.handle.JkzhFromulaHandle;
-import org.handle.JkzhGetValues;
 import org.junit.Test;
-import org.latexTranslation.LatexUserString;
-import org.latexTranslation.VariableIDDynamicTable;
 import org.show.JkzhILayout;
-import org.solutions.Solution;
-import org.solveableManipulationBehavior.SolveableManipulateBehavior;
-import org.solveables.Equation;
-import org.solveables.Solveable;
-import org.symbolComponents.CalcNumber;
-import org.symbols.Expression;
-import org.symbols.Symbol;
-import org.symbols.Variable;
-import org.table.JkzhBasicParam;
-import org.table.SoilQualityTable;
-
 import java.util.*;
 
 @Slf4j
@@ -39,7 +24,9 @@ public class YhCalSheetApplicationTests {
      */
     @Test
     public void calculation(){
-
+        JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
+        JkzhCreateContextHandle JkzhCreateContextHandle = new JkzhCreateContextHandle();
+        JkzhCalculation JkzhCalculation = new JkzhCalculation();
     }
 
     /**
@@ -85,6 +72,7 @@ public class YhCalSheetApplicationTests {
             log.info("展开:{}",target);
         }
     }
+
     @Test
     public void getParamTest(){
         String fromula = "(地面堆载_{5}+重度_{1} \\times 厚度_{1}+重度_{2} \\times 厚度_{2}+重度_{3} \\times 厚度_{3}+重度_{4} \\times 厚度_{4}+重度_{5} \\times 厚度_{5}) \\times 主动土压力系数_{5}- 2 \\times 内聚力_{5} \\times \\sqrt{主动土压力系数_{5}}";

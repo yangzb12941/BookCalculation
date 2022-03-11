@@ -22,7 +22,7 @@ public class JkzhBasicParam {
 	private Double axis = 0.4;
 
 	//开挖深度
-	private Double depth =5.0;
+	private Double depth =7.0;
 
 	//土压力零点：这个参数时需要计算的
 	private Double pressureZero = 0.0;

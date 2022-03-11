@@ -18,7 +18,7 @@ public class JkzhILayout implements ILayout {
                 "被动土压力系数","根号主动土压力系数","根号被动土压力系数",
                 "主动土压力合力", "主动土作用点位置", "被动土压力合力","主动土压力上","主动土压力下","被动土压力上","被动土压力下",
                 "被动土作用点位置", "主动土层至土压力零点距离","被动土层至土压力零点距离", "土压力零点", "支撑的轴线",
-                "主动土压力","被动土压力"};
+                "主动土压力","被动土压力","支撑轴力主动","支撑轴力被动"};
 
         this.layoutMap = new HashMap<String, String>(32);
 
@@ -55,18 +55,6 @@ public class JkzhILayout implements ILayout {
         //主动土作用点位置
         this.layoutMap.put("主动土作用点位置","h_{an}");
 
-        //主动土压力上
-        this.layoutMap.put("主动土压力上","a");
-
-        //主动土压力下
-        this.layoutMap.put("主动土压力下","b");
-
-        //被动土压力上
-        this.layoutMap.put("被动土压力上","a");
-
-        //被动土压力下
-        this.layoutMap.put("被动土压力下","b");
-
         //被动土压力合力
         this.layoutMap.put("被动土压力合力","E_{pn}");
 
@@ -74,16 +62,16 @@ public class JkzhILayout implements ILayout {
         this.layoutMap.put("被动土作用点位置","h_{pn}");
 
         //主动土层至土压力零点距离
-        this.layoutMap.put("主动土层至土压力零点距离","L_{an}");
+        this.layoutMap.put("主动土层至土压力零点距离","h_{an}");
 
         //被动土层至土压力零点距离
-        this.layoutMap.put("被动土层至土压力零点距离","L_{pn}");
+        this.layoutMap.put("被动土层至土压力零点距离","h_{pn}");
 
         //土压力零点
         this.layoutMap.put("土压力零点","O");
 
         //支撑的轴线
-        this.layoutMap.put("支撑的轴线","Z");
+        this.layoutMap.put("支撑轴力","T_{cn}");
 
         //***********这几个不需要替换，只需要在输出公式的时候使用**********
         //主动土压力
@@ -97,5 +85,17 @@ public class JkzhILayout implements ILayout {
 
         //被动土压力下层
         this.layoutMap.put("被动土压力底层","{\\mathrm{P}^{\\prime}}_{pkn}");
+
+        //主动土压力上
+        this.layoutMap.put("主动土压力上","a");
+
+        //主动土压力下
+        this.layoutMap.put("主动土压力下","b");
+
+        //被动土压力上
+        this.layoutMap.put("被动土压力上","a");
+
+        //被动土压力下
+        this.layoutMap.put("被动土压力下","b");
     }
 }

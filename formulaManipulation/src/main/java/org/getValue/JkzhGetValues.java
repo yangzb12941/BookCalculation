@@ -1,4 +1,4 @@
-package org.handle;
+package org.getValue;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -184,8 +184,13 @@ public class JkzhGetValues extends DefaultGetValues{
                 case "被动土层至土压力零点距离":
                 case "主动土压力":
                 case "被动土压力":
-                    String vMap = getValuesFromMap(param.getName() + "_" + param.getIndex(),jkzhContext.getFormate());
-                    valueArray[index] = vMap;
+                    String vMap_1 = getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate());
+                    valueArray[index] = vMap_1;
+                    break;
+                case "支撑轴力主动":
+                case "支撑轴力被动":
+                    String vMap_2 = getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate());
+                    valueArray[index] = vMap_2;
                     break;
                 default :
                     log.error("没有匹配的参数:{}",param.getName());
