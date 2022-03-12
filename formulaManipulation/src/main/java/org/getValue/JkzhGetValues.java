@@ -87,6 +87,8 @@ public class JkzhGetValues extends DefaultGetValues{
                     valueArray[index] = jkzhContext.getJkzhBasicParam().getPressureZero().toString();
                     break;
                 case "厚度":
+                case "主动土作用点位置":
+                case "被动土作用点位置":
                     Integer floor = Integer.valueOf(param.getIndex());
                     //被动土压力计算，需要以当前开挖层所在土层实际土层厚度计算。
                     //例如：第一层土层厚度1米，第二层土层厚度3米，第三层土层厚度4米。开挖深度是6米，那么开挖深度是在第三层土位置。第三层土还剩6-（1+3）= 2米的土层厚度。
@@ -143,9 +145,35 @@ public class JkzhGetValues extends DefaultGetValues{
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
                             valueArray[index] = hdValue;
                         }
+                    }else if(this.model == JkzhGetValueModelEnum.主动支撑轴力计算){
+                        Double addm = 0.0;
+                        if(floor == jkzhContext.getJkzhBasicParam().getAtZoneLand()){
+                            for (int i = 1; i < floor;i++) {
+                                String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
+                                addm += Double.valueOf(hdValue);
+                            }
+                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-addm+Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate())));
+                        }else{
+                            for (int i = 1; i <= floor;i++) {
+                                String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
+                                addm += Double.valueOf(hdValue);
+                            }
+                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-addm+Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate())));
+                        }
+                    }else if(this.model == JkzhGetValueModelEnum.被动支撑轴力计算){
+                        Double addm = 0.0;
+                        //若是开挖深度所在土层跟土压力零点是在同一个土层，那么真是的土厚度
+                        for (int i = jkzhContext.getJkzhBasicParam().getAtDepthLand(); i <= floor;i++) {
+                            if(i == jkzhContext.getJkzhBasicParam().getAtDepthLand()){
+                                addm += jkzhContext.getJkzhBasicParam().getDepth();
+                            }else{
+                                String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
+                                addm += Double.valueOf(hdValue);
+                            }
+                        }
+                        valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-addm+Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate())));
                     }else if(this.model == JkzhGetValueModelEnum.支撑轴力计算){
-                        String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), floor,2);
-                        valueArray[index] = hdValue;
+                        valueArray[index] = String.valueOf(Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate())));
                     }
                     break;
                 case "重度":
@@ -177,13 +205,11 @@ public class JkzhGetValues extends DefaultGetValues{
                     valueArray[index] = ghBdtylxsValue;
                     break;
                 case "主动土压力合力":
-                case "主动土作用点位置":
                 case "被动土压力合力":
-                case "被动土作用点位置":
-                case "主动土层至土压力零点距离":
-                case "被动土层至土压力零点距离":
-                case "主动土压力":
-                case "被动土压力":
+                case "主动土压力上":
+                case "被动土压力上":
+                case "主动土压力下":
+                case "被动土压力下":
                     String vMap_1 = getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate());
                     valueArray[index] = vMap_1;
                     break;

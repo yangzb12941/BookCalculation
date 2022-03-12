@@ -134,7 +134,7 @@ public class JkzhFromulaHandle extends DefaultFromulaHandle{
         int skipChar = 0;
         char[] chars = equation.toCharArray();
         String result = equation;
-        if(chars[0] == '+' || chars[0] == '-'||chars[0] == '*'||chars[0] == '/' || chars[0] == '\\'){
+        if(chars[0] == '+' || chars[0] == '-'||chars[0] == '*'||chars[0] == '/'){
             for (int i = 1; i < equation.length(); i++) {
                 if(chars[i] == '+' || chars[i] == '-'||chars[i] == '*'||chars[i] == '/') {
                     skipChar = i;

@@ -28,8 +28,16 @@ public class YhCalSheetApplicationTests {
     @Test
     public void calculation(){
         JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
-        JkzhCalculation JkzhCalculation = new JkzhCalculation(jkzhFromulaHandle);
-        JkzhCalculation.zdPositionAction();
+        JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhFromulaHandle);
+        jkzhCalculation.zdPressure();
+        jkzhCalculation.bdPressure(7.0);
+        jkzhCalculation.pressureZero(7.0);
+        jkzhCalculation.zdResultantEarthPressures();
+        jkzhCalculation.zdPositionAction();
+        jkzhCalculation.bdResultantEarthPressures(7.0);
+        jkzhCalculation.bdPositionAction(7.0);
+        //下面报错了
+        jkzhCalculation.calStrutForce(7.0);
     }
 
     /**
