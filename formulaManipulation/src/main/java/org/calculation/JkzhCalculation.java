@@ -162,13 +162,13 @@ public class JkzhCalculation extends DefaultCalculation{
      */
     public void pressureZero(Double depth){
         //根据开挖深度，判断开挖基土在哪一层
-        Integer atLand = depthAtLand(depth);
+        Integer atDepthLand = depthAtLand(depth);
         //重新计算这一层的主动土压力底
         JkzhGetValues jkzhGetValues = new JkzhGetValues();
         jkzhGetValues.setModel(JkzhGetValueModelEnum.土压力零点所在土层);
-        customCalZdPressure(atLand,jkzhGetValues);
+        customCalZdPressure(atDepthLand,jkzhGetValues);
         //计算土压力零点在哪一层
-        pressureZeroAtLand(depth,atLand,jkzhContext.getJkzhBasicParam().getAllLands(),jkzhContext.getFormate());
+        pressureZeroAtLand(depth,atDepthLand,jkzhContext.getJkzhBasicParam().getAllLands(),jkzhContext.getFormate());
     }
 
     //计算给定深度，返回深度所在土层
@@ -230,29 +230,71 @@ public class JkzhCalculation extends DefaultCalculation{
      * 计算土压力零点在第几层土层。
      * 并且计算土压力零点数值。
      * @param depth 开挖深度所在土层
-     * @param atLand 开挖深度所在土层
+     * @param atDepthLand 开挖深度所在土层
      * @param allLands 总的土层
      * @param formate 中间计算结果集
      */
-    private void pressureZeroAtLand(Double depth,int atLand, int allLands, HashMap<String,String> formate){
+    private void pressureZeroAtLand(Double depth,int atDepthLand, int allLands, HashMap<String,String> formate){
         //第一种情况
-        int zoneLand = firstCase(atLand, allLands, formate);
+        int zoneLand = firstCase(atDepthLand, allLands, formate);
         if(zoneLand != 0){
             // 解土压力零点方程
             Double pressureZero = calPressureZero(zoneLand);
-            this.jkzhContext.getJkzhBasicParam().setPressureZero(pressureZero);
+            firstCasePressureZero(zoneLand,atDepthLand,depth,pressureZero);
         }else{
             //第二种情况
-            zoneLand = secondCase(atLand, allLands, formate);
+            zoneLand = secondCase(atDepthLand, allLands, formate);
             if(zoneLand != 0){
-                Double pressureZero = getLandThickness(zoneLand);
-                this.jkzhContext.getJkzhBasicParam().setPressureZero(pressureZero);
+                secondCasePressureZero(zoneLand);
             }else{
                 //第四种情况
-                Double pressureZero = thirdCase(depth);
-                this.jkzhContext.getJkzhBasicParam().setPressureZero(pressureZero);
+                zoneLand = thirdCase(depth);
+                if(zoneLand != 0){
+                    thirdCasePressureZero(depth);
+                }
             }
         }
+    }
+
+    /**
+     * 第二种情况，计算土压力零点深度
+     * @param zoneLand 当前土层
+     * @return
+     */
+    private void secondCasePressureZero(Integer zoneLand){
+        Double zero = 0.0;
+        for (int i = 0; i <= zoneLand; i++) {
+            zero += Double.valueOf(this.jkzhContext.getSoilPressureTable().getTable()[i][2]);
+        }
+        this.jkzhContext.getJkzhBasicParam().setPressureZero(zero);
+    }
+
+    /**
+     * 第二种情况，计算土压力零点深度
+     * @param zoneLand
+     * @param atDepthLand
+     * @param depth
+     * @return
+     */
+    private void firstCasePressureZero(Integer zoneLand,Integer atDepthLand,Double depth,Double pressureZero){
+        Double zero = 0.0;
+        if(zoneLand == atDepthLand){
+            this.jkzhContext.getJkzhBasicParam().setPressureZero(depth+pressureZero);
+        }else{
+            for (int i = 1; i < zoneLand; i++) {
+                zero += Double.valueOf(this.jkzhContext.getJkzhBasicParam().getSoilQualityTable().getTable()[i-1][2]);
+            }
+            this.jkzhContext.getJkzhBasicParam().setPressureZero(zero+pressureZero);
+        }
+    }
+
+    /**
+     * 第二种情况，计算土压力零点深度
+     * @param depth 当前开挖深度
+     * @return
+     */
+    private void thirdCasePressureZero(Double depth){
+        this.jkzhContext.getJkzhBasicParam().setPressureZero(depth * 1.2);
     }
 
     /**
@@ -263,20 +305,20 @@ public class JkzhCalculation extends DefaultCalculation{
      * 第二种情况判断
      * 主动土压力上端-被动土压力上端<0 并且主动土压力低端-被动土压力低端>0。同样1情况处理。
      * 土压力零点所在 土层
-     * @param atLand 开挖深度所在土层
+     * @param atDepthLand 开挖深度所在土层
      * @param allLands 总的土层
      * @param formate 中间计算结果集
      * @return
      */
-    private int firstCase(int atLand, int allLands, HashMap<String,String> formate){
+    private int firstCase(int atDepthLand, int allLands, HashMap<String,String> formate){
         int result = 0;
-        for (int i = atLand; i <= allLands; i++) {
+        for (int i = atDepthLand; i <= allLands; i++) {
             //主动土压力上端-被动土压力上端
-            Double zdUp = Double.valueOf(formate.get("主动土压力上" + atLand));
-            Double bdUp = Double.valueOf(formate.get("被动土压力上"+atLand));
+            Double zdUp = Double.valueOf(formate.get("主动土压力上" + atDepthLand));
+            Double bdUp = Double.valueOf(formate.get("被动土压力上"+atDepthLand));
             //主动土压力下端-被动土压力下端
-            Double zdDown = Double.valueOf(formate.get("主动土压力下"+atLand));
-            Double bdDown = Double.valueOf(formate.get("被动土压力下"+atLand));
+            Double zdDown = Double.valueOf(formate.get("主动土压力下"+atDepthLand));
+            Double bdDown = Double.valueOf(formate.get("被动土压力下"+atDepthLand));
             Double tmpe = (zdUp - bdUp) * (zdDown - bdDown);
             if(tmpe.compareTo(0.0)<=0){
                 result = i;
@@ -321,11 +363,10 @@ public class JkzhCalculation extends DefaultCalculation{
      * @param depth
      * @return
      */
-    private Double thirdCase(Double depth){
+    private Integer thirdCase(Double depth){
         Double pressureZero = depth*0.2;
         Integer atZoneLand = depthAtLand(pressureZero+depth);
-        jkzhContext.getJkzhBasicParam().setAtZoneLand(atZoneLand);
-        return pressureZero;
+        return atZoneLand;
     }
 
     /**
@@ -410,13 +451,7 @@ public class JkzhCalculation extends DefaultCalculation{
      * @return
      */
     private Double getLandThickness(int land){
-        String hdValue = "0.0";
-        try {
-            hdValue = jkzhContext.getJkzhBasicParam().getSoilQualityTable().getTable()[land][2];
-        }catch (IndexOutOfBoundsException e) {
-            log.error("getValuesFromSoilPressureTable:{}",e);
-        }
-        return Double.valueOf(hdValue);
+        return 0.0;
     }
 
     /**
@@ -524,7 +559,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_主动上大于0_下大于0.getCalculate(),
                         jkzhZDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土作用点位置第{}层展示公式-下:{}={}",latexCal,calculate,zdCalRtDown);
+                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("主动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
                 String latexCal = jkzhFromulaHandle.generalFromulaHandle(
@@ -540,7 +575,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_主动上小于0_下大于0.getCalculate(),
                         jkzhZDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土作用点位置第{}层展示公式-下:{}={}",latexCal,calculate,zdCalRtDown);
+                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("主动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
                 String latexCal = jkzhFromulaHandle.generalFromulaHandle(
@@ -556,7 +591,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_主动上大于0_下小于0.getCalculate(),
                         jkzhZDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土作用点位置第{}层展示公式-下:{}={}",latexCal,calculate,zdCalRtDown);
+                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("主动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }
         }
@@ -603,7 +638,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.土压力合力_被动上大于0_下大于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土压力合力第{}层展示公式-下:{}={}",depthLand,calculate,zdCalRtDown);
+                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土压力合力"+land,String.format("%.2f",zdCalRtDown));
             }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
                 String latexCal = jkzhFromulaHandle.generalFromulaHandle(
@@ -619,7 +654,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.土压力合力_被动上小于0_下大于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土压力合力第{}层展示公式-下:{}={}",depthLand,calculate,zdCalRtDown);
+                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土压力合力"+land,String.format("%.2f",zdCalRtDown));
             }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
                 String latexCal = jkzhFromulaHandle.generalFromulaHandle(
@@ -635,7 +670,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.土压力合力_被动上大于0_下小于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土压力合力第{}层展示公式-下:{}={}",depthLand,calculate,zdCalRtDown);
+                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土压力合力"+land,String.format("%.2f",zdCalRtDown));
             }
         }
@@ -671,7 +706,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_被动上大于0_下大于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",latexCal,calculate,zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
                 String latexCal = jkzhFromulaHandle.generalFromulaHandle(
@@ -687,7 +722,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_被动上小于0_下大于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",latexCal,calculate,zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
                 String latexCal = jkzhFromulaHandle.generalFromulaHandle(
@@ -703,7 +738,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_被动上大于0_下小于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",latexCal,calculate,zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }
         }
@@ -740,16 +775,17 @@ public class JkzhCalculation extends DefaultCalculation{
                 atZoneLand,
                 JkzhConfigEnum.支撑轴力主动.getCalculate(),
                 jkzhZDGetValues);
-        this.jkzhContext.getFormate().put("支撑轴力主动",zdCalculate);
+        this.jkzhContext.getFormate().put("支撑轴力主动"+atZoneLand,zdCalculate);
         log.info("支撑轴力计算主动土压力公式:{}={}",zdLatexCal,zdCalculate);
         //获取开挖基坑所在土层
         JkzhGetValues jkzhBDGetValues = new JkzhGetValues();
         jkzhBDGetValues.setModel(JkzhGetValueModelEnum.被动支撑轴力计算);
         int atDepthLand = this.jkzhContext.getJkzhBasicParam().getAtDepthLand();
+        int time = atZoneLand-atDepthLand+1;
         String bdLatexCal = jkzhFromulaHandle.getLatexCalExpression(
                 jkzhContext,
                 jkzhFromulaHandle,
-                atZoneLand-atDepthLand,
+                time,
                 atDepthLand,
                 atZoneLand,
                 this.jkzhILayout,
@@ -758,17 +794,17 @@ public class JkzhCalculation extends DefaultCalculation{
         String bdCalculate = jkzhFromulaHandle.getCalculateExpression(
                 jkzhContext,
                 jkzhFromulaHandle,
-                atZoneLand-atDepthLand,
+                time,
                 atDepthLand,
                 atZoneLand,
                 JkzhConfigEnum.支撑轴力被动.getCalculate(),
                 jkzhBDGetValues);
-        this.jkzhContext.getFormate().put("支撑轴力被动",bdCalculate);
+        this.jkzhContext.getFormate().put("支撑轴力被动"+atZoneLand,bdCalculate);
         log.info("支撑轴力计算被动土压力公式:{}={}",bdLatexCal,bdCalculate);
 
         HashMap<String, String> layoutMap = this.jkzhILayout.getLayoutMap();
-        layoutMap.put("支撑轴力主动",zdLatexCal);
-        layoutMap.put("支撑轴力被动",bdLatexCal);
+        layoutMap.put("支撑轴力主动"+atZoneLand,zdLatexCal);
+        layoutMap.put("支撑轴力被动"+atZoneLand,bdLatexCal);
 
         JkzhGetValues jkzhZCZLGetValues = new JkzhGetValues();
         jkzhZCZLGetValues.setModel(JkzhGetValueModelEnum.支撑轴力计算);
@@ -786,6 +822,6 @@ public class JkzhCalculation extends DefaultCalculation{
                 JkzhConfigEnum.支撑轴力.getCalculate(),
                 jkzhZCZLGetValues);
         Double zlCalRt = (Double) AviatorEvaluator.execute(zlCalculate);
-        log.info("支撑轴力计算:{}={}",zlLatexCal,zlCalculate,zlCalRt);
+        log.info("支撑轴力计算:{}={}={}",zlLatexCal,zlCalculate,zlCalRt);
     }
 }

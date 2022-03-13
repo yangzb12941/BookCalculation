@@ -1,6 +1,7 @@
 package org.table;
 
 import lombok.Data;
+import org.config.JkzhGetValueModelEnum;
 
 /**
  * 基坑支护设计排桩法基本参数:
