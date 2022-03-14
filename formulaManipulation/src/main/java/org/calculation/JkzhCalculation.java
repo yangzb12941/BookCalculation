@@ -706,7 +706,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_被动上大于0_下大于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
                 String latexCal = jkzhFromulaHandle.generalFromulaHandle(
@@ -722,7 +722,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_被动上小于0_下大于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
                 String latexCal = jkzhFromulaHandle.generalFromulaHandle(
@@ -738,7 +738,7 @@ public class JkzhCalculation extends DefaultCalculation{
                         JkzhConfigEnum.作用点位置_被动上大于0_下小于0.getCalculate(),
                         jkzhBDGetValues);
                 Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,calculate,zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
                 jkzhContext.getFormate().put("被动土作用点位置"+land,String.format("%.2f",zdCalRtDown));
             }
         }
