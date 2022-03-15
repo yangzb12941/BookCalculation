@@ -43,6 +43,9 @@ public class JkzhBasicParam {
 	//土压力零点所在土层
 	private int atZoneLand;
 
+	//是否存在 主动土压力等于被动土压力
+	private Boolean isZDEqualsBD;
+
 	public int getAllLands(){
 		return soilQualityTable.getTable().length;
 	}

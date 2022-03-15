@@ -7,9 +7,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="writeTemplate" />
         <module name="formulaManipulation" />
         <module name="bootstrap" />
+        <module name="writeTemplate" />
         <module name="solveEquations" />
         <module name="webControl" />
       </profile>
@@ -20,7 +20,7 @@
       <module name="formulaManipulation" target="8" />
       <module name="solveEquations" target="1.7" />
       <module name="webControl" target="1.7" />
-      <module name="writeTemplate" target="1.7" />
+      <module name="writeTemplate" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -140,7 +140,7 @@ public class JkzhGetValues extends DefaultGetValues{
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
                                 addm += Double.valueOf(hdValue);
                             }
-                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-addm+Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate())));
+                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-addm+Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getTemporaryValue())));
                         }
                     }else if(this.model == JkzhGetValueModelEnum.被动支撑轴力计算){
                         Double addm = 0.0;
@@ -155,10 +155,10 @@ public class JkzhGetValues extends DefaultGetValues{
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getJkzhBasicParam().getSoilQualityTable(), i,2);
                                 addm += Double.valueOf(hdValue);
                             }
-                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-addm+Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate())));
+                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero()-addm+Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getTemporaryValue())));
                         }
                     }else if(this.model == JkzhGetValueModelEnum.支撑轴力计算){
-                        valueArray[index] = String.valueOf(Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate())));
+                        valueArray[index] = String.valueOf(Double.valueOf(getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getTemporaryValue())));
                     }
                     break;
                 case "重度":
@@ -195,12 +195,12 @@ public class JkzhGetValues extends DefaultGetValues{
                 case "被动土压力上":
                 case "主动土压力下":
                 case "被动土压力下":
-                    String vMap_1 = getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate());
+                    String vMap_1 = getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getTemporaryValue());
                     valueArray[index] = vMap_1;
                     break;
                 case "支撑轴力主动":
                 case "支撑轴力被动":
-                    String vMap_2 = getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getFormate());
+                    String vMap_2 = getValuesFromMap(param.getName() +param.getIndex(),jkzhContext.getTemporaryValue());
                     valueArray[index] = vMap_2;
                     break;
                 default :

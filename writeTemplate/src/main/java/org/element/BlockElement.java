@@ -1,0 +1,21 @@
+package org.element;
+
+import org.apache.commons.collections.CollectionUtils;
+import java.util.*;
+
+public class BlockElement extends BaseElement<List<BaseElement>> {
+    public BlockElement(String tagName, List<BaseElement> value) {
+        super(tagName, value);
+    }
+
+    public Map<String,Object> getValues(){
+        Map<String,Object> valueMap = new Hashtable<>(64);
+        List<BaseElement> value = super.getValue();
+        if(CollectionUtils.isNotEmpty(value)){
+            for (BaseElement element : value) {
+                valueMap.put(element.getTagName(),element.getValue());
+            }
+        }
+        return valueMap;
+    }
+}

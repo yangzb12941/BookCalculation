@@ -35,7 +35,7 @@ public class LatexExtractAddition extends LatexExtractOperator {
 			nesting -= next.isDoneNesting() ? 1 : 0;
 			if (next.isOperator(Operator.Minus) && nesting == 0 && i!=0) return true; ///MINUS IS ALSO AN ADDITION!
 																		///We are checking it is not i=0 because a minus
-																		///as the first element is not an addition.
+																		///as the first elementHandler is not an addition.
 																		///Examples: -5x, -3, -(x+2)...
 			if (next.isOperator(this.op()) && nesting == 0) return true;
 		}
