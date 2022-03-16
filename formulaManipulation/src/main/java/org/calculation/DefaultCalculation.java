@@ -34,8 +34,12 @@ public class DefaultCalculation extends AbstractCalculation{
     private JkzhContext getJkzhContext(JkzhFromulaHandle jkzhFromulaHandle){
         //①、生成土压力系数表
         JkzhContext jkzhContext = (JkzhContext)FactoryContext.getContext(JkzhContext.class);
-        HashMap<String,String> formate = new HashMap<>(64);
-        jkzhContext.setTemporaryValue(formate);
+        HashMap<String,String> temporaryValue = new HashMap<>(128);
+        jkzhContext.setTemporaryValue(temporaryValue);
+
+        HashMap<String,Object> elementTemplate = new HashMap<>(128);
+        jkzhContext.setElementTemplate(elementTemplate);
+
         //基础参数拼装
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
         SoilQualityTable soilQualityTable = new SoilQualityTable();

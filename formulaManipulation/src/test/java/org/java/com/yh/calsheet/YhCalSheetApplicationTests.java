@@ -29,14 +29,21 @@ public class YhCalSheetApplicationTests {
     public void calculation(){
         JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
         JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhFromulaHandle);
+        //计算主动土压力
         jkzhCalculation.zdPressure();
+        //计算被动土压力
         jkzhCalculation.bdPressure(7.0);
+        //计算土压力零点
         jkzhCalculation.pressureZero(7.0);
+        //计算主动土压力合力
         jkzhCalculation.zdResultantEarthPressures();
+        //主动土压力合力作用点位置
         jkzhCalculation.zdPositionAction();
+        //被动土压力合力及作用点位置
         jkzhCalculation.bdResultantEarthPressures(7.0);
+        //被动土压力合力作用点位置
         jkzhCalculation.bdPositionAction(7.0);
-        //下面报错了
+        //支撑处水平力计算
         jkzhCalculation.calStrutForce(7.0);
     }
 
@@ -69,19 +76,34 @@ public class YhCalSheetApplicationTests {
     }
 
     @Test
-    public void latexEquation(){
+    public void latexCalEquation(){
         JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
         JkzhILayout jkzhLayout = new JkzhILayout();
         //①、解析公式，把公式展开
         for (JkzhConfigEnum source : JkzhConfigEnum.values()) {
             //①、替换成现实的字符
             //LatexCal : 替换，是用于word展示不带参数的计算过程公式
-            String replaceChar = jkzhFromulaHandle.replaceLayoutChar(source.getLatexCal(),jkzhLayout);
+            String replaceChar = jkzhFromulaHandle.replaceLayoutChar(source.getLatex(),jkzhLayout);
             log.info("替换:{}",replaceChar);
             //LatexCal : 展开，是用于word展示不带参数的计算过程公式
             String target = jkzhFromulaHandle.expansionEquation(replaceChar,3,3,4);
             log.info("展开:{}",target);
         }
+    }
+
+
+    @Test
+    public void latexEquation(){
+        JkzhFromulaHandle jkzhFromulaHandle = new JkzhFromulaHandle();
+        JkzhILayout jkzhLayout = new JkzhILayout();
+        //①、解析公式，把公式展开
+        //①、替换成现实的字符
+        //LatexCal : 替换，是用于word展示不带参数的计算过程公式
+        String replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_主动上大于0_下大于0.getLatex(),jkzhLayout);
+        log.info("替换:{}",replaceChar);
+        //LatexCal : 展开，是用于word展示不带参数的计算过程公式
+        String target = jkzhFromulaHandle.expansionEquation(replaceChar,3,3,4);
+        log.info("展开:{}",target);
     }
 
     @Test
