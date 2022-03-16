@@ -6,75 +6,84 @@ import org.element.BaseElement;
 import org.element.BlockElement;
 import org.element.FormulaElement;
 import org.element.TextElement;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class JkzhBlockElementHandler extends BlockElementHandler{
+
     @Override
-    public BlockElement getElementValue(IContext iContext, String key) {
-        BlockElement blockElement = null;
+    public List<BlockElement> getElementValue(IContext iContext, String key) {
+        List<BlockElement> blockElements = null;
         if(key.equals("主动土压力")){
-            blockElement = zdPressure((JkzhContext) iContext,key);
+            blockElements = zdPressure((JkzhContext) iContext,key);
         }else if(key.equals("被动土压力")){
-            blockElement = bdPressure((JkzhContext) iContext,key);
+            blockElements = bdPressure((JkzhContext) iContext,key);
         }else if(key.equals("主动土压力合力")){
-            blockElement = zdPressureResultant((JkzhContext) iContext,key);
+            blockElements = zdPressureResultant((JkzhContext) iContext,key);
         }else if(key.equals("被动土压力合力")){
-            blockElement = bdPressureResultant((JkzhContext) iContext,key);
+            blockElements = bdPressureResultant((JkzhContext) iContext,key);
         }else if(key.equals("是否存在主被动相等")){
-            blockElement = isZDEqualsBD((JkzhContext) iContext,key);
+            blockElements = isZDEqualsBD((JkzhContext) iContext,key);
         }
-        return blockElement;
+        return blockElements;
     }
 
-    private BlockElement zdPressure(JkzhContext jkzhContext, String key){
+    private List<BlockElement> zdPressure(JkzhContext jkzhContext, String key){
         int allLands = jkzhContext.getJkzhBasicParam().getAllLands();
         List<BaseElement> baseElements = new ArrayList<BaseElement>(3);
+        List<BlockElement> blockElements = new ArrayList<BlockElement>(allLands);
         for(int land = 1;land <= allLands; land++){
             String zdFloorKey = "主动土层" + land;
             String zdFloorValue = (String)jkzhContext.getElementTemplate().get(zdFloorKey);
-            TextElement textElement = new TextElement(zdFloorKey,zdFloorValue);
+            TextElement textElement = new TextElement("主动土层",zdFloorValue);
             baseElements.add(textElement);
 
             String zdPreUpKey = "主动土压力计算上" + land;
             String zdPreUpValue = (String)jkzhContext.getElementTemplate().get(zdPreUpKey);
-            FormulaElement zdPreUpFormula = new FormulaElement(zdPreUpKey,zdPreUpValue);
+            FormulaElement zdPreUpFormula = new FormulaElement("主动土压力计算上",zdPreUpValue);
             baseElements.add(zdPreUpFormula);
             String zdPreDownKey = "主动土压力计算下" + land;
             String zdPreDownValue = (String)jkzhContext.getElementTemplate().get(zdPreDownKey);
-            FormulaElement zdpreDownFormula = new FormulaElement(zdPreDownKey,zdPreDownValue);
+            FormulaElement zdpreDownFormula = new FormulaElement("主动土压力计算下",zdPreDownValue);
             baseElements.add(zdpreDownFormula);
+
+            BlockElement blockElement = new BlockElement(key,baseElements);
+            blockElements.add(blockElement);
         }
-        return new BlockElement(key,baseElements);
+        return blockElements;
     }
 
-    private BlockElement bdPressure(JkzhContext jkzhContext, String key){
+    private List<BlockElement> bdPressure(JkzhContext jkzhContext, String key){
         int depthLand = jkzhContext.getJkzhBasicParam().getAtDepthLand();
         int allLands = jkzhContext.getJkzhBasicParam().getAllLands();
         List<BaseElement> baseElements = new ArrayList<BaseElement>(3);
+        List<BlockElement> blockElements = new ArrayList<BlockElement>(allLands-depthLand+1);
         for(int land = depthLand;land <= allLands; land++){
             String bdFloorKey = "被动土层" + land;
             String bdFloorValue = (String)jkzhContext.getElementTemplate().get(bdFloorKey);
-            TextElement textElement = new TextElement(bdFloorKey,bdFloorValue);
+            TextElement textElement = new TextElement("被动土层",bdFloorValue);
             baseElements.add(textElement);
 
             String bdPreUpKey = "被动土压力计算上" + land;
             String bdPreUpValue = (String)jkzhContext.getElementTemplate().get(bdPreUpKey);
-            FormulaElement zdpreUpFormula = new FormulaElement(bdPreUpKey,bdPreUpValue);
+            FormulaElement zdpreUpFormula = new FormulaElement("被动土压力计算上",bdPreUpValue);
             baseElements.add(zdpreUpFormula);
             String bdPreDownKey = "被动土压力计算下" + land;
             String bdPreDownValue = (String)jkzhContext.getElementTemplate().get(bdPreDownKey);
-            FormulaElement bdpreDownFormula = new FormulaElement(bdPreDownKey,bdPreDownValue);
+            FormulaElement bdpreDownFormula = new FormulaElement("被动土压力计算下",bdPreDownValue);
             baseElements.add(bdpreDownFormula);
+
+            BlockElement blockElement = new BlockElement(key,baseElements);
+            blockElements.add(blockElement);
         }
-        return new BlockElement(key,baseElements);
+        return blockElements;
     }
 
-    private BlockElement zdPressureResultant (JkzhContext jkzhContext, String key){
+    private List<BlockElement> zdPressureResultant (JkzhContext jkzhContext, String key){
         int zoneLand = jkzhContext.getJkzhBasicParam().getAtZoneLand();
         List<BaseElement> baseElements = new ArrayList<BaseElement>(12);
+        List<BlockElement> blockElements = new ArrayList<BlockElement>(zoneLand);
         for(int land = 1;land <= zoneLand; land++){
             HashMap<String, String> temporaryValue = jkzhContext.getTemporaryValue();
             Double upPressure = Double.valueOf(temporaryValue.get("主动土压力上"+land));
@@ -125,21 +134,26 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
 
             String preResKey = "主动土压力合力计算"+land;
             String preResValue = (String)jkzhContext.getElementTemplate().get(preResKey);
-            FormulaElement preRes = new FormulaElement(preResKey,preResValue);
+            FormulaElement preRes = new FormulaElement("主动土压力合力计算",preResValue);
             baseElements.add(preRes);
 
             String prePointKey = "主动作用点位置计算"+land;
             String prePointValue = (String)jkzhContext.getElementTemplate().get(prePointKey);
-            FormulaElement prePoint = new FormulaElement(preResKey,prePointValue);
+            FormulaElement prePoint = new FormulaElement("主动作用点位置计算",prePointValue);
             baseElements.add(prePoint);
+
+            BlockElement blockElement = new BlockElement(key,baseElements);
+            blockElements.add(blockElement);
         }
-        return new BlockElement(key,baseElements);
+        return blockElements;
     }
 
-    private BlockElement bdPressureResultant(JkzhContext jkzhContext, String key){
+    private List<BlockElement> bdPressureResultant(JkzhContext jkzhContext, String key){
         int zoneLand = jkzhContext.getJkzhBasicParam().getAtZoneLand();
         int atDepthLand = jkzhContext.getJkzhBasicParam().getAtDepthLand();
         List<BaseElement> baseElements = new ArrayList<BaseElement>(12);
+        List<BlockElement> blockElements = new ArrayList<BlockElement>(zoneLand);
+
         for(int land = atDepthLand;land <= zoneLand; land++){
             HashMap<String, String> temporaryValue = jkzhContext.getTemporaryValue();
             Double upPressure = Double.valueOf(temporaryValue.get("被动土压力上"+land));
@@ -190,21 +204,27 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
 
             String preResKey = "被动土压力合力计算"+land;
             String preResValue = (String)jkzhContext.getElementTemplate().get(preResKey);
-            FormulaElement preRes = new FormulaElement(preResKey,preResValue);
+            FormulaElement preRes = new FormulaElement("被动土压力合力计算",preResValue);
             baseElements.add(preRes);
 
             String prePointKey = "被动作用点位置计算"+land;
             String prePointValue = (String)jkzhContext.getElementTemplate().get(prePointKey);
-            FormulaElement prePoint = new FormulaElement(preResKey,prePointValue);
+            FormulaElement prePoint = new FormulaElement("被动作用点位置计算",prePointValue);
             baseElements.add(prePoint);
+
+            BlockElement blockElement = new BlockElement(key,baseElements);
+            blockElements.add(blockElement);
         }
-        return new BlockElement(key,baseElements);
+        return blockElements;
     }
 
-    private BlockElement isZDEqualsBD(JkzhContext jkzhContext, String key){
+    private List<BlockElement> isZDEqualsBD(JkzhContext jkzhContext, String key){
         List<BaseElement> baseElements = new ArrayList<BaseElement>(1);
+        List<BlockElement> blockElements = new ArrayList<BlockElement>(1);
         BaseElement baseElement = new BaseElement("零点土压力值",jkzhContext.getJkzhBasicParam().getPressureZero());
         baseElements.add(baseElement);
-        return new BlockElement(key, baseElements);
+        BlockElement blockElement = new BlockElement(key,baseElements);
+        blockElements.add(blockElement);
+        return blockElements;
     }
 }
