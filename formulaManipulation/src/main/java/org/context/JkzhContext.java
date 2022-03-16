@@ -4,8 +4,6 @@ import lombok.Data;
 import org.table.JkzhBasicParam;
 import org.table.SoilPressureTable;
 
-import java.util.HashMap;
-
 /**
  * 基坑支护计算上下文对象
  */

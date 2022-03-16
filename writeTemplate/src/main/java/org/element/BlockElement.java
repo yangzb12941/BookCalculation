@@ -1,7 +1,10 @@
 package org.element;
 
 import org.apache.commons.collections.CollectionUtils;
-import java.util.*;
+
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 public class BlockElement extends BaseElement<List<BaseElement>> {
     public BlockElement(String tagName, List<BaseElement> value) {

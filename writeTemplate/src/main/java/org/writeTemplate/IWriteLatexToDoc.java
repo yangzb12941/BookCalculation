@@ -4,7 +4,6 @@ import com.deepoove.poi.XWPFTemplate;
 import org.context.IContext;
 import org.handler.IDisplayHandler;
 
-import javax.swing.text.Document;
 import java.io.IOException;
 
 public interface IWriteLatexToDoc {

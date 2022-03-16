@@ -1,8 +1,7 @@
 package org.readTemplate;
 
 import com.deepoove.poi.XWPFTemplate;
-
-import com.spire.doc.*;
+import com.spire.doc.Document;
 
 public interface IReadTemplate {
     /**

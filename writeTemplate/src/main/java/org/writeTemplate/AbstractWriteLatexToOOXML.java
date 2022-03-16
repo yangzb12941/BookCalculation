@@ -1,6 +1,5 @@
 package org.writeTemplate;
 
-import org.context.IContext;
 import org.handler.IDisplayHandler;
 
 import javax.swing.text.Document;

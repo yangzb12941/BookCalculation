@@ -2,6 +2,7 @@ package org.elementHandler;
 
 import org.context.IContext;
 import org.element.TextElement;
+
 import java.util.Objects;
 
 public class TextElementHandler implements IElementHandler<TextElement>{
