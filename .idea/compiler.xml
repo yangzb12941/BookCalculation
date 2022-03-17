@@ -7,17 +7,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="formulaManipulation" />
-        <module name="bootstrap" />
-        <module name="writeTemplate" />
         <module name="solveEquations" />
         <module name="webControl" />
+        <module name="bootstrap" />
+        <module name="formulaManipulation" />
+        <module name="writeTemplate" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="BookCalculation" target="1.5" />
       <module name="bootstrap" target="1.7" />
       <module name="formulaManipulation" target="8" />
+      <module name="LayoutElement" target="1.5" />
       <module name="solveEquations" target="1.7" />
       <module name="webControl" target="1.7" />
       <module name="writeTemplate" target="8" />

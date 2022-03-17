@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/BookCalculation.iml" filepath="$PROJECT_DIR$/.idea/BookCalculation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LayoutElement/LayoutElement.iml" filepath="$PROJECT_DIR$/LayoutElement/LayoutElement.iml" />
       <module fileurl="file://$PROJECT_DIR$/bootstrap/bootstrap.iml" filepath="$PROJECT_DIR$/bootstrap/bootstrap.iml" />
       <module fileurl="file://$PROJECT_DIR$/formulaManipulation/formulaManipulation.iml" filepath="$PROJECT_DIR$/formulaManipulation/formulaManipulation.iml" />
       <module fileurl="file://$PROJECT_DIR$/solveEquations/solveEquations.iml" filepath="$PROJECT_DIR$/solveEquations/solveEquations.iml" />

@@ -12,7 +12,7 @@ public class BlockElement extends BaseElement<List<BaseElement>> {
     }
 
     public Map<String,Object> getValues(){
-        Map<String,Object> valueMap = new Hashtable<>(64);
+        Map<String,Object> valueMap = new Hashtable<String,Object>(64);
         List<BaseElement> value = super.getValue();
         if(CollectionUtils.isNotEmpty(value)){
             for (BaseElement element : value) {

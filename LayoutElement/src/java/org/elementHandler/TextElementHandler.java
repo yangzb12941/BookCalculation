@@ -9,15 +9,11 @@ public class TextElementHandler implements IElementHandler<TextElement>{
 
     @Override
     public TextElement getElementValue(IContext iContext,String key) {
-        TextElement textElement = null;
         String value = (String) iContext.getElementTemplate().get(key);
         if(Objects.isNull(value)){
-            textElement.setTagName(key);
-            textElement.setValue("NAN");
+            return new TextElement(key,"NAN");
         }else{
-            textElement.setTagName(key);
-            textElement.setValue(value);
+            return new TextElement(key,value);
         }
-        return textElement;
     }
 }

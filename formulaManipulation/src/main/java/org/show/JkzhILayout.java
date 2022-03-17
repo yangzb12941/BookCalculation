@@ -20,7 +20,7 @@ public class JkzhILayout implements ILayout {
                 "被动土作用点位置", "土压力零点", "支撑的轴线",
                 "主动土压力","被动土压力","支撑轴力主动","支撑轴力被动","支点至基坑底面的距离","基坑底面至反弯点的距离"};
 
-        this.layoutMap = new HashMap<String, String>(32);
+        this.layoutMap = new HashMap<String, String>(64);
 
         //地面堆载
         this.layoutMap.put("地面堆载","q");
@@ -60,72 +60,5 @@ public class JkzhILayout implements ILayout {
 
         //支撑的轴线
         this.layoutMap.put("支撑轴力","T_{cn}");
-
-        //***********这几个不需要替换，只需要在输出公式的时候使用**********
-        //主动土压力
-        this.layoutMap.put("主动土压力","P_{akn}");
-
-        //主动土压力下层
-        this.layoutMap.put("主动土压力底层","{\\mathrm{P}^{\\prime}}_{akn}");
-
-        //被动土压力
-        this.layoutMap.put("被动土压力","P_{pkn}");
-
-        //被动土压力下层
-        this.layoutMap.put("被动土压力底层","{\\mathrm{P}^{\\prime}}_{pkn}");
-
-        //主动土压力上
-        this.layoutMap.put("主动土压力上","a");
-
-        //主动土压力下
-        this.layoutMap.put("主动土压力下","b");
-
-        //被动土压力上
-        this.layoutMap.put("被动土压力上","a");
-
-        //被动土压力下
-        this.layoutMap.put("被动土压力下","b");
-
-        //支点至基坑底面的距离
-        this.layoutMap.put("支点至基坑底面的距离","{h}_{Tn}");
-
-        //基坑底面至反弯点的距离
-        this.layoutMap.put("基坑底面至反弯点的距离","{h}_{cn}");
-
-        //************************************************************
-        //支护结构外侧
-        this.layoutMap.put("支护结构外侧","P_{ak}");
-        //支护结构内侧
-        this.layoutMap.put("支护结构内侧","P_{pk}");
-
-        //支护结构外侧
-        this.layoutMap.put("支护结构外侧应力","{\\sigma}_{ak}");
-        //支护结构内侧
-        this.layoutMap.put("支护结构内侧应力","{\\sigma}_{pk}");
-
-        //主动土压力系数
-        this.layoutMap.put("主动土压力系数","K_{a,n}");
-
-        //***********************************************************
-        //被动合力至反弯点的距离
-        this.layoutMap.put("被动合力至反弯点的距离","h_{pn}");
-
-        //各层土的被动合力
-        this.layoutMap.put("各层土的被动合力","\\sum{{{E}_{pc}}}");
-
-        //轴向支反力
-        this.layoutMap.put("轴向支反力","T_{cn}");
-
-        //支点至基坑底面的距离
-        this.layoutMap.put("支点至基坑底面的距离","h_{Tn}");
-
-        //被动土压力系数
-        this.layoutMap.put("基坑底面至反弯点的距离","h_{cn}");
-
-        //被动土压力系数
-        this.layoutMap.put("主动合力至反弯点的距离","h_{an}");
-
-        //被动土压力系数
-        this.layoutMap.put("各层土的主动合力","\\sum{{{E}_{ac}}}");
     }
 }
