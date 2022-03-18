@@ -2,7 +2,7 @@ package org.handle;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.context.IContext;
+import org.context.AbstractContext;
 import org.enumUtils.StringUtil;
 import org.getValue.GetValues;
 import org.show.ILayout;
@@ -15,7 +15,7 @@ public class DefaultFromulaHandle extends FromulaHandle{
 
     /**
      * 获取可计算的数学表达式
-     * @param iContext 上下文
+     * @param abstractContext 上下文
      * @param fromulaHandle 解析公式
      * @param time 展开次数
      * @param beginFloor 第几层开始
@@ -23,7 +23,7 @@ public class DefaultFromulaHandle extends FromulaHandle{
      * @param equation 需解析的公式
      * @return
      */
-    public String getCalculateExpression(IContext iContext,
+    public String getCalculateExpression(AbstractContext abstractContext,
                                          FromulaHandle fromulaHandle,
                                          int time,
                                          int beginFloor,
@@ -32,13 +32,13 @@ public class DefaultFromulaHandle extends FromulaHandle{
                                          GetValues getValue){
         log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",equation,time,beginFloor,endFloor);
         //前置处理
-        String bhString = beforHandler(equation,iContext,time,beginFloor,endFloor);
+        String bhString = beforHandler(equation,abstractContext,time,beginFloor,endFloor);
         //处理计算结果的公式
         String target = fromulaHandle.expansionEquation(bhString,time,beginFloor,endFloor);
         //后置处理
-        String ahString = afterHandler(target,iContext,time,beginFloor,endFloor);
+        String ahString = afterHandler(target,abstractContext,time,beginFloor,endFloor);
         log.info("cal展开:{}",ahString);
-        String[] values = getValue.getValues(iContext, ahString);
+        String[] values = getValue.getValues(abstractContext, ahString);
         String placeholder = fromulaHandle.placeholder(ahString);
         log.info("cal占位:{}",placeholder);
         String fillingCal = fromulaHandle.valuesFillCal(placeholder, values);
@@ -48,7 +48,7 @@ public class DefaultFromulaHandle extends FromulaHandle{
 
     /**
      * 获取在word展示的Latex表达式。
-     * @param iContext 上下文
+     * @param abstractContext 上下文
      * @param fromulaHandle 解析公式
      * @param time 展开次数
      * @param beginFloor 第几层开始
@@ -57,7 +57,7 @@ public class DefaultFromulaHandle extends FromulaHandle{
      * @param equation 公式字符串
      * @return
      */
-    public String getLatexExpression(IContext iContext,
+    public String getLatexExpression(AbstractContext abstractContext,
                                      FromulaHandle fromulaHandle,
                                      int time,
                                      int beginFloor,
@@ -66,20 +66,20 @@ public class DefaultFromulaHandle extends FromulaHandle{
                                      String equation){
         log.info("latex入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",equation,time,beginFloor,endFloor);
         //前置处理
-        String bhString = beforHandler(equation,iContext, time,beginFloor,endFloor);
+        String bhString = beforHandler(equation,abstractContext, time,beginFloor,endFloor);
         //处理计算结果的公式
         String target = fromulaHandle.replaceLayoutChar(bhString, iLayout);
         log.info("latex替换:{}",target);
         String expansion = fromulaHandle.expansionEquation(target,time,beginFloor,endFloor);
         //后置处理
-        String ahString = afterHandler(expansion,iContext,time,beginFloor,endFloor);
+        String ahString = afterHandler(expansion,abstractContext,time,beginFloor,endFloor);
         log.info("latex展开:{}",ahString);
         return ahString;
     }
 
     /**
      * 获取可计算的数学表达式
-     * @param iContext 上下文
+     * @param abstractContext 上下文
      * @param fromulaHandle 解析公式
      * @param time 展开次数
      * @param beginFloor 第几层开始
@@ -88,7 +88,7 @@ public class DefaultFromulaHandle extends FromulaHandle{
      * @param equation 公式字符串
      * @return
      */
-    public String getLatexCalExpression(IContext iContext,
+    public String getLatexCalExpression(AbstractContext abstractContext,
                       FromulaHandle fromulaHandle,
                       int time,
                       int beginFloor,
@@ -98,13 +98,13 @@ public class DefaultFromulaHandle extends FromulaHandle{
                       GetValues getValue){
         log.info("latexCal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",equation,time,beginFloor,endFloor);
         //前置处理
-        String bhString = beforHandler(equation,iContext, time,beginFloor,endFloor);
+        String bhString = beforHandler(equation,abstractContext, time,beginFloor,endFloor);
         //处理计算结果的公式
         String target = fromulaHandle.expansionEquation(bhString,time,beginFloor,endFloor);
         //后置处理
-        String ahString = afterHandler(target,iContext,time,beginFloor,endFloor);
+        String ahString = afterHandler(target,abstractContext,time,beginFloor,endFloor);
         log.info("latexCal展开:{}",ahString);
-        String[] values = getValue.getValues(iContext, ahString);
+        String[] values = getValue.getValues(abstractContext, ahString);
         String placeholder = fromulaHandle.placeholder(ahString);
         log.info("latexCal占位:{}",placeholder);
         String fillingCal = fromulaHandle.valuesFillCal(placeholder, values);
@@ -148,7 +148,7 @@ public class DefaultFromulaHandle extends FromulaHandle{
      * @return
      */
     public String beforHandler(String equation,
-                               IContext iContext,
+                               AbstractContext abstractContext,
                                int time,
                                int beginFloor,
                                int endFloor){
@@ -167,7 +167,7 @@ public class DefaultFromulaHandle extends FromulaHandle{
      * @return
      */
     public String afterHandler(String equation,
-                               IContext iContext,
+                               AbstractContext abstractContext,
                                int time,
                                int beginFloor,
                                int endFloor){

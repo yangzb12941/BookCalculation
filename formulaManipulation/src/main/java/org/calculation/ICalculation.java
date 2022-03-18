@@ -1,9 +1,9 @@
 package org.calculation;
 
-import org.context.IContext;
+import org.context.AbstractContext;
 import org.handle.FromulaHandle;
 
 public interface ICalculation {
-    public IContext getContext(ICalculation iCalculation,
+    public AbstractContext getContext(ICalculation iCalculation,
                                FromulaHandle fromulaHandle);
 }

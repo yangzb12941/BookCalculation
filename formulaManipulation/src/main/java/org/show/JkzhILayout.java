@@ -14,13 +14,40 @@ public class JkzhILayout implements ILayout {
     private String[] layoutChar;
 
     public JkzhILayout() {
-        this.layoutChar = new String[]{"地面堆载", "重度", "厚度", "内聚力", "内摩擦角", "主动土压力系数",
-                "被动土压力系数","根号主动土压力系数","根号被动土压力系数",
-                "主动土压力合力", "主动土作用点位置", "被动土压力合力","主动土压力上","主动土压力下","被动土压力上","被动土压力下",
-                "被动土作用点位置", "土压力零点", "支撑的轴线",
-                "主动土压力","被动土压力","支撑轴力主动","支撑轴力被动","支点至基坑底面的距离","基坑底面至反弯点的距离"};
+        this.layoutChar = new String[]{
+                "基坑底面至反弯点的距离",
+                "支点至基坑底面的距离",
+                "根号主动土压力系数",
+                "根号被动土压力系数",
+                "主动土作用点位置",
+                "被动土作用点位置",
+                "主动土压力系数",
+                "被动土压力系数",
+                "主动土压力合力",
+                "被动土压力合力",
+                "主动土压力上",
+                "主动土压力下",
+                "被动土压力上",
+                "被动土压力下",
+                "地面堆载",
+                "内摩擦角",
+                "支撑轴力",
+                "内聚力",
+                "重度",
+                "厚度"};
 
-        this.layoutMap = new HashMap<String, String>(64);
+        this.layoutMap = new HashMap<String, String>(20);
+        //主动土压力上
+        this.layoutMap.put("主动土压力上","P_{akn}");
+
+        //主动土压力下
+        this.layoutMap.put("主动土压力下","{\\mathrm{P}^{\\prime}}_{akn}");
+
+        //被动土压力上
+        this.layoutMap.put("被动土压力上","P_{pkn}");
+
+        //被动土压力下
+        this.layoutMap.put("被动土压力下","{\\mathrm{P}^{\\prime}}_{pkn}");
 
         //地面堆载
         this.layoutMap.put("地面堆载","q");
@@ -37,11 +64,17 @@ public class JkzhILayout implements ILayout {
         //内摩擦角
         this.layoutMap.put("内摩擦角","\\varphi_{n}");
 
-        //主动土压力系数
+        //根号主动土压力系数
         this.layoutMap.put("根号主动土压力系数","Ka_{n}");
 
-        //被动土压力系数
+        //根号被动土压力系数
         this.layoutMap.put("根号被动土压力系数","Kp_{n}");
+
+        //主动土压力系数
+        this.layoutMap.put("主动土压力系数","Ka_{n}");
+
+        //被动土压力系数
+        this.layoutMap.put("被动土压力系数","Kp_{n}");
 
         //主动土压力合力
         this.layoutMap.put("主动土压力合力","E_{an}");
@@ -55,10 +88,13 @@ public class JkzhILayout implements ILayout {
         //被动土作用点位置
         this.layoutMap.put("被动土作用点位置","h_{pn}");
 
-        //土压力零点
-        this.layoutMap.put("土压力零点","O");
-
-        //支撑的轴线
+        //支撑轴力
         this.layoutMap.put("支撑轴力","T_{cn}");
+
+        //支点至基坑底面的距离
+        this.layoutMap.put("支点至基坑底面的距离","{h}_{Tn}");
+
+        //基坑底面至反弯点的距离
+        this.layoutMap.put("基坑底面至反弯点的距离","{h}_{cn}");
     }
 }

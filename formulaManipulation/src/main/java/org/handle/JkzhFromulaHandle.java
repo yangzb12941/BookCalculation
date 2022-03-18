@@ -2,7 +2,7 @@ package org.handle;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.context.IContext;
+import org.context.AbstractContext;
 import org.getValue.GetValues;
 import org.springframework.util.CollectionUtils;
 
@@ -23,7 +23,7 @@ public class JkzhFromulaHandle extends DefaultFromulaHandle{
      * @return
      */
     public String beforHandler(String equation,
-                               IContext iContext,
+                               AbstractContext abstractContext,
                                int time,
                                int beginFloor,
                                int endFloor){
@@ -101,18 +101,18 @@ public class JkzhFromulaHandle extends DefaultFromulaHandle{
 
     /**
      * 普通公式处理，针对不需要展开的计算公式，进行参数简化包装
-     * @param iContext 上下文
+     * @param AbstractContext 上下文
      * @param fromulaHandle 解析公式
      * @param curFloor 展开次数
      * @param equation 需解析的公式
      * @return
      */
-    public String generalFromulaHandle(IContext iContext,
+    public String generalFromulaHandle(AbstractContext AbstractContext,
                                        FromulaHandle fromulaHandle,
                                        int curFloor,
                                        String equation,
                                        GetValues getValue){
-        String calculateExpression = getCalculateExpression(iContext, fromulaHandle, curFloor, curFloor, curFloor, equation,getValue);
+        String calculateExpression = getCalculateExpression(AbstractContext, fromulaHandle, curFloor, curFloor, curFloor, equation,getValue);
         return calculateExpression;
     }
 
@@ -125,7 +125,7 @@ public class JkzhFromulaHandle extends DefaultFromulaHandle{
      * @return
      */
     public String afterHandler(String equation,
-                               IContext iContext,
+                               AbstractContext AbstractContext,
                                int time,
                                int beginFloor,
                                int endFloor){

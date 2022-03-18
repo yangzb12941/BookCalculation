@@ -4,7 +4,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
-import org.context.IContext;
+import org.context.AbstractContext;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class JkzhWriteLatexToDoc {
 
-    public void writelatexToDoc(IContext iContext, XWPFTemplate xWPFTemplate,String toFileName) throws IOException {
+    public void writelatexToDoc(AbstractContext AbstractContext, XWPFTemplate xWPFTemplate,String toFileName) throws IOException {
         List<MetaTemplate> elementTemplates = xWPFTemplate.getElementTemplates();
         Map<String, Object> values = new HashMap<String, Object>(128);
         for(MetaTemplate metaTemplate:elementTemplates){

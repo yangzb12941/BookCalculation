@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BlockElement extends BaseElement<List<BaseElement>> {
-    public BlockElement(String tagName, List<BaseElement> value) {
-        super(tagName, value);
+    public BlockElement(Integer index,String tagName, List<BaseElement> value) {
+        super(index,tagName, value);
     }
 
     public Map<String,Object> getValues(){

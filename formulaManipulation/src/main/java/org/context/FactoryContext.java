@@ -2,7 +2,7 @@ package org.context;
 
 public class FactoryContext {
     private FactoryContext(){}
-    public static IContext getContext(Class < ? extends  IContext> clzss){
+    public static AbstractContext getContext(Class < ? extends  AbstractContext> clzss){
         if(clzss.isAssignableFrom(JkzhContext.class)){
             return new JkzhContext();
         }

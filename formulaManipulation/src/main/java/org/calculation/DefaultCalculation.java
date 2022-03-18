@@ -2,9 +2,11 @@ package org.calculation;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+
+import org.context.AbstractContext;
 import org.context.FactoryContext;
-import org.context.IContext;
 import org.context.JkzhContext;
+import org.element.BaseElement;
 import org.handle.FromulaHandle;
 import org.handle.JkzhFromulaHandle;
 import org.table.JkzhBasicParam;
@@ -16,13 +18,13 @@ import java.util.HashMap;
 public class DefaultCalculation extends AbstractCalculation{
 
     @Override
-    public IContext getContext(ICalculation iCalculation,
-                               FromulaHandle fromulaHandle) {
-        IContext iContext = null;
+    public AbstractContext getContext(ICalculation iCalculation,
+                                      FromulaHandle fromulaHandle) {
+        AbstractContext abstractContext = null;
         if(iCalculation instanceof JkzhCalculation){
-            iContext = getJkzhContext((JkzhFromulaHandle)fromulaHandle);
+            abstractContext = getJkzhContext((JkzhFromulaHandle)fromulaHandle);
         }
-        return iContext;
+        return abstractContext;
     }
 
     /**
@@ -33,25 +35,25 @@ public class DefaultCalculation extends AbstractCalculation{
      */
     private JkzhContext getJkzhContext(JkzhFromulaHandle jkzhFromulaHandle){
         //①、生成土压力系数表
-        JkzhContext jkzhContext = (JkzhContext)FactoryContext.getContext(JkzhContext.class);
+        JkzhContext jkzhContext = (JkzhContext) FactoryContext.getContext(JkzhContext.class);
         HashMap<String,String> temporaryValue = new HashMap<>(128);
         jkzhContext.setTemporaryValue(temporaryValue);
 
-        HashMap<String,Object> elementTemplate = new HashMap<>(128);
+        HashMap<String, BaseElement> elementTemplate = new HashMap<>(128);
         jkzhContext.setElementTemplate(elementTemplate);
 
         //基础参数拼装
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
-        SoilQualityTable soilQualityTable = new SoilQualityTable();
-        jkzhBasicParam.setSoilQualityTable(soilQualityTable);
         jkzhContext.setJkzhBasicParam(jkzhBasicParam);
+        SoilQualityTable soilQualityTable = new SoilQualityTable();
+        jkzhContext.setSoilQualityTable(soilQualityTable);
         //土压力系数表计算
         createContextHandle(jkzhContext,jkzhFromulaHandle);
         return jkzhContext;
     }
 
-    private void createContextHandle(IContext iContext, JkzhFromulaHandle jkzhFromulaHandle) {
-        JkzhContext jkzhContext = (JkzhContext)iContext;
+    private void createContextHandle(AbstractContext AbstractContext, JkzhFromulaHandle jkzhFromulaHandle) {
+        JkzhContext jkzhContext = (JkzhContext)AbstractContext;
         SoilPressureTable soilPressureTable = new SoilPressureTable(jkzhContext,jkzhFromulaHandle);
         jkzhContext.setSoilPressureTable(soilPressureTable);
         log.info("土地压力系数表:{}", JSON.toJSONString(soilPressureTable));

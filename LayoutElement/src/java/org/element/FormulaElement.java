@@ -1,8 +1,8 @@
 package org.element;
 
 public class FormulaElement extends BaseElement<String>{
-    public FormulaElement(String tagName, String value) {
-        super(tagName, value);
+    public FormulaElement(Integer index,String tagName, String value) {
+        super(index,tagName, value);
     }
 
     /**

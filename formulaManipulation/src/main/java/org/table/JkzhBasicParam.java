@@ -12,9 +12,6 @@ import lombok.Data;
 @Data
 public class JkzhBasicParam {
 
-	//土层参数计算依据表
-	private SoilQualityTable soilQualityTable;
-
 	//地面堆载
 	private Double surcharge = 20.0;
 
@@ -43,9 +40,5 @@ public class JkzhBasicParam {
 	private int atZoneLand;
 
 	//是否存在 主动土压力等于被动土压力
-	private Boolean isZDEqualsBD;
-
-	public int getAllLands(){
-		return soilQualityTable.getTable().length;
-	}
+	private String zDEqualsBDKinds;
 }
