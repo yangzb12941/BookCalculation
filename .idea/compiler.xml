@@ -19,6 +19,7 @@
       <module name="bootstrap" target="1.7" />
       <module name="formulaManipulation" target="8" />
       <module name="LayoutElement" target="1.5" />
+      <module name="layoutElement" target="1.5" />
       <module name="solveEquations" target="1.7" />
       <module name="webControl" target="1.7" />
       <module name="writeTemplate" target="8" />

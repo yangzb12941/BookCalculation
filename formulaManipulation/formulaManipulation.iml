@@ -21,8 +21,9 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.17.1" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.aviator:aviator:5.0.0" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.3" level="project" />
-    <orderEntry type="library" name="Maven: e-iceblue:spire.doc.free:3.9.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
     <orderEntry type="library" name="Maven: com.github.gbenroscience:parser-ng:0.1.5" level="project" />
+    <orderEntry type="library" name="Maven: e-iceblue:spire.doc:5.2.3" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.69" level="project" />
     <orderEntry type="library" name="Maven: com.deepoove:poi-tl:1.11.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />
@@ -64,7 +65,5 @@
     <orderEntry type="module" module-name="solveEquations" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.2.3" level="project" />
-    <orderEntry type="module" module-name="LayoutElement" />
-    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2" level="project" />
   </component>
 </module>

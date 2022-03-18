@@ -8,7 +8,7 @@ import org.context.JkzhContext;
 import org.element.FormulaElement;
 import org.element.TextElement;
 import org.enumUtils.BigDecimalStringUtil;
-import org.enums.ZDEqualsBDKindsEnum;
+import org.enumUtils.ZDEqualsBDKindsEnum;
 import org.getValue.JkzhGetValues;
 import org.handle.JkzhFromulaHandle;
 import org.latexTranslation.LatexUserString;

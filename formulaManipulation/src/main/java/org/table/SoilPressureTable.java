@@ -26,7 +26,7 @@ public class SoilPressureTable implements ITable {
 	}
 
 	public SoilPressureTable(JkzhContext jkzhContext, JkzhFromulaHandle jkzhFromulaHandle){
-		String[][] table = jkzhContext.getJkzhBasicParam().getSoilQualityTable().getTable();
+		String[][] table = jkzhContext.getSoilQualityTable().getTable();
 		String[][] tableParam = new String[table.length][table[0].length];
 		JkzhGetValues jkzhGetValues = new JkzhGetValues();
 		jkzhGetValues.setModel(JkzhGetValueModelEnum.土压力系数计算);
