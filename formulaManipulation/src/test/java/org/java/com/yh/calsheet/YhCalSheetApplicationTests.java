@@ -99,7 +99,9 @@ public class YhCalSheetApplicationTests {
         //①、解析公式，把公式展开
         //①、替换成现实的字符
         //LatexCal : 替换，是用于word展示不带参数的计算过程公式
-        String replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_主动上大于0_下大于0.getLatex(),jkzhLayout);
+        //String replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力水土分算.getLatexCal(),jkzhLayout);
+
+        String replaceChar = JkzhConfigEnum.主动土压力水土分算.getLatexCal();
         log.info("替换:{}",replaceChar);
         //LatexCal : 展开，是用于word展示不带参数的计算过程公式
         String target = jkzhFromulaHandle.expansionEquation(replaceChar,3,3,4);
