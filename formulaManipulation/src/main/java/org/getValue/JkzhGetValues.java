@@ -231,7 +231,7 @@ public class JkzhGetValues extends DefaultGetValues{
     private String getValuesFromSoilPressureTable(SoilPressureTable soilPressureTable, int line, int rows){
         String value = "0.0";
         try {
-            value = soilPressureTable.getTable()[line-1][rows];
+            value = soilPressureTable.getTable()[line][rows];
         }catch (IndexOutOfBoundsException e) {
             log.error("getValuesFromSoilPressureTable:{}",e);
         }
@@ -248,7 +248,7 @@ public class JkzhGetValues extends DefaultGetValues{
     private String getValuesFromSoilQualityTable(SoilQualityTable soilQualityTable, int line, int rows){
         String value = "0.0";
         try {
-            value = soilQualityTable.getTable()[line-1][rows];
+            value = soilQualityTable.getTable()[line][rows];
         }catch (IndexOutOfBoundsException e) {
             log.error("getValuesFromSoilQualityTable:{}",e);
         }

@@ -1,9 +1,7 @@
 package org.element;
 
-import com.deepoove.poi.data.RowRenderData;
-
-public class TableElement extends BaseElement<RowRenderData[]>{
-    public TableElement(Integer index,String tagName, RowRenderData[] value) {
+public class TableElement extends BaseElement<String[][]>{
+    public TableElement(Integer index,String tagName, String[][] value) {
         super(index,tagName, value);
     }
 }

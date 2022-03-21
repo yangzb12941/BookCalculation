@@ -1,6 +1,7 @@
 package org.calculation;
 
 import com.googlecode.aviator.AviatorEvaluator;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
@@ -23,6 +24,7 @@ import org.symbolComponents.CalcNumber;
 import org.symbols.Expression;
 import org.symbols.Symbol;
 import org.symbols.Variable;
+
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -30,6 +32,7 @@ import java.util.Objects;
  * 基坑支护计算
  */
 @Slf4j
+@Data
 public class JkzhCalculation extends DefaultCalculation{
     private JkzhFromulaHandle jkzhFromulaHandle;
     private JkzhContext jkzhContext;
@@ -190,7 +193,7 @@ public class JkzhCalculation extends DefaultCalculation{
         Double sumLands = 0.0;
         int atLand = 0;
         for(int floor = 1;floor <table.length; floor++){
-            sumLands += Double.valueOf(table[floor-1][2]);
+            sumLands += Double.valueOf(table[floor][2]);
             if(sumLands.compareTo(depth) >= 0){
                 atLand = floor;
                 break;
@@ -223,7 +226,7 @@ public class JkzhCalculation extends DefaultCalculation{
                 JkzhConfigEnum.主动土压力.getCalculate(),
                 jkzhGetValues);
         Double zdCalRtDown = (Double) AviatorEvaluator.execute(calDown);
-        log.info("主动土压力第{}层展示公式-下:{}={}",atLand,calDown,zdCalRtDown);
+        log.info("主动土压力第{}层展示公式-下:{}={}",atLand,latexCalDown,zdCalRtDown);
         String valueDown = String.format("%.2f", zdCalRtDown);
         jkzhContext.getTemporaryValue().put("主动土压力下"+atLand,valueDown);
     }
@@ -401,6 +404,8 @@ public class JkzhCalculation extends DefaultCalculation{
     private Integer thirdCase(Double depth){
         Double pressureZero = depth*0.2;
         Integer atZoneLand = depthAtLand(pressureZero+depth);
+        jkzhContext.getJkzhBasicParam().setAtZoneLand(atZoneLand);
+        jkzhContext.getJkzhBasicParam().setZDEqualsBDKinds(ZDEqualsBDKindsEnum.土压力零点第三种情况.getType());
         return atZoneLand;
     }
 
