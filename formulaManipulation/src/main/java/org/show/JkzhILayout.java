@@ -16,6 +16,7 @@ public class JkzhILayout implements ILayout {
     public JkzhILayout() {
         this.layoutChar = new String[]{
                 "基坑底面至反弯点的距离",
+                "主动深度到水位的距离",
                 "支点至基坑底面的距离",
                 "根号主动土压力系数",
                 "根号被动土压力系数",
@@ -38,6 +39,7 @@ public class JkzhILayout implements ILayout {
                 "土层厚度",
                 "支撑轴力",
                 "内聚力",
+                "水常量",
                 "重度",
                 "厚度"};
 
@@ -110,5 +112,11 @@ public class JkzhILayout implements ILayout {
 
         //土层厚度
         this.layoutMap.put("土层厚度","h");
+
+        //主动深度到水位的距离
+        this.layoutMap.put("主动深度到水位的距离","h_{wn}");
+
+        //水常量
+        this.layoutMap.put("水常量","10");
     }
 }
