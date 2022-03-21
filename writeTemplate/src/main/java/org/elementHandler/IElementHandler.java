@@ -1,5 +1,6 @@
 package org.elementHandler;
 
+import com.deepoove.poi.template.MetaTemplate;
 import org.context.AbstractContext;
 
 /**
@@ -7,5 +8,5 @@ import org.context.AbstractContext;
  * @param <T>
  */
 public interface IElementHandler<T> {
-    T getElementValue(AbstractContext abstractContext,String key);
+    T getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate);
 }

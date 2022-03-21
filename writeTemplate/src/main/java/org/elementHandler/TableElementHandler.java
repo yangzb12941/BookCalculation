@@ -1,6 +1,8 @@
 package org.elementHandler;
 
 import com.deepoove.poi.data.*;
+import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.template.run.RunTemplate;
 import org.context.AbstractContext;
 import org.element.BaseElement;
 
@@ -23,8 +25,9 @@ public class TableElementHandler implements IElementHandler<TableRenderData>{
     }
 
     @Override
-    public TableRenderData getElementValue(AbstractContext abstractContext, String key) {
-        BaseElement baseElement = abstractContext.getElementTemplate().get(key);
+    public TableRenderData getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate) {
+        RunTemplate runTemplate = (RunTemplate) metaTemplate;
+        BaseElement baseElement = abstractContext.getElementTemplate().get(runTemplate.getTagName());
         RowRenderData[] rowRenderData = soilPressureTable(baseElement);
         return Tables.create(rowRenderData);
     }

@@ -1,35 +1,28 @@
 package org.elementHandler;
 
+import com.deepoove.poi.template.IterableTemplate;
+import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.template.run.RunTemplate;
 import org.context.AbstractContext;
-import org.element.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class ElementHandlerUtils {
 
-    public static Object getElementValue(AbstractContext abstractContext, String key){
-        BaseElement baseElement = abstractContext.getElementTemplate().get(key);
-        if(baseElement instanceof TextElement){
-            TextElementHandler textElementHandler = TextElementHandler.getInstance();
-            return textElementHandler.getElementValue(abstractContext, key).getValue();
-        }else if(baseElement instanceof FormulaElement){
-            FormulaElementHandler formulaElementHandler = FormulaElementHandler.getInstance();
-            return formulaElementHandler.getElementValue(abstractContext, key).getValue();
-        }else if(baseElement instanceof BlockElement){
-            JkzhBlockElementHandler jkzhBlockElementHandler = JkzhBlockElementHandler.getInstance();
-            Object elementValue = jkzhBlockElementHandler.getElementValue(abstractContext, key);
-            List<BlockElement> value = (List<BlockElement>)elementValue;
-            List<Map<String,Object>> list = new ArrayList<>(value.size());
-            for (BlockElement block : value) {
-                list.add(block.getValues());
+    public static Object getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate){
+        Object value = null;
+        if(metaTemplate instanceof RunTemplate){
+            String tagName = ((RunTemplate) metaTemplate).getTagName();
+            String source = ((RunTemplate) metaTemplate).getSource();
+            if(source.indexOf("#")>=0){
+                TableElementHandler tableElementHandler = TableElementHandler.getInstance();
+                value = tableElementHandler.getElementValue(abstractContext, metaTemplate);
+            }else{
+                StringElementHandler stringElementHandler = StringElementHandler.getInstance();
+                value = stringElementHandler.getElementValue(abstractContext, metaTemplate);
             }
-            return list;
-        }else if(baseElement instanceof TableElement){
-            TableElementHandler tableElementHandler = TableElementHandler.getInstance();
-            return tableElementHandler.getElementValue(abstractContext, key);
+        }else if (metaTemplate instanceof IterableTemplate){
+            JkzhBlockElementHandler jkzhBlockElementHandler = JkzhBlockElementHandler.getInstance();
+            value = jkzhBlockElementHandler.getElementValue(abstractContext, metaTemplate);
         }
-        return null;
+        return value;
     }
 }

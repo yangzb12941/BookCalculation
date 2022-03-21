@@ -1,8 +1,7 @@
 package org.elementHandler;
 
-import org.element.BlockElement;
-
 import java.util.List;
+import java.util.Map;
 
-public abstract class BlockElementHandler implements IElementHandler<Object>{
+public abstract class BlockElementHandler implements IElementHandler<List<Map<String,Object>>>{
 }
