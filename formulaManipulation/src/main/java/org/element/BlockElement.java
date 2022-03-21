@@ -5,6 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class BlockElement extends BaseElement<List<BaseElement>> {
     public BlockElement(Integer index,String tagName, List<BaseElement> value) {
@@ -16,7 +17,9 @@ public class BlockElement extends BaseElement<List<BaseElement>> {
         List<BaseElement> value = super.getValue();
         if(CollectionUtils.isNotEmpty(value)){
             for (BaseElement element : value) {
-                valueMap.put(element.getTagName(),element.getValue());
+                if(Objects.nonNull(element)){
+                    valueMap.put(element.getTagName(),element.getValue());
+                }
             }
         }
         return valueMap;

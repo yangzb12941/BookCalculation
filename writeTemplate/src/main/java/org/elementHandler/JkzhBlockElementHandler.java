@@ -13,6 +13,7 @@ import org.enumUtils.ZDEqualsBDKindsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class JkzhBlockElementHandler extends BlockElementHandler{
 
@@ -20,7 +21,7 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
 
     public static JkzhBlockElementHandler getInstance(){
         if(instance == null){
-            synchronized (instance){
+            synchronized (JkzhBlockElementHandler.class){
                 if (instance == null) {
                     instance = new JkzhBlockElementHandler();
                 }
@@ -109,7 +110,12 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
                 RunTemplate temp = (RunTemplate)templates;
                 String key = temp.getTagName() + land;
                 BaseElement value = jkzhContext.getElementTemplate().get(key);
-                baseElements.add(value);
+                if(Objects.nonNull(value)){
+                    baseElements.add(value);
+                }else{
+                    value = jkzhContext.getElementTemplate().get(temp.getTagName());
+                    baseElements.add(value);
+                }
             }
             BlockElement blockElement = new BlockElement(land,iterableTemplate.getStartMark().getTagName(),baseElements);
             blockElements.add(blockElement);

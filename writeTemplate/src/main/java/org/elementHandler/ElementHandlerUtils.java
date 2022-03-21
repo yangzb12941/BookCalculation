@@ -10,7 +10,6 @@ public class ElementHandlerUtils {
     public static Object getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate){
         Object value = null;
         if(metaTemplate instanceof RunTemplate){
-            String tagName = ((RunTemplate) metaTemplate).getTagName();
             String source = ((RunTemplate) metaTemplate).getSource();
             if(source.indexOf("#")>=0){
                 TableElementHandler tableElementHandler = TableElementHandler.getInstance();

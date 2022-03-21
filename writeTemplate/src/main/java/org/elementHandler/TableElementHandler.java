@@ -15,7 +15,7 @@ public class TableElementHandler implements IElementHandler<TableRenderData>{
 
     public static TableElementHandler getInstance(){
         if(instance == null){
-            synchronized (instance){
+            synchronized (TableElementHandler.class){
                 if (instance == null) {
                     instance = new TableElementHandler();
                 }

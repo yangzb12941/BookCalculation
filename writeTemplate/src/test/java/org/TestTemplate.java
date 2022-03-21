@@ -50,11 +50,11 @@ public class TestTemplate {
                     if(item instanceof RunTemplate){
                         String tagName = ((RunTemplate) item).getTagName();
                         log.info("RunTemplate TagName:{}",tagName);
-                        put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,tagName));
+                        put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,item));
                     }else if (item instanceof IterableTemplate){
                         String tagName = ((IterableTemplate)item).getStartMark().getTagName();
                         log.info("IterableTemplate TagName:{}",tagName);
-                        put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,tagName));
+                        put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,item));
                     }
                 }
             }

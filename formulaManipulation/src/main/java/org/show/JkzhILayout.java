@@ -25,12 +25,17 @@ public class JkzhILayout implements ILayout {
                 "被动土压力系数",
                 "主动土压力合力",
                 "被动土压力合力",
+                "土压力强度顶面",
+                "土压力强度底面",
+                "支撑轴力主动",
+                "支撑轴力被动",
                 "主动土压力上",
                 "主动土压力下",
                 "被动土压力上",
                 "被动土压力下",
                 "地面堆载",
                 "内摩擦角",
+                "土层厚度",
                 "支撑轴力",
                 "内聚力",
                 "重度",
@@ -96,5 +101,14 @@ public class JkzhILayout implements ILayout {
 
         //基坑底面至反弯点的距离
         this.layoutMap.put("基坑底面至反弯点的距离","{h}_{cn}");
+
+        //土压力强度顶面
+        this.layoutMap.put("土压力强度顶面","a");
+
+        //土压力强度底面
+        this.layoutMap.put("土压力强度底面","b");
+
+        //土层厚度
+        this.layoutMap.put("土层厚度","h");
     }
 }

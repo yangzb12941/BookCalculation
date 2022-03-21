@@ -145,11 +145,27 @@ public abstract class FromulaHandle{
 		String target = new String(source);
 		for(String item: iLayout.getLayoutChar()){
 			if(target.indexOf(item)>=0){
-				String replace = iLayout.getLayoutMap().get(item).indexOf('\\')>=0?"\\"+ iLayout.getLayoutMap().get(item): iLayout.getLayoutMap().get(item);
-				target = target.replaceAll(item,replace);
+				String sOne = iLayout.getLayoutMap().get(item);
+				if(sOne.indexOf('\\')>=0){
+					String s = retainSpecialChar(sOne);
+					target = target.replaceAll(item,s);
+				}else{
+					target = target.replaceAll(item,sOne);
+				}
 			}
 		}
 		return target;
+	}
+
+	private String retainSpecialChar(String source){
+		StringBuilder target = new StringBuilder();
+		for (char item: source.toCharArray()) {
+			target.append(item);
+		    if(item == '\\'){
+				target.append('\\');
+			}
+		}
+		return target.toString();
 	}
 
 	/**

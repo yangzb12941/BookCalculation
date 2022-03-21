@@ -5,6 +5,8 @@ import com.deepoove.poi.template.run.RunTemplate;
 import org.context.AbstractContext;
 import org.element.BaseElement;
 
+import java.util.Objects;
+
 
 public class StringElementHandler implements IElementHandler<String>{
 
@@ -12,7 +14,7 @@ public class StringElementHandler implements IElementHandler<String>{
 
     public static StringElementHandler getInstance(){
         if(instance == null){
-            synchronized (instance){
+            synchronized (StringElementHandler.class){
                 if (instance == null) {
                     instance = new StringElementHandler();
                 }
@@ -25,6 +27,10 @@ public class StringElementHandler implements IElementHandler<String>{
     public String getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate) {
         RunTemplate runTemplate = (RunTemplate) metaTemplate;
         BaseElement baseElement = abstractContext.getElementTemplate().get(runTemplate.getTagName());
-        return (String)baseElement.getValue();
+        if(Objects.nonNull(baseElement)){
+            return (String)baseElement.getValue();
+        }else{
+            return "NAN";
+        }
     }
 }
