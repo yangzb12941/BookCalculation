@@ -101,7 +101,7 @@ public class YhCalSheetApplicationTests {
         //LatexCal : 替换，是用于word展示不带参数的计算过程公式
         //String replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力水土分算.getLatexCal(),jkzhLayout);
 
-        String replaceChar = JkzhConfigEnum.主动土压力水土分算.getLatexCal();
+        String replaceChar = JkzhConfigEnum.被动土压力水土分算.getLatexCal();
         log.info("替换:{}",replaceChar);
         //LatexCal : 展开，是用于word展示不带参数的计算过程公式
         String target = jkzhFromulaHandle.expansionEquation(replaceChar,3,3,4);
