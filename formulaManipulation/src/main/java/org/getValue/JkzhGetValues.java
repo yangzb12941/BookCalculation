@@ -4,79 +4,55 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhGetValueModelEnum;
 import org.context.JkzhContext;
-import org.entity.Param;
-import org.enumUtils.StringUtil;
+import org.entity.ElementParam;
 import org.table.SoilPressureTable;
 import org.table.SoilQualityTable;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Data
-public class JkzhGetValues extends DefaultGetValues{
+public class JkzhGetValues implements GetValues {
 
     /**
      * 参数解析模型：1-主动土压力计算、2-被动土压力计算、3-土压力零点计算、4-支撑轴力计算
      */
     private JkzhGetValueModelEnum model;
 
-    @Override
-    public List<Param> getParam(Object... values) {
-        String fromula = null;
-        for(Object vs: values){
-            if(vs instanceof String){
-                fromula = (String)vs;
-            }
-        }
-        List<Param> params = new ArrayList<Param>();
-        ArrayDeque<Character> deque = new ArrayDeque<Character>();
-        Boolean isChanged = Boolean.FALSE;
-        char[] chars = fromula.toCharArray();
-        for(int i = 0; i < chars.length; i++){
-            if(StringUtil.isChineseChar(chars[i])){
-                isChanged = Boolean.TRUE;
-                deque.push(chars[i]);
-                continue;
-            }
-            if (isChanged) {
-                deque.push(chars[i]);
-                isChanged = Boolean.FALSE;
-                //往前跳过n个字符去掉 _{5}格式内容
-                int skip = 0;
-                do {
-                    skip++;
-                    deque.push(chars[i+skip]);
-                }while (chars[skip+i]!='}');
-                i=i+skip;
-            }
-            if (!deque.isEmpty()) {
-                StringBuilder subPart = new StringBuilder();
-                do{
-                    subPart.append(deque.pollLast());
-                }while (!deque.isEmpty());
-                Param param = createParam(subPart.toString());
-                params.add(param);
-            }
-        }
-        return params;
+    /**
+     * 计算上下文
+     */
+    private JkzhContext jkzhContext;
+
+    /**
+     * 参数
+     */
+    private List<ElementParam> elementParams;
+
+    public JkzhGetValues(JkzhGetValueModelEnum model,JkzhContext jkzhContext) {
+        this.model = model;
+        this.jkzhContext = jkzhContext;
+    }
+
+    /**
+     * 设置
+     * @param elementParams
+     */
+    public void setElementParams(List<ElementParam> elementParams) {
+        this.elementParams = elementParams;
     }
 
     @Override
-    public String[] matchValues(List<Param> params, Object... values) {
-        JkzhContext jkzhContext = null;
-        for(Object vs: values){
-            if (vs instanceof JkzhContext) {
-                jkzhContext = (JkzhContext) vs;
-                break;
-            }
-        }
-        String[] valueArray = new String[params.size()];
-        for (int index = 0; index <params.size();index++) {
-            Param param = params.get(index);
-            switch (param.getName()){
+    public String[] getValues() {
+        return matchValues(this.jkzhContext);
+    }
+
+    private String[] matchValues(JkzhContext jkzhContext) {
+        String[] valueArray = new String[elementParams.size()];
+        for (int index = 0; index < elementParams.size(); index++) {
+            ElementParam elementParam = elementParams.get(index);
+            switch (elementParam.getName()){
                 case "地面堆载": {
                     valueArray[index] = jkzhContext.getJkzhBasicParam().getSurcharge().toString();
                     break;
@@ -92,7 +68,7 @@ public class JkzhGetValues extends DefaultGetValues{
                 case "厚度":
                 case "主动土作用点位置":
                 case "被动土作用点位置": {
-                    Integer floor = Integer.valueOf(param.getIndex());
+                    Integer floor = Integer.valueOf(elementParam.getIndex());
                     //被动土压力计算，需要以当前开挖层所在土层实际土层厚度计算。
                     //例如：第一层土层厚度1米，第二层土层厚度3米，第三层土层厚度4米。开挖深度是6米，那么开挖深度是在第三层土位置。第三层土还剩6-（1+3）= 2米的土层厚度。
                     //那么计算被动土压力时，第三层土的厚度就是2m。
@@ -140,7 +116,7 @@ public class JkzhGetValues extends DefaultGetValues{
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), i, 2);
                                 addm += Double.valueOf(hdValue);
                             }
-                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero() - addm + Double.valueOf(getValuesFromMap(param.getName() + param.getIndex(), jkzhContext.getTemporaryValue())));
+                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero() - addm + Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue())));
                         }
                     } else if (this.model == JkzhGetValueModelEnum.被动支撑轴力计算) {
                         Double addm = 0.0;
@@ -155,45 +131,45 @@ public class JkzhGetValues extends DefaultGetValues{
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), i, 2);
                                 addm += Double.valueOf(hdValue);
                             }
-                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero() - addm + Double.valueOf(getValuesFromMap(param.getName() + param.getIndex(), jkzhContext.getTemporaryValue())));
+                            valueArray[index] = String.valueOf(jkzhContext.getJkzhBasicParam().getPressureZero() - addm + Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue())));
                         }
                     } else if (this.model == JkzhGetValueModelEnum.支撑轴力计算) {
-                        valueArray[index] = String.valueOf(Double.valueOf(getValuesFromMap(param.getName() + param.getIndex(), jkzhContext.getTemporaryValue())));
+                        valueArray[index] = String.valueOf(Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue())));
                     }
                     break;
                 }
                 case "重度": {
-                    String zdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), Integer.valueOf(param.getIndex()), 3);
+                    String zdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), Integer.valueOf(elementParam.getIndex()), 3);
                     valueArray[index] = zdValue;
                     break;
                 }
                 case "内聚力": {
-                    String njlValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), Integer.valueOf(param.getIndex()), 4);
+                    String njlValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), Integer.valueOf(elementParam.getIndex()), 4);
                     valueArray[index] = njlValue;
                     break;
                 }
                 case "内摩擦角": {
-                    String nmcjValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), Integer.valueOf(param.getIndex()), 5);
+                    String nmcjValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), Integer.valueOf(elementParam.getIndex()), 5);
                     valueArray[index] = nmcjValue;
                     break;
                 }
                 case "主动土压力系数": {
-                    String zdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(param.getIndex()), 2);
+                    String zdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(elementParam.getIndex()), 2);
                     valueArray[index] = zdtylxsValue;
                     break;
                 }
                 case "被动土压力系数":{
-                    String bdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(param.getIndex()),4);
+                    String bdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(elementParam.getIndex()),4);
                     valueArray[index] = bdtylxsValue;
                     break;
                 }
                 case "根号主动土压力系数": {
-                    String ghZdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(param.getIndex()), 3);
+                    String ghZdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(elementParam.getIndex()), 3);
                     valueArray[index] = ghZdtylxsValue;
                     break;
                 }
                 case "根号被动土压力系数": {
-                    String ghBdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(param.getIndex()), 5);
+                    String ghBdtylxsValue = getValuesFromSoilPressureTable(jkzhContext.getSoilPressureTable(), Integer.valueOf(elementParam.getIndex()), 5);
                     valueArray[index] = ghBdtylxsValue;
                     break;
                 }
@@ -203,13 +179,13 @@ public class JkzhGetValues extends DefaultGetValues{
                 case "被动土压力上":
                 case "主动土压力下":
                 case "被动土压力下": {
-                    String vMap_1 = getValuesFromMap(param.getName() + param.getIndex(), jkzhContext.getTemporaryValue());
+                    String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue());
                     valueArray[index] = vMap_1;
                     break;
                 }
                 case "支撑轴力主动":
                 case "支撑轴力被动": {
-                    String vMap_2 = getValuesFromMap(param.getName() + param.getIndex(), jkzhContext.getTemporaryValue());
+                    String vMap_2 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue());
                     valueArray[index] = vMap_2;
                     break;
                 }
@@ -226,25 +202,12 @@ public class JkzhGetValues extends DefaultGetValues{
                     break;
                 }
                 default : {
-                    log.error("没有匹配的参数:{}", param.getName());
+                    log.error("没有匹配的参数:{}", elementParam.getName());
                     break;
                 }
             }
         }
         return valueArray;
-    }
-
-    /**
-     * 生成参数对象
-     * @param element
-     * @return
-     */
-    private Param createParam(String element){
-        Param param = new Param();
-        String[] s = element.split("_");
-        param.setName(s[0]);
-        param.setIndex(s[1].substring(1,s[1].length() - 1));
-        return param;
     }
 
     /**

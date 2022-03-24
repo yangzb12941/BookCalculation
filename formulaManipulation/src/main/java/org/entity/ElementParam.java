@@ -3,7 +3,7 @@ package org.entity;
 import lombok.Data;
 
 @Data
-public class Param {
+public class ElementParam {
     private String name;
     private String index;
 }

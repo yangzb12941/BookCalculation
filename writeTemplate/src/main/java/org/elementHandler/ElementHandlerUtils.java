@@ -6,7 +6,6 @@ import com.deepoove.poi.template.run.RunTemplate;
 import org.context.AbstractContext;
 
 public class ElementHandlerUtils {
-
     public static Object getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate){
         Object value = null;
         if(metaTemplate instanceof RunTemplate){
