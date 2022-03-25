@@ -2,14 +2,15 @@ package org.handle;
 
 import lombok.extern.slf4j.Slf4j;
 import org.enums.ConditionEnum;
+import org.handleParams.WaterHandlerParams;
 import org.table.JkzhBasicParam;
 
 import java.util.ArrayDeque;
 import java.util.Stack;
 
 @Slf4j
-public class WaterHandler implements IHandler<JkzhBasicParam>{
-    private JkzhBasicParam jkzhBasicParam;
+public class WaterHandler implements IHandler<WaterHandlerParams>{
+    private WaterHandlerParams waterHandlerParams;
 
     @Override
     public String execute(String fromula) {
@@ -40,7 +41,7 @@ public class WaterHandler implements IHandler<JkzhBasicParam>{
                 //表明已经是匹配上了<③...>
                 if(("<"+ConditionEnum.首层土计算.getValue()+">").equals(pop+">")){
                     //需要根据条件判断是否需要保留这部分公式
-                    if(Boolean.FALSE){
+                    if(waterHandlerParams.getValue()){
                         StringBuilder sub = new StringBuilder();
                         do{
                             Character character = deque.pollLast();
@@ -75,8 +76,8 @@ public class WaterHandler implements IHandler<JkzhBasicParam>{
     }
 
     @Override
-    public WaterHandler setParams(JkzhBasicParam jkzhBasicParam) {
-        this.jkzhBasicParam = jkzhBasicParam;
+    public WaterHandler setParams(WaterHandlerParams waterHandlerParams) {
+        this.waterHandlerParams = waterHandlerParams;
         return this;
     }
 }

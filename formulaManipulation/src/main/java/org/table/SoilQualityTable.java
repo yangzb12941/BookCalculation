@@ -22,4 +22,8 @@ public class SoilQualityTable implements ITable {
     public String[][] getTable() {
         return this.table;
     }
+
+    public void setTable(String[][] table){
+        this.table = table;
+    }
 }

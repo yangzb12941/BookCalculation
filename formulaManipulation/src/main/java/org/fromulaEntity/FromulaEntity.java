@@ -5,6 +5,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FromulaEntity {
     //公式字符串
@@ -46,5 +47,24 @@ public class FromulaEntity {
             }
         }
         return null;
+    }
+
+    /**
+     * 根据指定的Class 移除处理器，并且返回移除的处理器
+     * @param clazz
+     * @return
+     */
+    public IHandler removeHandler(Class clazz) {
+        IHandler result = null;
+        for(IHandler item:iHandlers){
+            if(item.getClass().isAssignableFrom(clazz)){
+                result = item;
+                break;
+            }
+        }
+        if(Objects.nonNull(result)){
+            iHandlers.remove(result);
+        }
+        return result;
     }
 }

@@ -127,4 +127,12 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
         this.expansionParam = expansionParam;
         return this;
     }
+
+    /**
+     * 获取当前参数
+     * @return
+     */
+    public ExpansionParam getExpansionParam() {
+        return expansionParam;
+    }
 }

@@ -5,14 +5,20 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
+import org.constant.Constant;
 import org.context.JkzhContext;
 import org.element.FormulaElement;
 import org.element.TableElement;
 import org.element.TextElement;
+import org.entity.ExpansionParam;
 import org.enumUtils.BigDecimalStringUtil;
 import org.enumUtils.ZDEqualsBDKindsEnum;
+import org.enums.WaterWhichEnum;
 import org.fromulaEntity.FromulaEntity;
 import org.getValue.JkzhGetValues;
+import org.handle.*;
+import org.handleParams.FirstFloorHandlerParam;
+import org.handleParams.WaterHandlerParams;
 import org.latexTranslation.LatexUserString;
 import org.latexTranslation.VariableIDDynamicTable;
 import org.show.JkzhElementLayout;
@@ -26,7 +32,6 @@ import org.symbolComponents.CalcNumber;
 import org.symbols.Expression;
 import org.symbols.Symbol;
 import org.symbols.Variable;
-
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -51,12 +56,14 @@ public class JkzhCalculation extends DefaultCalculation{
      * 主动土压力强度计算
      */
     public void zdPressure(){
-        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土压力零点所在土层,this.jkzhContext);
-        FromulaEntity latexFromulaEntity = new FromulaEntity(JkzhConfigEnum.主动土压力.getLatexCal());
-
+        FromulaEntity fromulaToCal = creatFromulaToCal(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
+        FromulaEntity fromulaToLatex = creatFromulaToLatex(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
         int layer = this.jkzhContext.getJkzhBasicParam().getAllLands();
         //②、计算主动土压力强度
         for(int i = 1; i <= layer; i++){
+            ExpansionHandler handler = (ExpansionHandler)fromulaToCal.getHandler(ExpansionHandler.class);
+            ExpansionParam expansionParam = handler.getExpansionParam();
+            expansionParam.setExpansionTimes();
             String  latexCalUp = this.jkzhFromulaHandle.getLatexCalExpression(
                     jkzhContext,
                     jkzhFromulaHandle,
@@ -981,5 +988,47 @@ public class JkzhCalculation extends DefaultCalculation{
         String calValue = String.format("%.2f", zlCalRt);
         this.jkzhContext.getTemporaryValue().put("支撑处水平力",calValue);
         this.jkzhContext.getElementTemplate().put("支点反力计算",new FormulaElement(atZoneLand,"支点反力计算",zlLatexCal+"="+calValue+"kN"));
+    }
+
+    private FromulaEntity creatFromulaToCal(JkzhGetValueModelEnum jkzhGetValueModelEnum,JkzhConfigEnum jkzhConfigEnum,WaterWhichEnum waterWhichEnum){
+        JkzhGetValues jkzhGetValues = new JkzhGetValues(jkzhGetValueModelEnum,this.jkzhContext);
+        //用于计算结果
+        FromulaEntity calFromulaEntity = new FromulaEntity(jkzhConfigEnum.getCalculate());
+        calFromulaEntity
+                //添加首层土判断处理器
+                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.getJkzhContext().getJkzhBasicParam())))
+                //添加地面堆载处理器
+                .addHandler(new SurchargeHandler().setParams(this.getJkzhContext().getJkzhBasicParam()))
+                //添加水土分算处理器
+                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(this.getJkzhContext().getSoilQualityTable(),this.getJkzhContext().getJkzhBasicParam(), waterWhichEnum)))
+                //添加元素标记处理器
+                .addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+                //添加展开公式处理器
+                .addHandler(new ExpansionHandler().setParams(new ExpansionParam(0,0)))
+                //添加值填充处理器
+                .addHandler(new FillValueHandler().setParams(jkzhGetValues))
+                //添加值填充处理器
+                .addHandler(new CalHandler());
+        return calFromulaEntity;
+    }
+
+    private FromulaEntity creatFromulaToLatex(JkzhGetValueModelEnum jkzhGetValueModelEnum,JkzhConfigEnum jkzhConfigEnum,WaterWhichEnum waterWhichEnum){
+        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土压力零点所在土层,this.jkzhContext);
+        //用于word展示
+        FromulaEntity latexFromulaEntity = new FromulaEntity(JkzhConfigEnum.主动土压力.getLatexCal());
+        latexFromulaEntity
+                //添加首层土判断处理器
+                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.getJkzhContext().getJkzhBasicParam())))
+                //添加地面堆载处理器
+                .addHandler(new SurchargeHandler().setParams(this.getJkzhContext().getJkzhBasicParam()))
+                //添加水土分算处理器
+                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(this.getJkzhContext().getSoilQualityTable(),this.getJkzhContext().getJkzhBasicParam(), waterWhichEnum)))
+                //添加元素标记处理器
+                .addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+                //添加展开公式处理器
+                .addHandler(new ExpansionHandler().setParams(new ExpansionParam(0,0)))
+                //添加值填充处理器
+                .addHandler(new FillValueHandler().setParams(jkzhGetValues));
+        return latexFromulaEntity;
     }
 }
