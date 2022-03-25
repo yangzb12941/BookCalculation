@@ -10,7 +10,7 @@ public class FirstFloorHandlerParam extends AbstractHandleParams {
     }
 
     public Boolean getValue() {
-        if(curFloor >1 && this.jkzhBasicParam.getSurcharge().compareTo(0.0)>0){
+        if(curFloor >1 || this.jkzhBasicParam.getSurcharge().compareTo(0.0)>0){
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

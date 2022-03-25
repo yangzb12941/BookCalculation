@@ -1,5 +1,6 @@
 package org.fromulaEntity;
 
+import lombok.extern.slf4j.Slf4j;
 import org.handle.IHandler;
 import org.springframework.util.CollectionUtils;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 public class FromulaEntity {
     //公式字符串
     private String fromula;
@@ -19,7 +21,7 @@ public class FromulaEntity {
 
     public FromulaEntity addHandler(IHandler iHandler){
         if(CollectionUtils.isEmpty(iHandlers)){
-            iHandlers = new ArrayList<>(4);
+            iHandlers = new ArrayList<>(8);
             iHandlers.add(iHandler);
         }else{
             iHandlers.add(iHandler);
@@ -30,7 +32,9 @@ public class FromulaEntity {
     public String compile(){
         String tempFromula = this.fromula;
         for (IHandler iHandle : iHandlers) {
+            log.info("befor {}:{}",iHandle.getClass().getSimpleName(),tempFromula);
             tempFromula = iHandle.execute(tempFromula);
+            log.info("after {}:{}",iHandle.getClass().getSimpleName(),tempFromula);
         }
         return tempFromula;
     }

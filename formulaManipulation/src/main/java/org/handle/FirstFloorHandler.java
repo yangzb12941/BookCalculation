@@ -3,7 +3,6 @@ package org.handle;
 import lombok.extern.slf4j.Slf4j;
 import org.enums.ConditionEnum;
 import org.handleParams.FirstFloorHandlerParam;
-import org.table.JkzhBasicParam;
 
 import java.util.ArrayDeque;
 import java.util.Stack;
@@ -72,7 +71,6 @@ public class FirstFloorHandler implements IHandler<FirstFloorHandlerParam>{
             tempFromula.append(chars[i]);
         }
         String sResult = tempFromula.toString();
-        log.info("SurchargeHandler execute:{}",sResult);
         return sResult;
     }
 

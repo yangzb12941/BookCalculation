@@ -2,7 +2,10 @@ package org.handle;
 
 import lombok.extern.slf4j.Slf4j;
 import org.entity.ExpansionParam;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 /**
@@ -37,9 +40,14 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
                         sub.append(stack.pop());
                     }while (!stack.peek().equals("["));
                     stack.pop();
-                    String sExpansion = sub.toString();
-                    String subString = doExpansion(sExpansion,this.expansionParam.getExpansionTimes(),this.expansionParam.getBeginFloor());
-                    stack.push(subString);
+                    String sExpansion = sub.reverse().toString();
+                    String subString = doExpansion(sExpansion,
+                            this.expansionParam.getTimes(),
+                            this.expansionParam.getBeginFloor(),
+                            this.expansionParam.getEndFloor());
+                    if(!StringUtils.isEmpty(subString)){
+                        stack.push(subString);
+                    }
                     if(stack.isEmpty()){
                         isPush = Boolean.FALSE;
                         continue;
@@ -64,7 +72,7 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
         }
         String result = tempFromula.toString();
         log.info("展开:{}",result);
-        return result;
+        return nToIndexOrder(result,String.valueOf(this.expansionParam.getEndFloor()));
     }
 
     /**
@@ -76,22 +84,28 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
      */
     private String doExpansion(String subEquation,
                                int time,
-                               int beginFloor){
+                               int beginFloor,
+                               int endFloor){
         String substring = subEquation;
         //表明需要扩展
-        if(substring.startsWith("...")){
+        if(substring.endsWith("...")){
             //获取展开公式之间的连接符 [重度*厚度+...]
             //连接符是 +
-            substring = substring.substring(3,substring.length());
+            substring = substring.substring(0,substring.length()-3);
             StringBuilder subPart = new StringBuilder();
-            for(int i = 0;i< time;i++){
-                subPart.append(nToIndex(substring,String.valueOf(beginFloor+i)));
+            int i = 0;
+            while (i< time) {
+                subPart.append(nToIndexOrder(substring,String.valueOf(beginFloor+i)));
+                i++;
             }
-            return subPart.substring(1,subPart.length());
+            if(StringUtils.isEmpty(subPart.toString())){
+                return "";
+            }
+            substring = subPart.substring(0,subPart.length()-1);
         }else{
-            //表明不需要扩展
-            return substring;
+            substring = nToIndexOrder(substring, String.valueOf(endFloor));
         }
+        return substring;
     }
 
     /**
@@ -100,26 +114,35 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
      * @param index 具体数字
      * @return
      */
-    private String nToIndex(String substring,String index){
-        Stack<String> stack = new Stack<String>();
+    private String nToIndexOrder(String substring,String index){
+        Stack<Character> stack = new Stack<Character>();
+        StringBuilder temp = new StringBuilder();
+        Boolean isPush = Boolean.FALSE;
         for(char ch:substring.toCharArray()){
-            stack.push(String.valueOf(ch));
-            if (ch == '}') {
+            if (ch == '{') {
+                stack.push(ch);
+                isPush = Boolean.TRUE;
                 //持续出栈
-                StringBuilder subPart = new StringBuilder();
-                do{
-                    String pop = stack.pop();
-                    subPart.append(pop.equals("n")?index:pop);
-                }while (!stack.empty() && !stack.peek().equals("{"));
-                subPart.append(stack.pop());
-                stack.push(subPart.toString());
+                continue;
             }
+            if(ch == '}'){
+                stack.push(ch);
+                StringBuilder subPart = new StringBuilder();
+                while (!stack.isEmpty()){
+                    char pop = stack.pop();
+                    subPart.append(pop == 'n'?index:pop);
+                }
+                temp.append(subPart.reverse().toString());
+                isPush = Boolean.FALSE;
+                continue;
+            }
+            if(isPush){
+                stack.push(ch);
+                continue;
+            }
+            temp.append(ch);
         }
-        StringBuilder subPart = new StringBuilder();
-        do{
-            subPart.append(stack.pop());
-        }while (!stack.empty());
-        return subPart.reverse().toString();
+        return temp.toString();
     }
 
     @Override

@@ -5,11 +5,13 @@ import lombok.Data;
 @Data
 public class ExpansionParam {
 
-    private int expansionTimes;
+    private int times;
     private int beginFloor;
+    private int endFloor;
 
-    public ExpansionParam(int expansionTimes,int beginFloor){
-        this.expansionTimes = expansionTimes;
+    public ExpansionParam(int times,int beginFloor,int endFloor){
+        this.times = times;
         this.beginFloor = beginFloor;
+        this.endFloor = endFloor;
     }
 }

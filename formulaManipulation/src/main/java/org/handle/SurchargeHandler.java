@@ -70,7 +70,6 @@ public class SurchargeHandler implements IHandler<JkzhBasicParam>{
             tempFromula.append(chars[i]);
         }
         String sResult = tempFromula.toString();
-        log.info("SurchargeHandler execute:{}",sResult);
         return sResult;
     }
 
