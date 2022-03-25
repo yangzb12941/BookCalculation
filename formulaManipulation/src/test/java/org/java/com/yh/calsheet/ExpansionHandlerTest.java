@@ -1,22 +1,79 @@
-package org.handle;
+package org.java.com.yh.calsheet;
 
 import lombok.extern.slf4j.Slf4j;
-import org.entity.ExpansionParam;
+import org.enums.ConditionEnum;
+import org.junit.Test;
 
+import java.util.ArrayDeque;
 import java.util.Stack;
 
-/**
- * 带有需展开部分的公式处理
- */
 @Slf4j
-public class ExpansionHandler implements IHandler<ExpansionParam>{
-    //展开参数
-    private ExpansionParam expansionParam;
+public class ExpansionHandlerTest {
+    @Test
+    public void execute() {
+        //判断是否存在堆载，有堆载则需要进行堆载计算
+        char[] chars = "<③(<①地面堆载+>[重度*厚度+...]<②-([厚度+...]-基坑外水位)*水常量>)*主动土压力系数->2*内聚力*根号主动土压力系数<②+([厚度+...]-基坑外水位)*水常量>".toCharArray();
+        boolean isPush = Boolean.FALSE;
+        Stack<String> flagStack = new Stack<String>();
+        ArrayDeque<Character> deque = new ArrayDeque<Character>();
+        StringBuilder tempFromula = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+            if(chars[i] == '<'){
+                if(String.valueOf(chars[i+1]).equals(ConditionEnum.地面堆载.getValue())){
+                    isPush = Boolean.TRUE;
+                }
+                //<③ 入标识栈
+                if(isPush){
+                    deque.push(chars[i]);
+                    String flagS = chars[i] + String.valueOf(chars[i+1]);
+                    flagStack.push(flagS);
+                    continue;
+                }
+            }
+            if(chars[i] == '>' && isPush){
+                if(flagStack.isEmpty()){
+                    throw new RuntimeException("< is not match at index "+i);
+                }
+                String pop = flagStack.pop();
+                //表明已经是匹配上了<③...>
+                if(("<"+ConditionEnum.地面堆载.getValue()+">").equals(pop+">")){
+                    //需要根据条件判断是否需要保留这部分公式
+                    if(Boolean.FALSE){
+                        StringBuilder sub = new StringBuilder();
+                        do{
+                            Character character = deque.pollLast();
+                            if(String.valueOf(deque.peekLast()).equals(ConditionEnum.地面堆载.getValue()) && character == '<'
+                                    || String.valueOf(character).equals(ConditionEnum.地面堆载.getValue())){
 
-    @Override
-    public String execute(String fromula) {
-        //字符串扩展处理
-        char[] chars = fromula.toCharArray();
+                            }else{
+                                sub.append(character);
+                            }
+                        }while (!String.valueOf(deque.peekFirst()).equals(ConditionEnum.地面堆载.getValue()) && !deque.isEmpty());
+                        tempFromula.append(sub);
+                        isPush = Boolean.FALSE;
+                        continue;
+                    }else{
+                        isPush = Boolean.FALSE;
+                        continue;
+                    }
+                }else{
+                    deque.push(chars[i]);
+                    continue;
+                }
+            }
+            if(isPush){
+                deque.push(chars[i]);
+                continue;
+            }
+            tempFromula.append(chars[i]);
+        }
+        log.info("展开:{}",tempFromula.toString());
+    }
+
+    @Test
+    public void expansionHandlerTest() {
+        //判断是否存在堆载，有堆载则需要进行堆载计算
+        char[] chars = "(<①地面堆载+>[重度*厚度+...]<②-([厚度+...]-[基坑外水位])*水常量>)*主动土压力系数-2*内聚力*根号主动土压力系数<②+([厚度+...]-[基坑外水位])*水常量>".toCharArray();
         boolean isPush = Boolean.FALSE;
         Stack<String> stack = new Stack<String>();
         StringBuilder tempFromula = new StringBuilder();
@@ -38,8 +95,8 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
                     }while (!stack.peek().equals("["));
                     stack.pop();
                     String sExpansion = sub.toString();
-                    String subString = doExpansion(sExpansion,this.expansionParam.getExpansionTimes(),this.expansionParam.getBeginFloor());
-                    stack.push(subString);
+                    String s1 = doExpansion(sExpansion,2,2);
+                    stack.push(s1);
                     if(stack.isEmpty()){
                         isPush = Boolean.FALSE;
                         continue;
@@ -62,9 +119,7 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
             StringBuilder reverse = sub.reverse();
             tempFromula.append(reverse);
         }
-        String result = tempFromula.toString();
-        log.info("展开:{}",result);
-        return result;
+        log.info("展开:{}",tempFromula.toString());
     }
 
     /**
@@ -94,6 +149,7 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
         }
     }
 
+
     /**
      * 把公式中"{}"中是否存在n,若存在则把n替换为具体的数值。
      * @param substring 源字符串
@@ -120,11 +176,5 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
             subPart.append(stack.pop());
         }while (!stack.empty());
         return subPart.reverse().toString();
-    }
-
-    @Override
-    public ExpansionHandler setParams(ExpansionParam expansionParam) {
-        this.expansionParam = expansionParam;
-        return this;
     }
 }

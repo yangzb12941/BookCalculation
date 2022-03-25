@@ -41,7 +41,8 @@ public class AppendSubscriptHandler implements IHandler<String>{
     }
 
     @Override
-    public void setParams(String flagIndex) {
+    public AppendSubscriptHandler setParams(String flagIndex) {
         this.flagIndex = flagIndex;
+        return this;
     }
 }

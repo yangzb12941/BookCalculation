@@ -76,7 +76,8 @@ public class FirstFloorHandler implements IHandler<JkzhBasicParam>{
     }
 
     @Override
-    public void setParams(JkzhBasicParam jkzhBasicParam) {
+    public FirstFloorHandler setParams(JkzhBasicParam jkzhBasicParam) {
         this.jkzhBasicParam = jkzhBasicParam;
+        return this;
     }
 }

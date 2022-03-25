@@ -75,7 +75,8 @@ public class SurchargeHandler implements IHandler<JkzhBasicParam>{
     }
 
     @Override
-    public void setParams(JkzhBasicParam jkzhBasicParam) {
+    public SurchargeHandler setParams(JkzhBasicParam jkzhBasicParam) {
         this.jkzhBasicParam = jkzhBasicParam;
+        return this;
     }
 }

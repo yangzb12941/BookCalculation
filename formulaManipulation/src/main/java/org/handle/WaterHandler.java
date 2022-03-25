@@ -75,7 +75,8 @@ public class WaterHandler implements IHandler<JkzhBasicParam>{
     }
 
     @Override
-    public void setParams(JkzhBasicParam jkzhBasicParam) {
+    public WaterHandler setParams(JkzhBasicParam jkzhBasicParam) {
         this.jkzhBasicParam = jkzhBasicParam;
+        return this;
     }
 }

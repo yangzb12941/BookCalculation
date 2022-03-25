@@ -33,8 +33,9 @@ public class FillValueHandler implements IHandler<GetValues>{
     }
 
     @Override
-    public void setParams(GetValues getValues) {
+    public FillValueHandler setParams(GetValues getValues) {
         this.getValues = getValues;
+        return this;
     }
 
     /**

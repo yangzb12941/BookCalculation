@@ -11,6 +11,7 @@ import org.element.TableElement;
 import org.element.TextElement;
 import org.enumUtils.BigDecimalStringUtil;
 import org.enumUtils.ZDEqualsBDKindsEnum;
+import org.fromulaEntity.FromulaEntity;
 import org.getValue.JkzhGetValues;
 import org.latexTranslation.LatexUserString;
 import org.latexTranslation.VariableIDDynamicTable;
@@ -35,16 +36,14 @@ import java.util.Objects;
 @Slf4j
 @Data
 public class JkzhCalculation extends DefaultCalculation{
-    private JkzhFromulaHandle jkzhFromulaHandle;
     private JkzhContext jkzhContext;
     private JkzhILayout jkzhILayout;
     private JkzhElementLayout jkzhElementLayout;
 
-    public JkzhCalculation(JkzhFromulaHandle jkzhFromulaHandle) {
-        this.jkzhFromulaHandle = jkzhFromulaHandle;
+    public JkzhCalculation() {
         this.jkzhILayout = new JkzhILayout();
         this.jkzhElementLayout = new JkzhElementLayout();
-        this.jkzhContext = (JkzhContext)this.getContext(this,this.jkzhFromulaHandle);
+        this.jkzhContext = (JkzhContext)this.getContext(this);
         createFixedElement();
     }
 
@@ -52,8 +51,9 @@ public class JkzhCalculation extends DefaultCalculation{
      * 主动土压力强度计算
      */
     public void zdPressure(){
-        JkzhGetValues jkzhGetValues = new JkzhGetValues();
-        jkzhGetValues.setModel(JkzhGetValueModelEnum.主动土压力计算);
+        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土压力零点所在土层,this.jkzhContext);
+        FromulaEntity latexFromulaEntity = new FromulaEntity(JkzhConfigEnum.主动土压力.getLatexCal());
+
         int layer = this.jkzhContext.getJkzhBasicParam().getAllLands();
         //②、计算主动土压力强度
         for(int i = 1; i <= layer; i++){
@@ -179,8 +179,7 @@ public class JkzhCalculation extends DefaultCalculation{
         //根据开挖深度，判断开挖基土在哪一层
         Integer atDepthLand = depthAtLand(depth);
         //重新计算这一层的主动土压力底
-        JkzhGetValues jkzhGetValues = new JkzhGetValues();
-        jkzhGetValues.setModel(JkzhGetValueModelEnum.土压力零点所在土层);
+        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土压力零点所在土层,this.jkzhContext);
         customCalZdPressure(atDepthLand,jkzhGetValues);
         //计算土压力零点在哪一层
         pressureZeroAtLand(depth,atDepthLand,jkzhContext.getJkzhBasicParam().getAllLands(),jkzhContext.getTemporaryValue());

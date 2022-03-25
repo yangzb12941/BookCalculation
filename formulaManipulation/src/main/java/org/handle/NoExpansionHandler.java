@@ -1,17 +1,17 @@
 package org.handle;
 
 import lombok.extern.slf4j.Slf4j;
-import org.entity.ExpansionParam;
+import org.entity.NoExpansionParam;
 
 import java.util.Stack;
 
 /**
- * 带有需展开部分的公式处理
+ * 不需要展开的公式处理
  */
 @Slf4j
-public class ExpansionHandler implements IHandler<ExpansionParam>{
+public class NoExpansionHandler implements IHandler<NoExpansionParam>{
     //展开参数
-    private ExpansionParam expansionParam;
+    private NoExpansionParam noExpansionParam;
 
     @Override
     public String execute(String fromula) {
@@ -38,7 +38,7 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
                     }while (!stack.peek().equals("["));
                     stack.pop();
                     String sExpansion = sub.toString();
-                    String subString = doExpansion(sExpansion,this.expansionParam.getExpansionTimes(),this.expansionParam.getBeginFloor());
+                    String subString = doExpansion(sExpansion,this.noExpansionParam.getCurFloor());
                     stack.push(subString);
                     if(stack.isEmpty()){
                         isPush = Boolean.FALSE;
@@ -62,7 +62,7 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
             StringBuilder reverse = sub.reverse();
             tempFromula.append(reverse);
         }
-        String result = tempFromula.toString();
+        String result = doExpansion(tempFromula.toString(),this.noExpansionParam.getCurFloor());
         log.info("展开:{}",result);
         return result;
     }
@@ -70,28 +70,13 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
     /**
      * 展开字符次数拼接
      * @param subEquation 需展开的字符
-     * @param time 展开次数
-     * @param beginFloor 第几层开始
+     * @param curFloor 当前层
      * @return
      */
     private String doExpansion(String subEquation,
-                               int time,
-                               int beginFloor){
-        String substring = subEquation;
-        //表明需要扩展
-        if(substring.startsWith("...")){
-            //获取展开公式之间的连接符 [重度*厚度+...]
-            //连接符是 +
-            substring = substring.substring(3,substring.length());
-            StringBuilder subPart = new StringBuilder();
-            for(int i = 0;i< time;i++){
-                subPart.append(nToIndex(substring,String.valueOf(beginFloor+i)));
-            }
-            return subPart.substring(1,subPart.length());
-        }else{
-            //表明不需要扩展
-            return substring;
-        }
+                               int curFloor){
+        String nToIndex = nToIndex(subEquation, String.valueOf(curFloor));
+        return nToIndex;
     }
 
     /**
@@ -123,8 +108,12 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
     }
 
     @Override
-    public ExpansionHandler setParams(ExpansionParam expansionParam) {
-        this.expansionParam = expansionParam;
+    public NoExpansionHandler setParams(NoExpansionParam noExpansionParam) {
+        this.noExpansionParam = noExpansionParam;
         return this;
+    }
+
+    public NoExpansionParam getNoExpansionParam() {
+        return noExpansionParam;
     }
 }

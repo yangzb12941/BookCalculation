@@ -21,6 +21,7 @@ public class CalHandler implements IHandler{
     }
 
     @Override
-    public void setParams(Object object) {
+    public CalHandler setParams(Object object) {
+        return this;
     }
 }
