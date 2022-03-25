@@ -44,8 +44,8 @@ public class ZDPressureTest {
         FromulaEntity fromulaToLatex = creatFromulaToLatex(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
         int layer = this.jkzhContext.getJkzhBasicParam().getAllLands();
         //②、计算主动土压力强度
-        //for (int i = 1; i <= layer; i++) {
-            int i = 3;
+        for (int i = 1; i <= layer; i++) {
+
             ExpansionHandler handlerLatexUp = (ExpansionHandler) fromulaToLatex.getHandler(ExpansionHandler.class);
             ExpansionParam paramUp = handlerLatexUp.getExpansionParam();
             paramUp.setTimes(i-1);
@@ -63,7 +63,7 @@ public class ZDPressureTest {
             this.jkzhContext.getTemporaryValue().put("主动土压力上" + i, calUp);
             this.jkzhContext.getElementTemplate().put("主动土压力上" + i, new FormulaElement(i, "主动土压力上", latexCalUp + "=" + calUp + "kPa"));
             log.info("主动土压力第{}层展示公式—上:{}={}", i, latexCalUp, calUp);
-        //}
+        }
     }
     private FromulaEntity creatFromulaToCal(JkzhGetValueModelEnum jkzhGetValueModelEnum,JkzhConfigEnum jkzhConfigEnum,WaterWhichEnum waterWhichEnum){
         JkzhGetValues jkzhGetValues = new JkzhGetValues(jkzhGetValueModelEnum,this.jkzhContext);

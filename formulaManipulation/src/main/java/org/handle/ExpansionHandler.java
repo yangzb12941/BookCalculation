@@ -2,9 +2,11 @@ package org.handle;
 
 import lombok.extern.slf4j.Slf4j;
 import org.entity.ExpansionParam;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Stack;
 
@@ -18,62 +20,66 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
 
     @Override
     public String execute(String fromula) {
-        //字符串扩展处理
-        char[] chars = fromula.toCharArray();
+        Stack<Character> stack = new Stack<Character>();
+        StringBuilder subEquation = new StringBuilder();
+        //保存在[]内各部分被解析的公式，有可能[[]...[]...[]] 这种公式，需要先解析里面各个子部分
+        //然后再合成一个整体
+        ArrayList<String> subAnalysis = new ArrayList<String>(8);
         boolean isPush = Boolean.FALSE;
-        Stack<String> stack = new Stack<String>();
-        StringBuilder tempFromula = new StringBuilder();
-        for (int i = 0; i < chars.length; i++) {
-            if(chars[i] == '['){
+        //在对JkzhConfigEnum下 原始 latex、calculate、latexCal 展开之前做特殊处理。
+        //比如：在展开[<地面堆载+>[重度*厚度+...]]*主动土压力系数-2*内聚力*math.sqrt(主动土压力系数)
+        //的时候，是否在每个中文指标结束后添加_{n}标识:
+        //[<地面堆载_{n}+>[重度_{n}*厚度_{n}+...]]*主动土压力系数_{n}-2*内聚力_{n}*math.sqrt(主动土压力系数_{n})
+        // 这样再展开后如下：
+        // 一般展开后的公式，是通过_n下标，去匹配具体的值代入。而对于不带入参数的公式，是不需要这个特殊处理的。
+        for(char ch:fromula.toCharArray()){
+            if(ch == '['){
                 isPush = Boolean.TRUE;
-                stack.push(String.valueOf(chars[i]));
+                stack.push(ch);
                 continue;
             }
-
-            if(chars[i] == ']' && isPush){
-                if(stack.isEmpty()){
-                    isPush = Boolean.FALSE;
-                    continue;
+            if (ch == ']') {
+                stack.push(ch);
+                //持续出栈
+                StringBuilder subPart = new StringBuilder();
+                do{
+                    subPart.append(stack.pop());
+                }while (!stack.empty() && stackConditions(ch,stack.peek()));
+                //最后一个元素也出栈
+                subPart.append(stack.pop());
+                String analysis = subPart.reverse().toString();
+                //展开计算公式
+                String expansionPart = doExpansion(analysis,expansionParam.getTimes(),expansionParam.getBeginFloor());
+                subAnalysis.add(expansionPart);
+                boolean isPushContinue =  stack.search('[')>0;
+                if(isPushContinue){
+                    isPush = Boolean.TRUE;
                 }else{
-                    StringBuilder sub = new StringBuilder();
-                    do{
-                        sub.append(stack.pop());
-                    }while (!stack.peek().equals("["));
-                    stack.pop();
-                    String sExpansion = sub.reverse().toString();
-                    String subString = doExpansion(sExpansion,
-                            this.expansionParam.getTimes(),
-                            this.expansionParam.getBeginFloor(),
-                            this.expansionParam.getEndFloor());
-                    if(!StringUtils.isEmpty(subString)){
-                        stack.push(subString);
-                    }
-                    if(stack.isEmpty()){
-                        isPush = Boolean.FALSE;
-                        continue;
-                    }else{
-                        continue;
-                    }
+                    isPush = Boolean.FALSE;
                 }
+                continue;
             }
             if(isPush){
-                stack.push(String.valueOf(chars[i]));
-                continue;
+                stack.push(ch);
+            }else{
+                if(!CollectionUtils.isEmpty(subAnalysis)){
+                    for (String item : subAnalysis) {
+                        subEquation.append(item);
+                    }
+                    subAnalysis.clear();
+                }
+                subEquation.append(ch);
             }
-            tempFromula.append(chars[i]);
         }
-        if(!stack.isEmpty()){
-            StringBuilder sub = new StringBuilder();
-            do{
-                sub.append(stack.pop());
-            }while (!stack.isEmpty());
-            StringBuilder reverse = sub.reverse();
-            tempFromula.append(reverse);
+        if(!CollectionUtils.isEmpty(subAnalysis)){
+            for (String item : subAnalysis) {
+                subEquation.append(item);
+            }
+            subAnalysis.clear();
         }
-        String result = tempFromula.toString();
-        log.info("展开:{}",result);
-        return nToIndexOrder(result,String.valueOf(this.expansionParam.getEndFloor()));
+        return nToIndex(subEquation.toString(),String.valueOf(expansionParam.getEndFloor()));
     }
+
 
     /**
      * 展开字符次数拼接
@@ -84,28 +90,26 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
      */
     private String doExpansion(String subEquation,
                                int time,
-                               int beginFloor,
-                               int endFloor){
-        String substring = subEquation;
+                               int beginFloor){
+        String substring = subEquation.substring(1, subEquation.length() - 1);
         //表明需要扩展
         if(substring.endsWith("...")){
             //获取展开公式之间的连接符 [重度*厚度+...]
             //连接符是 +
-            substring = substring.substring(0,substring.length()-3);
+            substring = substring.substring(0,substring.length() - 3);
             StringBuilder subPart = new StringBuilder();
-            int i = 0;
-            while (i< time) {
-                subPart.append(nToIndexOrder(substring,String.valueOf(beginFloor+i)));
-                i++;
+            for(int i = 0;i< time;i++){
+                subPart.append(nToIndex(substring,String.valueOf(beginFloor+i)));
             }
-            if(StringUtils.isEmpty(subPart.toString())){
-                return "";
+            String toString = subPart.toString();
+            if(!StringUtils.isEmpty(toString)){
+                toString = subPart.substring(0,subPart.length() - 1);
             }
-            substring = subPart.substring(0,subPart.length()-1);
+            return toString;
         }else{
-            substring = nToIndexOrder(substring, String.valueOf(endFloor));
+            //表明不需要扩展
+            return substring;
         }
-        return substring;
     }
 
     /**
@@ -114,35 +118,36 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
      * @param index 具体数字
      * @return
      */
-    private String nToIndexOrder(String substring,String index){
-        Stack<Character> stack = new Stack<Character>();
-        StringBuilder temp = new StringBuilder();
-        Boolean isPush = Boolean.FALSE;
+    private String nToIndex(String substring,String index){
+        Stack<String> stack = new Stack<String>();
         for(char ch:substring.toCharArray()){
-            if (ch == '{') {
-                stack.push(ch);
-                isPush = Boolean.TRUE;
+            stack.push(String.valueOf(ch));
+            if (ch == '}') {
                 //持续出栈
-                continue;
-            }
-            if(ch == '}'){
-                stack.push(ch);
                 StringBuilder subPart = new StringBuilder();
-                while (!stack.isEmpty()){
-                    char pop = stack.pop();
-                    subPart.append(pop == 'n'?index:pop);
-                }
-                temp.append(subPart.reverse().toString());
-                isPush = Boolean.FALSE;
-                continue;
+                do{
+                    String pop = stack.pop();
+                    subPart.append(pop.equals("n")?index:pop);
+                }while (!stack.empty() && !stack.peek().equals("{"));
+                subPart.append(stack.pop());
+                stack.push(subPart.toString());
             }
-            if(isPush){
-                stack.push(ch);
-                continue;
-            }
-            temp.append(ch);
         }
-        return temp.toString();
+        StringBuilder subPart = new StringBuilder();
+        do{
+            subPart.append(stack.pop());
+        }while (!stack.empty());
+        return subPart.reverse().toString();
+    }
+
+    /**
+     * 展开公式时，判断出栈条件
+     * @param stackBottom 终止出栈字符
+     * @param curItem 当前字符
+     * @return
+     */
+    private Boolean stackConditions(char stackBottom,char curItem){
+        return stackBottom == ']' ? curItem != '[' : false;
     }
 
     @Override

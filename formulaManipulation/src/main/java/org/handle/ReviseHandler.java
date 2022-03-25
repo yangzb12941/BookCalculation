@@ -100,7 +100,7 @@ public class ReviseHandler implements IHandler<ReviseEnum>{
             }
             sub1.append(chars[i]);
         }
-        if(param.size()!=2){
+        if(param.size() < 2){
             return param.get(0);
         }else{
             return subString;
