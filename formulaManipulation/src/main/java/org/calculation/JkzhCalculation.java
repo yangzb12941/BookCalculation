@@ -6,6 +6,8 @@ import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
 import org.constant.Constant;
 import org.context.JkzhContext;
+import org.element.FormulaElement;
+import org.element.TextElement;
 import org.entity.ExpansionParam;
 import org.enums.WaterWhichEnum;
 import org.fromulaEntity.FromulaEntity;
@@ -26,62 +28,57 @@ public class JkzhCalculation extends DefaultCalculation{
     private JkzhILayout jkzhILayout;
     private JkzhElementLayout jkzhElementLayout;
 
-//    public JkzhCalculation() {
-//        this.jkzhILayout = new JkzhILayout();
-//        this.jkzhElementLayout = new JkzhElementLayout();
-//        this.jkzhContext = (JkzhContext)this.getContext(this);
-//        createFixedElement();
-//    }
-//
-//    /**
-//     * 主动土压力强度计算
-//     */
-//    public void zdPressure(){
-//        FromulaEntity fromulaToCal = creatFromulaToCal(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
-//        FromulaEntity fromulaToLatex = creatFromulaToLatex(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
-//        int layer = this.jkzhContext.getJkzhBasicParam().getAllLands();
-//        //②、计算主动土压力强度
-//        for(int i = 1; i <= layer; i++){
-//            ExpansionHandler handlerLatexUp = (ExpansionHandler)fromulaToLatex.getHandler(ExpansionHandler.class);
-//            ExpansionParam paramUp = handlerLatexUp.getExpansionParam();
-//            paramUp.setExpansionTimes(i);
-//            paramUp.setBeginFloor(i);
-//            String latexCalUp  = fromulaToLatex.compile();
-//
-//            ExpansionHandler handlerCalUp = (ExpansionHandler)fromulaToCal.getHandler(ExpansionHandler.class);
-//            ExpansionParam paramCalUp = handlerCalUp.getExpansionParam();
-//            paramCalUp.setExpansionTimes(i);
-//            paramCalUp.setBeginFloor(i);
-//            String calUp = fromulaToCal.compile();
-//
-//            this.jkzhContext.getTemporaryValue().put("主动土压力上"+i,calUp);
-//            this.jkzhContext.getElementTemplate().put("主动土压力上"+i,new FormulaElement(i,"主动土压力上",latexCalUp+"="+calUp+"kPa"));
-//            log.info("主动土压力第{}层展示公式—上:{}={}",i,latexCalUp,calUp);
-//
-//            String latexCalDown = this.jkzhFromulaHandle.getLatexCalExpression(
-//                    jkzhContext,
-//                    jkzhFromulaHandle,
-//                    i,
-//                    1,
-//                    i,
-//                    JkzhConfigEnum.主动土压力.getLatexCal(),
-//                    jkzhGetValues);
-//            String  calDown = this.jkzhFromulaHandle.getCalculateExpression(
-//                    jkzhContext,
-//                    jkzhFromulaHandle,
-//                    i,
-//                    1,
-//                    i,
-//                    JkzhConfigEnum.主动土压力.getCalculate(),
-//                    jkzhGetValues);
-//            Double zdCalRtDown = (Double) AviatorEvaluator.execute(calDown);
-//            log.info("主动土压力第{}层展示公式-下:{}={}",i,latexCalDown,zdCalRtDown);
-//            String valueDown = String.format("%.2f",zdCalRtDown);
-//            this.jkzhContext.getElementTemplate().put("主动土层"+i,new TextElement(i,"主动土层",String.valueOf(i)));
-//            this.jkzhContext.getTemporaryValue().put("主动土压力下"+i,valueDown);
-//            this.jkzhContext.getElementTemplate().put("主动土压力下"+i,new FormulaElement(i,"主动土压力下",latexCalDown+"="+valueDown+"kPa"));
-//        }
-//    }
+    public JkzhCalculation() {
+        this.jkzhILayout = new JkzhILayout();
+        this.jkzhElementLayout = new JkzhElementLayout();
+        this.jkzhContext = (JkzhContext)this.getContext(this);
+        createFixedElement();
+    }
+
+    /**
+     * 主动土压力强度计算
+     */
+    public void zdPressure(){
+        FromulaEntity fromulaToCal = creatFromulaToCal(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
+        FromulaEntity fromulaToLatex = creatFromulaToLatex(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
+        int layer = this.jkzhContext.getJkzhBasicParam().getAllLands();
+        //②、计算主动土压力强度
+        for(int i = 1; i <= layer; i++){
+            ExpansionHandler handlerLatexUp = (ExpansionHandler) fromulaToLatex.getHandler(ExpansionHandler.class);
+            ExpansionParam paramUp = handlerLatexUp.getExpansionParam();
+            paramUp.setTimes(i-1);
+            paramUp.setBeginFloor(1);
+            paramUp.setEndFloor(i);
+            String latexCalUp = fromulaToLatex.compile();
+
+            ExpansionHandler handlerCalUp = (ExpansionHandler) fromulaToCal.getHandler(ExpansionHandler.class);
+            ExpansionParam paramCalUp = handlerCalUp.getExpansionParam();
+            paramCalUp.setTimes(i-1);
+            paramCalUp.setBeginFloor(1);
+            paramCalUp.setEndFloor(i);
+            String calUp = fromulaToCal.compile();
+
+            this.jkzhContext.getTemporaryValue().put("主动土压力上" + i, calUp);
+            this.jkzhContext.getElementTemplate().put("主动土压力上" + i, new FormulaElement(i, "主动土压力上", latexCalUp + "=" + calUp + "kPa"));
+            log.info("主动土压力第{}层展示公式—上:{}={}", i, latexCalUp, calUp);
+
+            paramUp.setTimes(i);
+            paramUp.setBeginFloor(1);
+            paramUp.setEndFloor(i);
+            String latexCalDown = fromulaToLatex.compile();
+
+            paramCalUp.setTimes(i-1);
+            paramCalUp.setBeginFloor(1);
+            paramCalUp.setEndFloor(i);
+            String zdCalRtDown = fromulaToCal.compile();
+
+            log.info("主动土压力第{}层展示公式-下:{}={}",i,latexCalDown,zdCalRtDown);
+            String valueDown = String.format("%.2f",zdCalRtDown);
+            this.jkzhContext.getElementTemplate().put("主动土层"+i,new TextElement(i,"主动土层",String.valueOf(i)));
+            this.jkzhContext.getTemporaryValue().put("主动土压力下"+i,valueDown);
+            this.jkzhContext.getElementTemplate().put("主动土压力下"+i,new FormulaElement(i,"主动土压力下",latexCalDown+"="+valueDown+"kPa"));
+        }
+    }
 //
 //    /**
 //     * 被动土压力强度计算
@@ -166,10 +163,10 @@ public class JkzhCalculation extends DefaultCalculation{
 //        pressureZeroAtLand(depth,atDepthLand,jkzhContext.getJkzhBasicParam().getAllLands(),jkzhContext.getTemporaryValue());
 //    }
 //
-//    /**
-//     * 把模板中的固定元素，填进模板元素集合中
-//     */
-//    private void createFixedElement(){
+    /**
+     * 把模板中的固定元素，填进模板元素集合中
+     */
+    private void createFixedElement(){
 //        /**固定计公式begin*/
 //        String s_1 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力.getLatex(),this.jkzhILayout);
 //        this.jkzhContext.getElementTemplate().put("主动土压力计算公式",new FormulaElement(0,"主动土压力计算公式",s_1));
@@ -215,7 +212,7 @@ public class JkzhCalculation extends DefaultCalculation{
 //        this.jkzhContext.getElementTemplate().put("主动合力至反弯点的距离",new FormulaElement(1,"主动合力至反弯点的距离",this.jkzhElementLayout.getLayoutMap().get("主动合力至反弯点的距离")));
 //        this.jkzhContext.getElementTemplate().put("各层土的主动合力",new FormulaElement(1,"各层土的主动合力",this.jkzhElementLayout.getLayoutMap().get("各层土的主动合力")));
 //        /**jkzhElementLayout end*/
-//    }
+    }
 //
 //    //计算给定深度，返回深度所在土层
 //    private Integer depthAtLand(Double depth){

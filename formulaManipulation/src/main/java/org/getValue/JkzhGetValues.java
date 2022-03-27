@@ -80,7 +80,7 @@ public class JkzhGetValues implements GetValues {
                             valueArray[index] = String.valueOf(getDepthUpToSection(jkzhContext));
                         } else {
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), floor, 2);
-                            valueArray[index] = hdValue;
+                              valueArray[index] = hdValue;
                         }
                     } else if (this.model == JkzhGetValueModelEnum.被动土压力计算) {
                         if (floor == jkzhContext.getJkzhBasicParam().getAtDepthLand()) {
