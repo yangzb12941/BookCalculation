@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.entity.ElementParam;
 import org.enumUtils.StringUtil;
 import org.getValue.GetValues;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

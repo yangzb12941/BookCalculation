@@ -2,12 +2,8 @@ package org.java.com.yh.calsheet;
 
 import lombok.extern.slf4j.Slf4j;
 import org.entity.ExpansionParam;
-import org.enums.ConditionEnum;
 import org.handle.ExpansionHandler;
 import org.junit.Test;
-
-import java.util.ArrayDeque;
-import java.util.Stack;
 
 @Slf4j
 public class ExpansionHandlerTest {
