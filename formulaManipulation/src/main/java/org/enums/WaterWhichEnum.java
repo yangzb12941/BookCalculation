@@ -5,7 +5,9 @@ public enum WaterWhichEnum {
     主动侧水位("1",
             "主动侧水位"),
     被动侧水位("2",
-            "被动侧水位"),;
+            "被动侧水位"),
+    不计水位("3",
+            "不计水位"),;
 
     private final String key;//公式类型
     private final String value;//存原始公式展示
