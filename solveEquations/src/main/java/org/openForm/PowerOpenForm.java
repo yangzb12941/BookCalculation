@@ -41,7 +41,7 @@ public class PowerOpenForm extends OpenForm {
 		if (!num.isInteger()) return sym;
 
 		int expoNum = (int)num.getDouble();
-		if (expoNum < 0) return sym; ///TODO maybe extend functionality so we can handle negative integer exponents
+		if (expoNum < 0) return sym; ///TODO maybe extend functionality so we can handler negative integer exponents
 		return openAdditionByNumExponent(base, expoNum);
 	}
 

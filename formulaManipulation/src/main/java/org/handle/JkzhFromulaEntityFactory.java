@@ -1,24 +1,35 @@
 package org.handle;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.config.JkzhConfigEnum;
 import org.constant.Constant;
 import org.entity.ExpansionParam;
-import org.enumUtils.StringUtil;
 import org.enums.ReviseEnum;
 import org.enums.WaterWhichEnum;
 import org.fromulaEntity.FromulaEntity;
 import org.getValue.JkzhGetValues;
 import org.handleParams.FirstFloorHandlerParam;
 import org.handleParams.WaterHandlerParams;
+import org.handler.*;
 import org.show.ILayout;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
 @Slf4j
-public abstract class FromulaHandle{
+public class JkzhFromulaEntityFactory {
+
+	private static volatile JkzhFromulaEntityFactory jkzhFromulaEntityFactory;
+
+	private JkzhFromulaEntityFactory(){}
+
+	public static JkzhFromulaEntityFactory getJkzhFromulaEntityFactory() {
+		if(null == jkzhFromulaEntityFactory){
+			synchronized (JkzhFromulaEntityFactory.class) {
+				if(null == jkzhFromulaEntityFactory){
+					jkzhFromulaEntityFactory = new JkzhFromulaEntityFactory();
+				}
+			}
+		}
+		return jkzhFromulaEntityFactory;
+	}
+
 
 	/**
 	 * 土压力计算结果：包括如下处理器
@@ -38,8 +49,8 @@ public abstract class FromulaHandle{
 	 */
 	public FromulaEntity soilPressureToCal(JkzhGetValues jkzhGetValues,
 										   String fromula,
-											WaterWhichEnum waterWhichEnum,
-										    ExpansionParam expansionParam){
+										   WaterWhichEnum waterWhichEnum,
+										   ExpansionParam expansionParam){
 		//用于计算结果
 		FromulaEntity calFromulaEntity = new FromulaEntity(fromula);
 		calFromulaEntity
@@ -80,8 +91,8 @@ public abstract class FromulaHandle{
 	 */
 	public FromulaEntity soilPressureToLatex(JkzhGetValues jkzhGetValues,
 											 String fromula,
-											  WaterWhichEnum waterWhichEnum,
-											  ExpansionParam expansionParam){
+											 WaterWhichEnum waterWhichEnum,
+											 ExpansionParam expansionParam){
 		//用于word展示
 		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
 		latexFromulaEntity

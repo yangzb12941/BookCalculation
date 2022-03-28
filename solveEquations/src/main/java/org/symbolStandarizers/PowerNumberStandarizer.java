@@ -30,7 +30,7 @@ public class PowerNumberStandarizer extends SymbolStandarizer {
 	private boolean isExponentEqualsNumber(CalcNumber toNum) {
 		NumberInfo expoInf = numberFilter.filter(getExpo());
 		return expoInf.getIsNum() && toNum.equals(expoInf.getNum()); ///TODO What if expoInf.getNum() is null?
-																   ///Check CalcNumber::equals can handle null parameter.
+																   ///Check CalcNumber::equals can handler null parameter.
 	}
 
 	@Override

@@ -1,16 +1,15 @@
-package org.handle;
+package org.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.enums.ConditionEnum;
-import org.handleParams.FirstFloorHandlerParam;
+import org.handleParams.WaterHandlerParams;
 
 import java.util.ArrayDeque;
 import java.util.Stack;
 
 @Slf4j
-public class FirstFloorHandler implements IHandler<FirstFloorHandlerParam>{
-    //展开参数
-    private FirstFloorHandlerParam firstFloorHandlerParam;
+public class WaterHandler implements IHandler<WaterHandlerParams>{
+    private WaterHandlerParams waterHandlerParams;
 
     @Override
     public String execute(String fromula) {
@@ -22,7 +21,7 @@ public class FirstFloorHandler implements IHandler<FirstFloorHandlerParam>{
         StringBuilder tempFromula = new StringBuilder();
         for (int i = 0; i < chars.length; i++) {
             if(chars[i] == '<'){
-                if(String.valueOf(chars[i+1]).equals(ConditionEnum.首层土计算.getValue())){
+                if(String.valueOf(chars[i+1]).equals(ConditionEnum.水土分算.getValue())){
                     isPush = Boolean.TRUE;
                 }
                 //<③ 入标识栈
@@ -39,19 +38,19 @@ public class FirstFloorHandler implements IHandler<FirstFloorHandlerParam>{
                 }
                 String pop = flagStack.pop();
                 //表明已经是匹配上了<③...>
-                if(("<"+ConditionEnum.首层土计算.getValue()+">").equals(pop+">")){
+                if(("<"+ConditionEnum.水土分算.getValue()+">").equals(pop+">")){
                     //需要根据条件判断是否需要保留这部分公式
-                    if(firstFloorHandlerParam.getValue()){
+                    if(waterHandlerParams.getValue()){
                         StringBuilder sub = new StringBuilder();
                         do{
                             Character character = deque.pollLast();
-                            if(String.valueOf(deque.peekLast()).equals(ConditionEnum.首层土计算.getValue()) && character == '<'
-                                    || String.valueOf(character).equals(ConditionEnum.首层土计算.getValue())){
+                            if(String.valueOf(deque.peekLast()).equals(ConditionEnum.水土分算.getValue()) && character == '<'
+                                    || String.valueOf(character).equals(ConditionEnum.水土分算.getValue())){
 
                             }else{
                                 sub.append(character);
                             }
-                        }while (!String.valueOf(deque.peekFirst()).equals(ConditionEnum.首层土计算.getValue()) && !deque.isEmpty());
+                        }while (!String.valueOf(deque.peekFirst()).equals(ConditionEnum.水土分算.getValue()) && !deque.isEmpty());
                         tempFromula.append(sub);
                         isPush = Boolean.FALSE;
                         continue;
@@ -75,8 +74,8 @@ public class FirstFloorHandler implements IHandler<FirstFloorHandlerParam>{
     }
 
     @Override
-    public FirstFloorHandler setParams(FirstFloorHandlerParam firstFloorHandlerParam) {
-        this.firstFloorHandlerParam = firstFloorHandlerParam;
+    public WaterHandler setParams(WaterHandlerParams waterHandlerParams) {
+        this.waterHandlerParams = waterHandlerParams;
         return this;
     }
 }

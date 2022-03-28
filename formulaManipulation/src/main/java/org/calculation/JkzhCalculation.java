@@ -1,7 +1,6 @@
 package org.calculation;
 
 import com.googlecode.aviator.AviatorEvaluator;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
@@ -9,24 +8,12 @@ import org.context.JkzhContext;
 import org.element.FormulaElement;
 import org.element.TableElement;
 import org.element.TextElement;
-import org.enumUtils.BigDecimalStringUtil;
 import org.enumUtils.ZDEqualsBDKindsEnum;
 import org.enums.WaterWhichEnum;
 import org.getValue.JkzhGetValues;
 import org.handle.JkzhFromulaHandle;
-import org.latexTranslation.LatexUserString;
-import org.latexTranslation.VariableIDDynamicTable;
 import org.show.JkzhElementLayout;
 import org.show.JkzhILayout;
-import org.solutions.Solution;
-import org.solveableManipulationBehavior.SolveableManipulateBehavior;
-import org.solveables.Equation;
-import org.solveables.Solveable;
-import org.springframework.util.StringUtils;
-import org.symbolComponents.CalcNumber;
-import org.symbols.Expression;
-import org.symbols.Symbol;
-import org.symbols.Variable;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -35,14 +22,14 @@ import java.util.Objects;
  * 基坑支护计算
  */
 @Slf4j
-@Data
 public class JkzhCalculation extends DefaultCalculation{
     private JkzhFromulaHandle jkzhFromulaHandle;
     private JkzhContext jkzhContext;
     private JkzhILayout jkzhILayout;
     private JkzhElementLayout jkzhElementLayout;
 
-    public JkzhCalculation(JkzhFromulaHandle jkzhFromulaHandle) {
+    public JkzhCalculation() {
+        this.jkzhFromulaHandle = new JkzhFromulaHandle();
         this.jkzhILayout = new JkzhILayout();
         this.jkzhElementLayout = new JkzhElementLayout();
         this.jkzhContext = (JkzhContext)this.getContext(this);
@@ -58,7 +45,6 @@ public class JkzhCalculation extends DefaultCalculation{
         //②、计算主动土压力强度
         for(int i = 1; i <= layer; i++){
             String  latexCalUp = this.jkzhFromulaHandle.soilPressureToLatex(
-                    jkzhFromulaHandle,
                     i-1,
                     1,
                     i,
@@ -66,7 +52,6 @@ public class JkzhCalculation extends DefaultCalculation{
                     WaterWhichEnum.主动侧水位,
                     jkzhGetValues);
             String  calUp = this.jkzhFromulaHandle.soilPressureToCal(
-                    jkzhFromulaHandle,
                     i-1,
                     1,
                     i,
@@ -77,7 +62,6 @@ public class JkzhCalculation extends DefaultCalculation{
             this.jkzhContext.getElementTemplate().put("主动土压力上"+i,new FormulaElement(i,"主动土压力上",latexCalUp+"="+calUp+"kPa"));
             log.info("主动土压力第{}层展示公式—上:{}={}",i,latexCalUp,calUp);
             String latexCalDown = this.jkzhFromulaHandle.soilPressureToLatex(
-                    jkzhFromulaHandle,
                     i,
                     1,
                     i,
@@ -85,7 +69,6 @@ public class JkzhCalculation extends DefaultCalculation{
                     WaterWhichEnum.主动侧水位,
                     jkzhGetValues);
             String  calDown = this.jkzhFromulaHandle.soilPressureToCal(
-                    jkzhFromulaHandle,
                     i,
                     1,
                     i,
@@ -112,7 +95,6 @@ public class JkzhCalculation extends DefaultCalculation{
         int allLands = jkzhContext.getJkzhBasicParam().getAllLands();
         for(int i = 0; i <= allLands-atLand; i++){
             String  latexCalUp = jkzhFromulaHandle.soilPressureToLatex(
-                    jkzhFromulaHandle,
                     i,
                     atLand,
                     i+atLand,
@@ -120,7 +102,6 @@ public class JkzhCalculation extends DefaultCalculation{
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
             String  calUp = jkzhFromulaHandle.soilPressureToCal(
-                    jkzhFromulaHandle,
                     i,
                     atLand,
                     i+atLand,
@@ -131,7 +112,6 @@ public class JkzhCalculation extends DefaultCalculation{
             this.jkzhContext.getElementTemplate().put("被动土压力上"+(atLand+i),new FormulaElement((atLand+i),"被动土压力上",latexCalUp+"="+calUp+"kPa"));
             log.info("被动土压力第{}层展示公式—上:{}={}",i+atLand,latexCalUp,calUp);
             String latexCalDown = jkzhFromulaHandle.soilPressureToLatex(
-                    jkzhFromulaHandle,
                     i+1,
                     atLand,
                     i+atLand,
@@ -139,7 +119,6 @@ public class JkzhCalculation extends DefaultCalculation{
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
             String  calDown = jkzhFromulaHandle.soilPressureToCal(
-                    jkzhFromulaHandle,
                     i+1,
                     atLand,
                     i+atLand,
@@ -182,17 +161,17 @@ public class JkzhCalculation extends DefaultCalculation{
      */
     private void createFixedElement(){
         /**固定计公式begin*/
-        String s_1 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力.getLatex(),this.jkzhILayout).compile();
+        String s_1 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力.getLatex(),this.jkzhILayout);
         this.jkzhContext.getElementTemplate().put("主动土压力计算公式",new FormulaElement(0,"主动土压力计算公式",s_1));
-        String s_2 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力系数.getLatex(),this.jkzhILayout).compile();
+        String s_2 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力系数.getLatex(),this.jkzhILayout);
         this.jkzhContext.getElementTemplate().put("主动土压力系数计算公式",new FormulaElement(0,"主动土压力系数计算公式",s_2));
 
-        String s_3 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.被动土压力.getLatex(),this.jkzhILayout).compile();
+        String s_3 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.被动土压力.getLatex(),this.jkzhILayout);
         this.jkzhContext.getElementTemplate().put("被动土压力计算公式",new FormulaElement(0,"被动土压力计算公式",s_3));
-        String s_4 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.被动土压力系数.getLatex(),this.jkzhILayout).compile();
+        String s_4 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.被动土压力系数.getLatex(),this.jkzhILayout);
         this.jkzhContext.getElementTemplate().put("被动土压力系数计算公式",new FormulaElement(0,"被动土压力系数计算公式",s_4));
 
-        String s_5 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.支撑轴力.getLatex(),this.jkzhILayout).compile();
+        String s_5 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.支撑轴力.getLatex(),this.jkzhILayout);
         this.jkzhContext.getElementTemplate().put("支反力计算公式",new FormulaElement(1,"支反力计算公式",s_5));
         /**固定计公式end*/
 
@@ -251,7 +230,6 @@ public class JkzhCalculation extends DefaultCalculation{
      */
     private void customCalZdPressure(int atLand,JkzhGetValues jkzhGetValues){
         String latexCalDown = jkzhFromulaHandle.soilPressureToLatex(
-                jkzhFromulaHandle,
                 atLand,
                 1,
                 atLand,
@@ -259,7 +237,6 @@ public class JkzhCalculation extends DefaultCalculation{
                 WaterWhichEnum.主动侧水位,
                 jkzhGetValues);
         String  calDown = jkzhFromulaHandle.soilPressureToCal(
-                jkzhFromulaHandle,
                 atLand,
                 1,
                 atLand,
@@ -278,7 +255,6 @@ public class JkzhCalculation extends DefaultCalculation{
      */
     private void customCalBdPressure(int atLand,int depthLand, JkzhGetValues jkzhGetValues){
         String  calDown = jkzhFromulaHandle.soilPressureToCal(
-                jkzhFromulaHandle,
                 atLand-depthLand+1,
                 depthLand,
                 atLand,
@@ -458,16 +434,14 @@ public class JkzhCalculation extends DefaultCalculation{
     private Double calPressureZero(int zoneLand){
         JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土压力零点深度计算,this.jkzhContext);
         //主动土压力底层：
-        String zdlatexCalDown = jkzhFromulaHandle.soilPressureToCal(
-                jkzhFromulaHandle,
+        String zdlatexCalDown = jkzhFromulaHandle.soilPressureToLatex(
                 zoneLand,
                 1,
                 zoneLand,
                 JkzhConfigEnum.主动土压力,
                 WaterWhichEnum.主动侧水位,
                 jkzhGetValues);
-        String  zdCalDown = jkzhFromulaHandle.soilPressureToLatex(
-                jkzhFromulaHandle,
+        String  zdCalDown = jkzhFromulaHandle.soilPressureToCal(
                 zoneLand,
                 1,
                 zoneLand,
@@ -477,16 +451,14 @@ public class JkzhCalculation extends DefaultCalculation{
         log.info("第{}层展示公式-下:{}={}",zoneLand,zdlatexCalDown,zdCalDown);
 
         //被动土压力底层：
-        String bdLatexCalDown = jkzhFromulaHandle.soilPressureToCal(
-                jkzhFromulaHandle,
+        String bdLatexCalDown = jkzhFromulaHandle.soilPressureToLatex(
                 zoneLand - jkzhContext.getJkzhBasicParam().getAtDepthLand()+1,
                 jkzhContext.getJkzhBasicParam().getAtDepthLand(),
                 zoneLand,
                 JkzhConfigEnum.被动土压力,
                 WaterWhichEnum.被动侧水位,
                 jkzhGetValues);
-        String  bdCalDown = jkzhFromulaHandle.soilPressureToLatex(
-                jkzhFromulaHandle,
+        String  bdCalDown = jkzhFromulaHandle.soilPressureToCal(
                 zoneLand - jkzhContext.getJkzhBasicParam().getAtDepthLand()+1,
                 jkzhContext.getJkzhBasicParam().getAtDepthLand(),
                 zoneLand,
@@ -513,7 +485,7 @@ public class JkzhCalculation extends DefaultCalculation{
      * @return
      */
     private String solveEquations(String zdCalDown,String bdCalDown){
-        String result = jkzhFromulaHandle.solveEquationsToCal(jkzhFromulaHandle, zdCalDown, bdCalDown);
+        String result = jkzhFromulaHandle.solveEquationsToCal(zdCalDown, bdCalDown);
         return result;
     }
 
@@ -556,52 +528,40 @@ public class JkzhCalculation extends DefaultCalculation{
             String replaceChar = "",latexCal = "",calculate = "",calValue = "";
             if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)>0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_主动上大于0_下大于0,
                         jkzhZDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_主动上大于0_下大于0,
                         jkzhZDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土压力合力第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("主动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("主动土压力合力"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_主动上大于0_下大于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_主动上大于0_下大于0.getLatex(),this.jkzhILayout);
             }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_主动上小于0_下大于0,
                         jkzhZDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_主动上小于0_下大于0,
                         jkzhZDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土压力合力第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("主动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("主动土压力合力"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_主动上小于0_下大于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_主动上小于0_下大于0.getLatex(),this.jkzhILayout);
             }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_主动上大于0_下小于0,
                         jkzhZDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_主动上大于0_下小于0,
                         jkzhZDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土压力合力第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("主动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("主动土压力合力"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_主动上大于0_下小于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_主动上大于0_下小于0.getLatex(),this.jkzhILayout);
             }
             jkzhContext.getElementTemplate().put("主动土压力合力计算条件"+land,new TextElement(land,"主动土压力合力计算条件",
                     "第"+land+"层主动土顶面压力："+String.valueOf(zdUpPressure)+"Kpa;主动土底面压力："+String.valueOf(zdDownPressure)+"Kpa"));
@@ -625,52 +585,40 @@ public class JkzhCalculation extends DefaultCalculation{
             Double zdDownPressure = Double.valueOf(jkzhContext.getTemporaryValue().get("主动土压力下"+land));
             if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)>0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_主动上大于0_下大于0,
                         jkzhZDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_主动上大于0_下大于0,
                         jkzhZDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("主动土作用点位置"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_主动上大于0_下大于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_主动上大于0_下大于0.getLatex(),this.jkzhILayout);
             }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_主动上小于0_下大于0,
                         jkzhZDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_主动上小于0_下大于0,
                         jkzhZDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("主动土作用点位置"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_主动上小于0_下大于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_主动上小于0_下大于0.getLatex(),this.jkzhILayout);
             }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_主动上大于0_下小于0,
                         jkzhZDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_主动上大于0_下小于0,
                         jkzhZDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("主动土作用点位置"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_主动上大于0_下小于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_主动上大于0_下小于0.getLatex(),this.jkzhILayout);
             }
             jkzhContext.getElementTemplate().put("主动作用点位置计算公式"+land,new FormulaElement(land,"主动作用点位置计算公式",replaceChar));
             jkzhContext.getElementTemplate().put("主动作用点位置计算"+land,new FormulaElement(land,"主动作用点位置计算",latexCal+"="+calValue+"m"));
@@ -706,52 +654,40 @@ public class JkzhCalculation extends DefaultCalculation{
             String replaceChar = "",latexCal = "",calculate = "",calValue = "";
             if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)>0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_被动上大于0_下大于0,
                         jkzhBDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_被动上大于0_下大于0,
                         jkzhBDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("被动土压力合力"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_被动上大于0_下大于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_被动上大于0_下大于0.getLatex(),this.jkzhILayout);
             }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_被动上小于0_下大于0,
                         jkzhBDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_被动上小于0_下大于0,
                         jkzhBDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("被动土压力合力"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_被动上小于0_下大于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_被动上小于0_下大于0.getLatex(),this.jkzhILayout);
             }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_被动上大于0_下小于0,
                         jkzhBDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.土压力合力_被动上大于0_下小于0,
                         jkzhBDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("被动土压力合力"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_被动上大于0_下小于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.土压力合力_被动上大于0_下小于0.getLatex(),this.jkzhILayout);
             }
             jkzhContext.getElementTemplate().put("被动土压力合力计算条件"+land,new TextElement(land,"被动土压力合力计算条件",
                     "第"+land+"层被动土顶面压力："+String.valueOf(zdUpPressure)+"Kpa;被动土底面压力："+String.valueOf(zdDownPressure)+"Kpa"));
@@ -778,52 +714,40 @@ public class JkzhCalculation extends DefaultCalculation{
             String replaceChar = "",latexCal = "",calculate = "",calValue = "";
             if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)>0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_被动上大于0_下大于0,
                         jkzhBDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_被动上大于0_下大于0,
                         jkzhBDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("被动土作用点位置"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_被动上大于0_下大于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_被动上大于0_下大于0.getLatex(),this.jkzhILayout);
             }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_被动上小于0_下大于0,
                         jkzhBDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_被动上小于0_下大于0,
                         jkzhBDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("被动土作用点位置"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_被动上小于0_下大于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_被动上小于0_下大于0.getLatex(),this.jkzhILayout);
             }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
                 latexCal = jkzhFromulaHandle.extendToLatex(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_被动上大于0_下小于0,
                         jkzhBDGetValues);
                 calculate = jkzhFromulaHandle.extendToCal(
-                        jkzhFromulaHandle,
                         land,
                         JkzhConfigEnum.作用点位置_被动上大于0_下小于0,
                         jkzhBDGetValues);
-                Double zdCalRtDown = (Double) AviatorEvaluator.execute(calculate);
-                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,zdCalRtDown);
-                calValue = String.format("%.2f", zdCalRtDown);
+                log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
                 jkzhContext.getTemporaryValue().put("被动土作用点位置"+land,calValue);
-                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_被动上大于0_下小于0.getLatex(),this.jkzhILayout).compile();
+                replaceChar = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.作用点位置_被动上大于0_下小于0.getLatex(),this.jkzhILayout);
             }
             jkzhContext.getElementTemplate().put("被动作用点位置计算公式"+land,new FormulaElement(land,"被动作用点位置计算公式",replaceChar));
             jkzhContext.getElementTemplate().put("被动作用点位置计算"+land,new FormulaElement(land,"被动作用点位置计算",latexCal+"="+calValue+"m"));
@@ -844,14 +768,12 @@ public class JkzhCalculation extends DefaultCalculation{
         int atZoneLand = this.jkzhContext.getJkzhBasicParam().getAtZoneLand();
         JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.主动支撑轴力计算,this.jkzhContext);
         String zdLatexCal = jkzhFromulaHandle.extendToLatexN(
-                jkzhFromulaHandle,
                 atZoneLand,
                 1,
                 atZoneLand,
                 JkzhConfigEnum.支撑轴力主动,
                 jkzhZDGetValues);
         String zdCalculate = jkzhFromulaHandle.extendToCalN(
-                jkzhFromulaHandle,
                 atZoneLand,
                 1,
                 atZoneLand,
@@ -864,14 +786,12 @@ public class JkzhCalculation extends DefaultCalculation{
         int atDepthLand = this.jkzhContext.getJkzhBasicParam().getAtDepthLand();
         int time = atZoneLand-atDepthLand+1;
         String bdLatexCal = jkzhFromulaHandle.extendToLatexN(
-                jkzhFromulaHandle,
                 time,
                 atDepthLand,
                 atZoneLand,
                 JkzhConfigEnum.支撑轴力被动,
                 jkzhBDGetValues);
         String bdCalculate = jkzhFromulaHandle.extendToCalN(
-                jkzhFromulaHandle,
                 time,
                 atDepthLand,
                 atZoneLand,
@@ -887,26 +807,21 @@ public class JkzhCalculation extends DefaultCalculation{
         JkzhGetValues jkzhZCZLGetValues = new JkzhGetValues(JkzhGetValueModelEnum.支撑轴力计算,this.jkzhContext);
         jkzhZCZLGetValues.setModel(JkzhGetValueModelEnum.支撑轴力计算);
         String zlLatexCal = jkzhFromulaHandle.replaceExtendToCal(
-                jkzhFromulaHandle,
                 JkzhConfigEnum.支撑轴力.getLatexCal(),
                 atZoneLand,
                 this.jkzhILayout);
 
         zlLatexCal = jkzhFromulaHandle.extendToCal(
-                jkzhFromulaHandle,
                 atZoneLand,
                 zlLatexCal,
                 jkzhZCZLGetValues);
 
         String zlCalculate = jkzhFromulaHandle.extendToCal(
-                jkzhFromulaHandle,
                 atZoneLand,
                 JkzhConfigEnum.支撑轴力,
                 jkzhZCZLGetValues);
-        Double zlCalRt = (Double) AviatorEvaluator.execute(zlCalculate);
-        log.info("支撑轴力计算:{}={}={}",zlLatexCal,zlCalculate,zlCalRt);
-        String calValue = String.format("%.2f", zlCalRt);
-        this.jkzhContext.getTemporaryValue().put("支撑处水平力",calValue);
-        this.jkzhContext.getElementTemplate().put("支点反力计算",new FormulaElement(atZoneLand,"支点反力计算",zlLatexCal+"="+calValue+"kN"));
+        log.info("支撑轴力计算:{}={}={}",zlLatexCal,zlCalculate,zlCalculate);
+        this.jkzhContext.getTemporaryValue().put("支撑处水平力",zlCalculate);
+        this.jkzhContext.getElementTemplate().put("支点反力计算",new FormulaElement(atZoneLand,"支点反力计算",zlLatexCal+"="+zlCalculate+"kN"));
     }
 }
