@@ -3,6 +3,7 @@ package org.handle;
 
 import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
+import org.constant.Constant;
 import org.context.AbstractContext;
 import org.entity.ExpansionParam;
 import org.enumUtils.StringUtil;
@@ -108,6 +109,26 @@ public class DefaultFromulaHandle extends FromulaHandle {
      * 获取可计算的数学表达式
      * @param fromulaHandle 解析公式
      * @param curFloor 当前层
+     * @param fromula 被解析的基础公式
+     * @param jkzhGetValues 获取值
+     * @return
+     */
+    public String extendToCal(FromulaHandle fromulaHandle,
+                              int curFloor,
+                              String fromula,
+                              JkzhGetValues jkzhGetValues){
+        log.info("extendToCal入参:公式{},当前层:{}",fromula,curFloor);
+        //处理计算结果的公式
+        ExpansionParam expansionParam = new ExpansionParam(curFloor,curFloor,curFloor);
+        FromulaEntity fromulaEntity = fromulaHandle.extendToCal(jkzhGetValues, fromula,expansionParam);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * 获取可计算的数学表达式
+     * @param fromulaHandle 解析公式
+     * @param curFloor 当前层
      * @param jkzhConfigEnum 被解析的基础公式
      * @param jkzhGetValues 获取值
      * @return
@@ -168,6 +189,41 @@ public class DefaultFromulaHandle extends FromulaHandle {
         //处理计算结果的公式
         ExpansionParam expansionParam = new ExpansionParam(time,beginFloor,endFloor);
         FromulaEntity fromulaEntity = fromulaHandle.extendToLatex(jkzhGetValues, jkzhConfigEnum.getLatexCal(),expansionParam);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     *
+     * @param fromulaHandle 解析公式
+     * @param fromula 公式字符串
+     * @param curFloor 当前层
+     * @param iLayout 公式展示字符集
+     * @return
+     */
+    public String replaceExtendToCal(FromulaHandle fromulaHandle,
+                                     String fromula,
+                                     int curFloor,
+                                     ILayout iLayout){
+        log.info("extendToCal入参:公式{},当前层:{}",fromula,curFloor);
+        //处理计算结果的公式
+        ExpansionParam expansionParam = new ExpansionParam(curFloor,curFloor,curFloor);
+        FromulaEntity fromulaEntity = fromulaHandle.replaceExtendToCal(fromula,expansionParam,iLayout);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * 固定公式展示处理器：
+     * 1、公式替换元素处理器
+     * @param fromula 解析公式
+     * @param iLayout 公式展示字符集
+     * @return
+     */
+    public String replaceLayoutChar(FromulaHandle fromulaHandle,String fromula,ILayout iLayout){
+        log.info("extendToCal入参:公式{},",fromula);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = fromulaHandle.replaceLayoutChar(fromula,iLayout);
         String compile = fromulaEntity.compile();
         return compile;
     }

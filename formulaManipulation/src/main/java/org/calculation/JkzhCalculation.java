@@ -886,23 +886,22 @@ public class JkzhCalculation extends DefaultCalculation{
 
         JkzhGetValues jkzhZCZLGetValues = new JkzhGetValues(JkzhGetValueModelEnum.支撑轴力计算,this.jkzhContext);
         jkzhZCZLGetValues.setModel(JkzhGetValueModelEnum.支撑轴力计算);
-        String zlLatexCal = jkzhFromulaHandle.extendToLatex(
+        String zlLatexCal = jkzhFromulaHandle.replaceExtendToCal(
                 jkzhFromulaHandle,
+                JkzhConfigEnum.支撑轴力.getLatexCal(),
                 atZoneLand,
-                this.jkzhILayout,
-                JkzhConfigEnum.支撑轴力);
+                this.jkzhILayout);
 
-        zlLatexCal = jkzhFromulaHandle.extendToLatex(
+        zlLatexCal = jkzhFromulaHandle.extendToCal(
                 jkzhFromulaHandle,
                 atZoneLand,
                 zlLatexCal,
                 jkzhZCZLGetValues);
 
         String zlCalculate = jkzhFromulaHandle.extendToCal(
-                jkzhContext,
                 jkzhFromulaHandle,
                 atZoneLand,
-                JkzhConfigEnum.支撑轴力.getCalculate(),
+                JkzhConfigEnum.支撑轴力,
                 jkzhZCZLGetValues);
         Double zlCalRt = (Double) AviatorEvaluator.execute(zlCalculate);
         log.info("支撑轴力计算:{}={}={}",zlLatexCal,zlCalculate,zlCalRt);

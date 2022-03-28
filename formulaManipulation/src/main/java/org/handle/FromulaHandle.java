@@ -119,6 +119,30 @@ public abstract class FromulaHandle{
 	}
 
 	/**
+	 * 固定公式展示处理器：
+	 * 1、公式替换元素处理器
+	 * 2、标记元素处理器
+	 * 3、展开公式处理器
+	 * @param fromula
+	 * @param iLayout
+	 * @return
+	 */
+	public FromulaEntity replaceExtendToCal(String fromula,
+											ExpansionParam expansionParam,
+											ILayout iLayout){
+		//用于计算结果
+		FromulaEntity calFromulaEntity = new FromulaEntity(fromula);
+		calFromulaEntity
+				//公式替换元素处理器
+				.addHandler(new ReplaceLayoutHandler().setParams(iLayout))
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(expansionParam));
+		return calFromulaEntity;
+	}
+
+	/**
 	 * 解方程处理器
 	 * @param leftFromula 等号左边方程
 	 * @param rightFromula 等号右边方程
