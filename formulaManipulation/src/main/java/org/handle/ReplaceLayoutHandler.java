@@ -2,10 +2,15 @@ package org.handle;
 
 import org.show.ILayout;
 
+import java.util.Objects;
+
 public class ReplaceLayoutHandler implements IHandler<ILayout>{
     private ILayout iLayout;
     @Override
     public String execute(String fromula) {
+        if(Objects.isNull(this.iLayout)){
+            return fromula;
+        }
         for(String item: iLayout.getLayoutChar()){
             if(fromula.indexOf(item)>=0){
                 String sOne = iLayout.getLayoutMap().get(item);

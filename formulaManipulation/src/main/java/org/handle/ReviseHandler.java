@@ -10,17 +10,7 @@ import java.util.HashSet;
  */
 public class ReviseHandler implements IHandler<ReviseEnum>{
     private ReviseEnum reviseEnum;
-    private static HashSet<String> operand;
-    static {
-        operand = new HashSet<>(2);
-        operand.add("\\times");
-        operand.add("\\div");
-        operand.add("+");
-        operand.add("-");
-        operand.add("*");
-        operand.add("/");
-        operand.add("÷");
-    }
+
     @Override
     public String execute(String fromula) {
         String result = fromula;
