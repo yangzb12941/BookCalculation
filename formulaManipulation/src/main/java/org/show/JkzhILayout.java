@@ -5,8 +5,7 @@ import lombok.Data;
 import java.util.HashMap;
 
 /**
- * 基坑支护布局展示。
- * 例如：\mathrm{P_{ak}} 替换为其他字符显示 \mathrm{e_{a上}}。
+ * 用于公式展示的字符替换
  */
 @Data
 public class JkzhILayout implements ILayout {

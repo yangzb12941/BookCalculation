@@ -17,6 +17,7 @@ import org.handleParams.FirstFloorHandlerParam;
 import org.handleParams.WaterHandlerParams;
 import org.handler.*;
 import org.junit.Test;
+import org.show.JkzhILayout;
 
 import java.util.HashSet;
 
@@ -37,6 +38,7 @@ public class ZDPressureTest {
     @Test
     public void execute() {
         JkzhCalculation jkzhCalculation = new JkzhCalculation();
+        JkzhILayout jkzhILayout = new JkzhILayout();
         this.jkzhContext = (JkzhContext) jkzhCalculation.getContext(jkzhCalculation);
         FromulaEntity fromulaToCal = creatFromulaToCal(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
         FromulaEntity fromulaToLatex = creatFromulaToLatex(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
@@ -58,7 +60,7 @@ public class ZDPressureTest {
             String calUp = fromulaToCal.compile();
 
             this.jkzhContext.getTemporaryValue().put("主动土压力上" + i, calUp);
-            this.jkzhContext.getElementTemplate().put("主动土压力上" + i, new FormulaElement(i, "主动土压力上", latexCalUp + "=" + calUp + "kPa"));
+            this.jkzhContext.getElementTemplate().put("主动土压力上" + i, new FormulaElement(i,jkzhILayout, "主动土压力上", latexCalUp + "=" + calUp + "kPa"));
             log.info("主动土压力第{}层展示公式—上:{}={}", i, latexCalUp, calUp);
 
             paramUp.setTimes(i);
@@ -73,7 +75,7 @@ public class ZDPressureTest {
             log.info("主动土压力第{}层展示公式-下:{}={}",i,latexCalDown,zdCalRtDown);
             this.jkzhContext.getElementTemplate().put("主动土层"+i,new TextElement(i,"主动土层",String.valueOf(i)));
             this.jkzhContext.getTemporaryValue().put("主动土压力下"+i,zdCalRtDown);
-            this.jkzhContext.getElementTemplate().put("主动土压力下"+i,new FormulaElement(i,"主动土压力下",latexCalDown+"="+zdCalRtDown +"kPa"));
+            this.jkzhContext.getElementTemplate().put("主动土压力下"+i,new FormulaElement(i,jkzhILayout,"主动土压力下",latexCalDown+"="+zdCalRtDown +"kPa"));
         }
     }
     private FromulaEntity creatFromulaToCal(JkzhGetValueModelEnum jkzhGetValueModelEnum,JkzhConfigEnum jkzhConfigEnum,WaterWhichEnum waterWhichEnum){

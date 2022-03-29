@@ -4,12 +4,15 @@ import lombok.Data;
 
 import java.util.HashMap;
 
+/**
+ * 主要是用于公式前缀和单独的字符显示
+ */
 @Data
-public class JkzhElementLayout implements ILayout{
+public class JkzhPrefixLayout implements ILayout{
     private HashMap<String,String> layoutMap;
     private String[] layoutChar;
 
-    public JkzhElementLayout() {
+    public JkzhPrefixLayout() {
         this.layoutChar = new String[]{
                 "被动合力至反弯点的距离",
                 "主动合力至反弯点的距离",
@@ -56,5 +59,33 @@ public class JkzhElementLayout implements ILayout{
 
         //轴向支反力
         this.layoutMap.put("轴向支反力","T_{cn}");
+
+        /**************公式前缀部分**************/
+        //主动土压力上
+        this.layoutMap.put("主动土压力上","P_{akn}");
+
+        //主动土压力下
+        this.layoutMap.put("主动土压力下","{\\mathrm{P}^{\\prime}}_{akn}");
+
+        //被动土压力上
+        this.layoutMap.put("被动土压力上","P_{pkn}");
+
+        //被动土压力下
+        this.layoutMap.put("被动土压力下","{\\mathrm{P}^{\\prime}}_{pkn}");
+
+        //主动土压力计算公式
+        this.layoutMap.put("主动土压力计算公式","P_{ak}");
+
+        //主动土压力系数计算公式
+        this.layoutMap.put("主动土压力系数计算公式","K_{a,i}");
+
+        //被动土压力计算公式
+        this.layoutMap.put("被动土压力计算公式","P_{pk}");
+
+        //被动土压力系数计算公式
+        this.layoutMap.put("被动土压力系数计算公式","K_{p,i}");
+
+        //支反力计算公式
+        this.layoutMap.put("支反力计算公式","T_{cn}");
     }
 }
