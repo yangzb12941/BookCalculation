@@ -16,16 +16,16 @@ public class JkzhILayout implements ILayout {
     public JkzhILayout() {
         this.layoutChar = new String[]{
                 "基坑底面至反弯点的距离",
+                "主动合力至反弯点的距离",
+                "被动合力至反弯点的距离",
                 "主动深度到水位的距离",
                 "支点至基坑底面的距离",
                 "根号主动土压力系数",
                 "根号被动土压力系数",
-                "主动土作用点位置",
-                "被动土作用点位置",
+                "各层土的主动合力",
+                "各层土的被动合力",
                 "主动土压力系数",
                 "被动土压力系数",
-                "主动土压力合力",
-                "被动土压力合力",
                 "土压力强度顶面",
                 "土压力强度底面",
                 "支撑轴力主动",
@@ -38,7 +38,7 @@ public class JkzhILayout implements ILayout {
                 "内摩擦角",
                 "土层厚度",
                 "支撑轴力",
-                "内聚力",
+                "粘聚力",
                 "水常量",
                 "重度",
                 "厚度"};
@@ -60,16 +60,16 @@ public class JkzhILayout implements ILayout {
         this.layoutMap.put("地面堆载","q");
 
         //重度
-        this.layoutMap.put("重度","\\gamma_{n}");
+        this.layoutMap.put("重度","\\gamma_{i}");
 
         //厚度
         this.layoutMap.put("厚度","h_{n}");
 
-        //内聚力
-        this.layoutMap.put("内聚力","C_{n}");
+        //粘聚力
+        this.layoutMap.put("粘聚力","C_{i}");
 
         //内摩擦角
-        this.layoutMap.put("内摩擦角","\\varphi_{n}");
+        this.layoutMap.put("内摩擦角","\\varphi_{i}");
 
         //根号主动土压力系数
         this.layoutMap.put("根号主动土压力系数","Ka_{n}");
@@ -83,17 +83,17 @@ public class JkzhILayout implements ILayout {
         //被动土压力系数
         this.layoutMap.put("被动土压力系数","Kp_{n}");
 
-        //主动土压力合力
-        this.layoutMap.put("主动土压力合力","E_{an}");
+        //各层土的主动合力
+        this.layoutMap.put("各层土的主动合力","E_{ac}");
 
-        //主动土作用点位置
-        this.layoutMap.put("主动土作用点位置","h_{an}");
+        //主动合力至反弯点的距离
+        this.layoutMap.put("主动合力至反弯点的距离","h_{an}");
 
-        //被动土压力合力
-        this.layoutMap.put("被动土压力合力","E_{pn}");
+        //各层土的被动合力
+        this.layoutMap.put("各层土的被动合力","E_{pc}");
 
-        //被动土作用点位置
-        this.layoutMap.put("被动土作用点位置","h_{pn}");
+        //被动合力至反弯点的距离
+        this.layoutMap.put("被动合力至反弯点的距离","h_{pn}");
 
         //支撑轴力
         this.layoutMap.put("支撑轴力","T_{cn}");

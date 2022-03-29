@@ -143,7 +143,7 @@ public class JkzhGetValues implements GetValues {
                     valueArray[index] = zdValue;
                     break;
                 }
-                case "内聚力": {
+                case "粘聚力": {
                     String njlValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), Integer.valueOf(elementParam.getIndex()), 4);
                     valueArray[index] = njlValue;
                     break;

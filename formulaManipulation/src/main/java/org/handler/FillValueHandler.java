@@ -42,8 +42,8 @@ public class FillValueHandler implements IHandler<GetValues>{
      * 通过解析公式把每一个字符替换为对应的具体数值。值的顺序要与解析的字符一一匹配，
      * 若是错位，则会填充错误。
      * 例如：
-     * (地面堆载+重度 \times 厚度+重度 \times 厚度+重度 \times 厚度+重度 \times 厚度+重度 \times 厚度) \times 主动土压力系数- 2 \times 内聚力 \times \sqrt{主动土压力系数}
-     * 地面堆载、重度、厚度、主动土压力系数、内聚力
+     * (地面堆载+重度 \times 厚度+重度 \times 厚度+重度 \times 厚度+重度 \times 厚度+重度 \times 厚度) \times 主动土压力系数- 2 \times 粘聚力 \times \sqrt{主动土压力系数}
+     * 地面堆载、重度、厚度、主动土压力系数、粘聚力
      * @param fromula
      * @return
      */

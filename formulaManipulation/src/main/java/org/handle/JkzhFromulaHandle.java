@@ -37,8 +37,30 @@ public class JkzhFromulaHandle{
                                     JkzhGetValues jkzhGetValues){
         log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
         //处理计算结果的公式
-        ExpansionParam expansionParam = new ExpansionParam(time,beginFloor,endFloor);
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToCal(jkzhGetValues, jkzhConfigEnum.getCalculate(), waterWhichEnum,expansionParam);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToCal(time,beginFloor,endFloor,jkzhGetValues,jkzhConfigEnum, waterWhichEnum);
+        String fillingCal = fromulaEntity.compile();
+        return fillingCal;
+    }
+
+    /**
+     * 土压力计算的数学表达式
+     * @param time 展开次数
+     * @param beginFloor 第几层开始
+     * @param endFloor 第几层开始
+     * @param jkzhConfigEnum 被解析的基础公式
+     * @param waterWhichEnum 水土合算、水土分算
+     * @param jkzhGetValues 获取值的方式
+     * @return
+     */
+    public String calSolveEquations(int time,
+                                    int beginFloor,
+                                    int endFloor,
+                                    JkzhConfigEnum jkzhConfigEnum,
+                                    WaterWhichEnum waterWhichEnum,
+                                    JkzhGetValues jkzhGetValues){
+        log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.calSolveEquations(time,beginFloor,endFloor,jkzhGetValues,jkzhConfigEnum, waterWhichEnum);
         String fillingCal = fromulaEntity.compile();
         return fillingCal;
     }
@@ -61,8 +83,7 @@ public class JkzhFromulaHandle{
                                       JkzhGetValues jkzhGetValues){
         log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
         //处理计算结果的公式
-        ExpansionParam expansionParam = new ExpansionParam(time,beginFloor,endFloor);
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToLatex(jkzhGetValues, jkzhConfigEnum.getLatexCal(), waterWhichEnum,expansionParam);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToLatex(time,beginFloor,endFloor,jkzhGetValues, jkzhConfigEnum, waterWhichEnum);
         String fillingLatex = fromulaEntity.compile();
         return fillingLatex;
     }
@@ -93,8 +114,7 @@ public class JkzhFromulaHandle{
                               JkzhGetValues jkzhGetValues){
         log.info("extendToCal入参:公式{},当前层:{}",jkzhConfigEnum,curFloor);
         //处理计算结果的公式
-        ExpansionParam expansionParam = new ExpansionParam(curFloor,curFloor,curFloor);
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToCal(jkzhGetValues, jkzhConfigEnum.getCalculate(),expansionParam);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToCal(curFloor,jkzhGetValues, jkzhConfigEnum.getCalculate());
         String compile = fromulaEntity.compile();
         return compile;
     }
@@ -111,8 +131,7 @@ public class JkzhFromulaHandle{
                               JkzhGetValues jkzhGetValues){
         log.info("extendToCal入参:公式{},当前层:{}",fromula,curFloor);
         //处理计算结果的公式
-        ExpansionParam expansionParam = new ExpansionParam(curFloor,curFloor,curFloor);
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToCal(jkzhGetValues, fromula,expansionParam);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToCal(curFloor,jkzhGetValues, fromula);
         String compile = fromulaEntity.compile();
         return compile;
     }
@@ -129,8 +148,24 @@ public class JkzhFromulaHandle{
                                 JkzhGetValues jkzhGetValues){
         log.info("extendToLatex入参:公式{},当前层:{}",jkzhConfigEnum,curFloor);
         //处理计算结果的公式
-        ExpansionParam expansionParam = new ExpansionParam(curFloor,curFloor,curFloor);
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToLatex(jkzhGetValues, jkzhConfigEnum.getLatexCal(),expansionParam);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToLatex(curFloor,jkzhGetValues, jkzhConfigEnum.getLatexCal());
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * 获取可计算的数学表达式
+     * @param curFloor 当前层
+     * @param fromula 被解析的基础公式
+     * @param jkzhGetValues 获取值
+     * @return
+     */
+    public String extendToLatex(int curFloor,
+                                String fromula,
+                                JkzhGetValues jkzhGetValues){
+        log.info("extendToLatex入参:公式{},当前层:{}",fromula,curFloor);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToLatex(curFloor,jkzhGetValues, fromula);
         String compile = fromulaEntity.compile();
         return compile;
     }
@@ -151,8 +186,7 @@ public class JkzhFromulaHandle{
                                JkzhGetValues jkzhGetValues){
         log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
         //处理计算结果的公式
-        ExpansionParam expansionParam = new ExpansionParam(time,beginFloor,endFloor);
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToCal(jkzhGetValues, jkzhConfigEnum.getCalculate(),expansionParam);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToCalN(time,beginFloor,endFloor,jkzhGetValues, jkzhConfigEnum.getCalculate());
         String compile = fromulaEntity.compile();
         return compile;
     }
@@ -173,8 +207,7 @@ public class JkzhFromulaHandle{
                                  JkzhGetValues jkzhGetValues){
         log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
         //处理计算结果的公式
-        ExpansionParam expansionParam = new ExpansionParam(time,beginFloor,endFloor);
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToLatex(jkzhGetValues, jkzhConfigEnum.getLatexCal(),expansionParam);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToLatexN(time,beginFloor,endFloor,jkzhGetValues, jkzhConfigEnum.getLatexCal());
         String compile = fromulaEntity.compile();
         return compile;
     }

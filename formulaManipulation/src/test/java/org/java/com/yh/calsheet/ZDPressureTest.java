@@ -82,7 +82,7 @@ public class ZDPressureTest {
         FromulaEntity calFromulaEntity = new FromulaEntity(jkzhConfigEnum.getCalculate());
         calFromulaEntity
                 //添加首层土判断处理器
-                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.jkzhContext.getJkzhBasicParam())))
+                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.jkzhContext.getJkzhBasicParam(),0,0,jkzhConfigEnum)))
                 //添加地面堆载处理器
                 .addHandler(new SurchargeHandler().setParams(this.jkzhContext.getJkzhBasicParam()))
                 //添加水土分算处理器
@@ -106,7 +106,7 @@ public class ZDPressureTest {
         FromulaEntity latexFromulaEntity = new FromulaEntity(JkzhConfigEnum.主动土压力.getLatexCal());
         latexFromulaEntity
                 //添加首层土判断处理器
-                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.jkzhContext.getJkzhBasicParam())))
+                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.jkzhContext.getJkzhBasicParam(),0,0,jkzhConfigEnum)))
                 //添加地面堆载处理器
                 .addHandler(new SurchargeHandler().setParams(this.jkzhContext.getJkzhBasicParam()))
                 //添加水土分算处理器

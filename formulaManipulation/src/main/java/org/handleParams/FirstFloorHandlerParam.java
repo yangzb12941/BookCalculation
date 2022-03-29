@@ -1,22 +1,34 @@
 package org.handleParams;
 
+import org.config.JkzhConfigEnum;
 import org.table.JkzhBasicParam;
 
 public class FirstFloorHandlerParam extends AbstractHandleParams {
-    private int curFloor;
+    private int curFloor;//当前计算土层
+    private int beginFloor;//首层土层
+    private JkzhConfigEnum  jkzhConfigEnum;//首层土层
     private JkzhBasicParam jkzhBasicParam;
-    public FirstFloorHandlerParam(JkzhBasicParam jkzhBasicParam) {
+    public FirstFloorHandlerParam(
+            JkzhBasicParam jkzhBasicParam,
+            int curFloor,
+            int beginFloor,
+            JkzhConfigEnum  jkzhConfigEnum) {
         this.jkzhBasicParam = jkzhBasicParam;
+        this.curFloor = curFloor;
+        this.beginFloor = beginFloor;
+        this.jkzhConfigEnum = jkzhConfigEnum;
     }
 
     public Boolean getValue() {
-        if(curFloor >1 || this.jkzhBasicParam.getSurcharge().compareTo(0.0)>0){
-            return Boolean.TRUE;
+        if(jkzhConfigEnum == JkzhConfigEnum.主动土压力){
+            if(curFloor > beginFloor || this.jkzhBasicParam.getSurcharge().compareTo(0.0)>0){
+                return Boolean.TRUE;
+            }
+        }else if(jkzhConfigEnum == JkzhConfigEnum.被动土压力){
+            if(curFloor > beginFloor){
+                return Boolean.TRUE;
+            }
         }
         return Boolean.FALSE;
-    }
-
-    public void setCurFloor(int curFloor){
-        this.curFloor = curFloor;
     }
 }

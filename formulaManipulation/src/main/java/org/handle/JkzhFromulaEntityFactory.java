@@ -1,6 +1,7 @@
 package org.handle;
 
 import lombok.extern.slf4j.Slf4j;
+import org.config.JkzhConfigEnum;
 import org.constant.Constant;
 import org.entity.ExpansionParam;
 import org.enums.ReviseEnum;
@@ -43,29 +44,35 @@ public class JkzhFromulaEntityFactory {
 	 * 8、添加值填充处理器
 	 * 9、计算过计算处理器
 	 * @param jkzhGetValues
-	 * @param fromula
+	 * @param jkzhConfigEnum
 	 * @param waterWhichEnum
 	 * @return
 	 */
-	public FromulaEntity soilPressureToCal(JkzhGetValues jkzhGetValues,
-										   String fromula,
-										   WaterWhichEnum waterWhichEnum,
-										   ExpansionParam expansionParam){
+	public FromulaEntity soilPressureToCal(int time,
+										   int beginFloor,
+										   int endFloor,
+			                               JkzhGetValues jkzhGetValues,
+										   JkzhConfigEnum jkzhConfigEnum,
+										   WaterWhichEnum waterWhichEnum){
 		//用于计算结果
-		FromulaEntity calFromulaEntity = new FromulaEntity(fromula);
+		FromulaEntity calFromulaEntity = new FromulaEntity(jkzhConfigEnum.getCalculate());
 		calFromulaEntity
 				//添加首层土判断处理器
-				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(jkzhGetValues.getJkzhContext().getJkzhBasicParam())))
+				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(
+						jkzhGetValues.getJkzhContext().getJkzhBasicParam(),
+						time+beginFloor,
+						beginFloor,
+						jkzhConfigEnum)))
 				//添加地面堆载处理器
 				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParam()))
 				//添加水土分算处理器
 				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParam(), waterWhichEnum)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(time,beginFloor,endFloor)))
 				//公式修正处理器
 				.addHandler(new ReviseHandler().setParams(ReviseEnum.公式修正))
-				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(expansionParam))
 				//添加值填充处理器
 				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
 				//添加值填充处理器
@@ -73,6 +80,51 @@ public class JkzhFromulaEntityFactory {
 		return calFromulaEntity;
 	}
 
+	/**
+	 * 土压力计算结果：包括如下处理器
+	 * 1、添加首层土判断处理器
+	 * 2、添加地面堆载处理器
+	 * 3、添加水土分算处理器
+	 * 4、添加元素标记处理器
+	 * 5、公式修正处理器
+	 * 6、添加展开公式处理器
+	 * 7、添加值填充处理器
+	 * 8、添加值填充处理器
+	 * 9、计算过计算处理器
+	 * @param jkzhGetValues
+	 * @param jkzhConfigEnum
+	 * @param waterWhichEnum
+	 * @return
+	 */
+	public FromulaEntity calSolveEquations(int time,
+										   int beginFloor,
+										   int endFloor,
+										   JkzhGetValues jkzhGetValues,
+										   JkzhConfigEnum jkzhConfigEnum,
+										   WaterWhichEnum waterWhichEnum){
+		//用于计算结果
+		FromulaEntity calFromulaEntity = new FromulaEntity(jkzhConfigEnum.getCalculate());
+		calFromulaEntity
+				//添加首层土判断处理器
+				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(
+						jkzhGetValues.getJkzhContext().getJkzhBasicParam(),
+						time+beginFloor,
+						beginFloor,
+						jkzhConfigEnum)))
+				//添加地面堆载处理器
+				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParam()))
+				//添加水土分算处理器
+				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParam(), waterWhichEnum)))
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(time,beginFloor,endFloor)))
+				//公式修正处理器
+				.addHandler(new ReviseHandler().setParams(ReviseEnum.公式修正))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
+		return calFromulaEntity;
+	}
 
 	/**
 	 * 土压力计算公式：包括如下处理器
@@ -85,29 +137,35 @@ public class JkzhFromulaEntityFactory {
 	 * 7、添加值填充处理器
 	 * 8、添加值填充处理器
 	 * @param jkzhGetValues
-	 * @param fromula
+	 * @param jkzhConfigEnum
 	 * @param waterWhichEnum
 	 * @return
 	 */
-	public FromulaEntity soilPressureToLatex(JkzhGetValues jkzhGetValues,
-											 String fromula,
-											 WaterWhichEnum waterWhichEnum,
-											 ExpansionParam expansionParam){
+	public FromulaEntity soilPressureToLatex(int time,
+											 int beginFloor,
+											 int endFloor,
+			                                 JkzhGetValues jkzhGetValues,
+											 JkzhConfigEnum jkzhConfigEnum,
+											 WaterWhichEnum waterWhichEnum){
 		//用于word展示
-		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		FromulaEntity latexFromulaEntity = new FromulaEntity(jkzhConfigEnum.getLatexCal());
 		latexFromulaEntity
 				//添加首层土判断处理器
-				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(jkzhGetValues.getJkzhContext().getJkzhBasicParam())))
+				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(
+						jkzhGetValues.getJkzhContext().getJkzhBasicParam(),
+						time+beginFloor,
+						beginFloor,
+						jkzhConfigEnum)))
 				//添加地面堆载处理器
 				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParam()))
 				//添加水土分算处理器
 				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParam(), waterWhichEnum)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(time,beginFloor,endFloor)))
 				//公式修正处理器
 				.addHandler(new ReviseHandler().setParams(ReviseEnum.公式修正))
-				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(expansionParam))
 				//添加值填充处理器
 				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
 		return latexFromulaEntity;
@@ -172,19 +230,18 @@ public class JkzhFromulaEntityFactory {
 	 * 需扩展计算结果
 	 * @param jkzhGetValues
 	 * @param fromula
-	 * @param expansionParam 扩展参数
 	 * @return
 	 */
-	public FromulaEntity extendToCal(JkzhGetValues jkzhGetValues,
-									 String fromula,
-									 ExpansionParam expansionParam){
+	public FromulaEntity extendToCal(int curFloor,
+									 JkzhGetValues jkzhGetValues,
+									 String fromula){
 		//用于word展示
 		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
 		latexFromulaEntity
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(expansionParam))
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor,curFloor,curFloor)))
 				//添加值填充处理器
 				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
 				//添加值填充处理器
@@ -196,19 +253,66 @@ public class JkzhFromulaEntityFactory {
 	 * 需扩展公式展示
 	 * @param jkzhGetValues
 	 * @param fromula
-	 * @param expansionParam 扩展参数
 	 * @return
 	 */
-	public FromulaEntity extendToLatex(JkzhGetValues jkzhGetValues,
-									   String fromula,
-									   ExpansionParam expansionParam){
+	public FromulaEntity extendToLatex(int curFloor,
+									   JkzhGetValues jkzhGetValues,
+									   String fromula){
 		//用于word展示
 		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
 		latexFromulaEntity
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(expansionParam))
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor,curFloor,curFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
+		return latexFromulaEntity;
+	}
+
+	/**
+	 * 需扩展计算结果
+	 * @param jkzhGetValues
+	 * @param fromula
+	 * @return
+	 */
+	public FromulaEntity extendToCalN(int time,
+									  int beginFloor,
+									  int endFloor,
+									 JkzhGetValues jkzhGetValues,
+									 String fromula){
+		//用于word展示
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(time,beginFloor,endFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
+				//添加值填充处理器
+				.addHandler(new CalHandler());
+		return latexFromulaEntity;
+	}
+
+	/**
+	 * 需扩展公式展示
+	 * @param jkzhGetValues
+	 * @param fromula
+	 * @return
+	 */
+	public FromulaEntity extendToLatexN(int time,
+										int beginFloor,
+										int endFloor,
+									   JkzhGetValues jkzhGetValues,
+									   String fromula){
+		//用于word展示
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(time,beginFloor,endFloor)))
 				//添加值填充处理器
 				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
 		return latexFromulaEntity;
