@@ -24,23 +24,21 @@ import java.util.Objects;
  * 基坑支护计算
  */
 @Slf4j
-public class JkzhCalculation extends DefaultCalculation{
+public class JkzhCalculation{
+
     private JkzhFromulaHandle jkzhFromulaHandle;
     private JkzhContext jkzhContext;
     private JkzhCalTemporaryPart jkzhCalTemporaryPart;
     private JkzhPrefixLayout jkzhPrefixLayout;
     private JkzhFormulaLayout jkzhFormulaLayout;
-    public JkzhCalculation() {
+
+    public JkzhCalculation(JkzhContext jkzhContext) {
         this.jkzhFromulaHandle = new JkzhFromulaHandle();
         this.jkzhCalTemporaryPart = new JkzhCalTemporaryPart();
         this.jkzhPrefixLayout = new JkzhPrefixLayout();
         this.jkzhFormulaLayout = new JkzhFormulaLayout();
-        this.jkzhContext = (JkzhContext)this.getContext(this);
+        this.jkzhContext = jkzhContext;
         createFixedElement();
-    }
-
-    public JkzhContext getJkzhContext() {
-        return jkzhContext;
     }
 
     /**

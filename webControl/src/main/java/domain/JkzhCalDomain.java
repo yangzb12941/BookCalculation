@@ -1,4 +1,4 @@
-package org;
+package domain;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.template.IterableTemplate;
@@ -9,42 +9,46 @@ import org.calculation.JkzhCalculation;
 import org.context.JkzhContext;
 import org.context.JkzhContextFactory;
 import org.elementHandler.ElementHandlerUtils;
-import org.junit.Test;
+import org.springframework.stereotype.Component;
 import org.table.JkzhBasicParam;
+import request.JkzhRequest;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+@Component
 @Slf4j
-public class TestTemplate {
-    @Test
+public class JkzhCalDomain {
+
     //往表格里插入计算公式测试
-    public void writeFormulaToTableCellTest() throws IOException {
-        JkzhBasicParam jkzhBasicParam = createJkzhBasicParam();
-        final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParam, createTable());
+    public String writeToWord(String templatePath, String downloadPath, JkzhRequest jkzhRequest) throws IOException {
+
+        JkzhBasicParam jkzhBasicParam = createJkzhBasicParam(jkzhRequest);
+        final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParam, jkzhRequest.getTable());
 
         JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhContext);
         //计算主动土压力
         jkzhCalculation.zdPressure();
         //计算被动土压力
-        jkzhCalculation.bdPressure(7.0);
+        jkzhCalculation.bdPressure(jkzhRequest.getDepth());
         //计算土压力零点
-        jkzhCalculation.pressureZero(7.0);
+        jkzhCalculation.pressureZero(jkzhRequest.getDepth());
         //计算主动土压力合力
         jkzhCalculation.zdResultantEarthPressures();
         //主动土压力合力作用点位置
         jkzhCalculation.zdPositionAction();
         //被动土压力合力及作用点位置
-        jkzhCalculation.bdResultantEarthPressures(7.0);
+        jkzhCalculation.bdResultantEarthPressures(jkzhRequest.getDepth());
         //被动土压力合力作用点位置
-        jkzhCalculation.bdPositionAction(7.0);
+        jkzhCalculation.bdPositionAction(jkzhRequest.getDepth());
         //支撑处水平力计算
-        jkzhCalculation.calStrutForce(7.0);
+        jkzhCalculation.calStrutForce(jkzhRequest.getDepth());
 
-        XWPFTemplate compile = XWPFTemplate.compile("src\\test\\templates\\铁男基坑支护模板.docx");
-        List<MetaTemplate> elementTemplates = compile.getElementTemplates();
+        XWPFTemplate compile = XWPFTemplate.compile(templatePath+"铁男基坑支护模板.docx");
+        final List<MetaTemplate> elementTemplates = compile.getElementTemplates();
         Map<String, Object> values = new HashMap<String, Object>() {
             {
                 for (MetaTemplate item:elementTemplates) {
@@ -60,29 +64,20 @@ public class TestTemplate {
                 }
             }
         };
-        compile.render(values).writeToFile("out_基坑支护设计排桩法模板.docx");
+        String fileName = UUID.randomUUID().toString();
+        String pathName= downloadPath+fileName+".docx";
+        compile.render(values).writeToFile(pathName);
+        return fileName;
     }
 
-    private JkzhBasicParam createJkzhBasicParam(){
+    private JkzhBasicParam createJkzhBasicParam(JkzhRequest jkzhRequest){
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
-        jkzhBasicParam.setSurcharge(20.0);
-        jkzhBasicParam.setAxis(0.4);
-        jkzhBasicParam.setDepth(7.0);
-        jkzhBasicParam.setZDWarterDepth(2.5);
-        jkzhBasicParam.setBDWarterDepth(10.5);
-        jkzhBasicParam.setWaterConstant(20.0);
+        jkzhBasicParam.setSurcharge(jkzhRequest.getSurcharge());
+        jkzhBasicParam.setAxis(jkzhRequest.getAxis());
+        jkzhBasicParam.setDepth(jkzhRequest.getDepth());
+        jkzhBasicParam.setZDWarterDepth(jkzhRequest.getZDWarterDepth());
+        jkzhBasicParam.setBDWarterDepth(jkzhRequest.getBDWarterDepth());
+        jkzhBasicParam.setWaterConstant(jkzhRequest.getWaterConstant());
         return jkzhBasicParam;
-    }
-
-    private String[][] createTable(){
-        //土压力系数头
-        String[][] table = {
-                {"岩土层分布（从上至下）及分布特征序号", "土层名称","厚度(m)\nh","重度(kN/m3)\nγ","黏聚力(kPa)\nc","内摩擦角(°)\nΨ","计算方式"},
-                {"1", "人工填土","1.2","18.0","5.7","13.5","水土合算"},
-                {"2", "淤泥质粉质黏土","5","17.8","8.2","9.6","水土合算"},
-                {"3", "粉质黏土","3.8","20.0","14","16.2","水土分算"},
-                {"4", "黏性土","7.4","20.5","22","20.8","水土合算"},
-        };
-        return table;
     }
 }

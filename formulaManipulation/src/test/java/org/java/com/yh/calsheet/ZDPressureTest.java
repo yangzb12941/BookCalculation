@@ -6,6 +6,7 @@ import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
 import org.constant.Constant;
 import org.context.JkzhContext;
+import org.context.JkzhContextFactory;
 import org.element.FormulaElement;
 import org.element.TextElement;
 import org.entity.ExpansionParam;
@@ -18,6 +19,7 @@ import org.handleParams.WaterHandlerParams;
 import org.handler.*;
 import org.junit.Test;
 import org.show.JkzhCalTemporaryPart;
+import org.table.JkzhBasicParam;
 
 import java.util.HashSet;
 
@@ -37,9 +39,11 @@ public class ZDPressureTest {
     private JkzhContext jkzhContext;
     @Test
     public void execute() {
-        JkzhCalculation jkzhCalculation = new JkzhCalculation();
+        JkzhBasicParam jkzhBasicParam = createJkzhBasicParam();
+        final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParam, createTable());
+
+        JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhContext);
         JkzhCalTemporaryPart jkzhCalTemporaryPart = new JkzhCalTemporaryPart();
-        this.jkzhContext = (JkzhContext) jkzhCalculation.getContext(jkzhCalculation);
         FromulaEntity fromulaToCal = creatFromulaToCal(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
         FromulaEntity fromulaToLatex = creatFromulaToLatex(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
         int layer = this.jkzhContext.getJkzhBasicParam().getAllLands();
@@ -122,5 +126,28 @@ public class ZDPressureTest {
                 //添加值填充处理器
                 .addHandler(new FillValueHandler().setParams(jkzhGetValues));
         return latexFromulaEntity;
+    }
+
+    private JkzhBasicParam createJkzhBasicParam(){
+        JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
+        jkzhBasicParam.setSurcharge(20.0);
+        jkzhBasicParam.setAxis(0.4);
+        jkzhBasicParam.setDepth(7.0);
+        jkzhBasicParam.setZDWarterDepth(2.5);
+        jkzhBasicParam.setBDWarterDepth(10.5);
+        jkzhBasicParam.setWaterConstant(20.0);
+        return jkzhBasicParam;
+    }
+
+    private String[][] createTable(){
+        //土压力系数头
+        String[][] table = {
+                {"岩土层分布（从上至下）及分布特征序号", "土层名称","厚度(m)\nh","重度(kN/m3)\nγ","黏聚力(kPa)\nc","内摩擦角(°)\nΨ","计算方式"},
+                {"1", "人工填土","1.2","18.0","5.7","13.5","水土合算"},
+                {"2", "淤泥质粉质黏土","5","17.8","8.2","9.6","水土合算"},
+                {"3", "粉质黏土","3.8","20.0","14","16.2","水土分算"},
+                {"4", "黏性土","7.4","20.5","22","20.8","水土合算"},
+        };
+        return table;
     }
 }

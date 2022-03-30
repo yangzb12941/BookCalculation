@@ -13,22 +13,22 @@ import lombok.Data;
 public class JkzhBasicParam {
 
 	//地面堆载
-	private Double surcharge = 20.0;
+	private Double surcharge = 0.0;
 
 	//第一层支撑的轴线
-	private Double axis = 0.4;
+	private Double axis = 0.0;
 
 	//开挖深度
-	private Double depth =7.0;
+	private Double depth = 0.0;
 
 	//基坑外水位(主动土侧水位)
-	private double zDWarterDepth = 2.5;
+	private double zDWarterDepth = 0.0;
 
 	//基内外水位(被动土侧水位)
-	private double bDWarterDepth = 10.5;
+	private double bDWarterDepth = 0.0;
 
 	//水常量
-	private double waterConstant = 20.0;
+	private double waterConstant = 0.0;
 
 	//总土层数
 	private int allLands = 0;

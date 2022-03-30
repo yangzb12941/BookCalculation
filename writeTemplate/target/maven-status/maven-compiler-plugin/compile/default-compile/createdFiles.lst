@@ -1,4 +1,10 @@
+org\elementHandler\BlockElementHandler.class
 org\readTemplate\DefaultReadTemplate.class
+org\elementHandler\StringElementHandler.class
+org\elementHandler\JkzhBlockElementHandler.class
 org\writeTemplate\JkzhWriteLatexToDoc.class
+org\elementHandler\ElementHandlerUtils.class
+org\elementHandler\TableElementHandler.class
 org\readTemplate\IReadTemplate.class
 org\writeTemplate\JkzhWriteLatexToDoc$1.class
+org\elementHandler\IElementHandler.class

@@ -7,11 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="solveEquations" />
-        <module name="webControl" />
-        <module name="bootstrap" />
         <module name="formulaManipulation" />
         <module name="writeTemplate" />
+        <module name="bootstrap" />
+        <module name="solveEquations" />
+        <module name="webControl" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -21,7 +21,7 @@
       <module name="LayoutElement" target="1.5" />
       <module name="layoutElement" target="1.5" />
       <module name="solveEquations" target="1.7" />
-      <module name="webControl" target="1.7" />
+      <module name="webControl" target="8" />
       <module name="writeTemplate" target="8" />
     </bytecodeTargetLevel>
   </component>
