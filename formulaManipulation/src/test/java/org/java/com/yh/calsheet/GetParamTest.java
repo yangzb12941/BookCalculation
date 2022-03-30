@@ -14,7 +14,7 @@ public class GetParamTest {
 
     @Test
     public void getParamTest(){
-        String fromula = "(地面堆载_{5}+重度_{1} \\times 厚度_{1}+重度_{2} \\times 厚度_{2}+重度_{3} \\times 厚度_{3}+重度_{4} \\times 厚度_{4}+重度_{5} \\times 厚度_{5}) \\times 主动土压力系数_{5}- 2 \\times 粘聚力_{5} \\times \\sqrt{主动土压力系数_{5}}";
+        String fromula = "(地面堆载_{5}+重度_{1} \\times 厚度_{1}+重度_{2} \\times 厚度_{2}+重度_{3} \\times 厚度_{3}+重度_{4} \\times 厚度_{4}+重度_{5} \\times 厚度_{5}) \\times 主动土压力系数_{5}- 2 \\times 黏聚力_{5} \\times \\sqrt{主动土压力系数_{5}}";
         List<ElementParam> elementParams = getParam(fromula);
         log.info("元素:{}", elementParams);
     }

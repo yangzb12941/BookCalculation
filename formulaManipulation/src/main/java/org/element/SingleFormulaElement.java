@@ -5,22 +5,18 @@ import org.springframework.util.StringUtils;
 
 import java.util.Stack;
 
-public class FormulaElement extends BaseElement<String>{
+public class SingleFormulaElement extends BaseElement<String>{
     //前缀
     private ILayout iLayout;
 
-    public FormulaElement(Integer index, ILayout iLayout, String tagName, String value) {
+    public SingleFormulaElement(Integer index, ILayout iLayout, String tagName, String value) {
         super(index,tagName, value);
         this.iLayout = iLayout;
     }
 
     public String getValue(){
         String toPrefix = numToPrefix();
-        if(!StringUtils.isEmpty(toPrefix)){
-            return "$"+toPrefix+"="+super.getValue()+"$";
-        }else{
-            return "$"+super.getValue()+"$";
-        }
+        return "$"+toPrefix+"$";
     }
 
     private String numToPrefix(){

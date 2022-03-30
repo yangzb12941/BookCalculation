@@ -188,6 +188,22 @@ public class JkzhFromulaEntityFactory {
 	}
 
 	/**
+	 * 公式下标标注{n}替换为对应的下标值
+	 * 1、公式下标标注{n}替换为对应的下标值处理器
+	 * @param fromula
+	 * @param flagIndex
+	 * @return
+	 */
+	public FromulaEntity replaceSubscript(String fromula,String flagIndex){
+		//用于word展示
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
+				//公式下标标注{n}替换为对应的下标值
+				.addHandler(new ReplaceSubscriptHandler().setParams(flagIndex));
+		return latexFromulaEntity;
+	}
+
+	/**
 	 * 固定公式展示处理器：
 	 * 1、公式替换元素处理器
 	 * 2、标记元素处理器

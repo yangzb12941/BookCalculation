@@ -7,6 +7,7 @@ import org.entity.ExpansionParam;
 import org.enums.WaterWhichEnum;
 import org.fromulaEntity.FromulaEntity;
 import org.getValue.JkzhGetValues;
+import org.handler.ReplaceSubscriptHandler;
 import org.show.ILayout;
 
 @Slf4j
@@ -240,6 +241,34 @@ public class JkzhFromulaHandle{
         log.info("extendToCal入参:公式{},",fromula);
         //处理计算结果的公式
         FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.replaceLayoutChar(fromula,iLayout);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * 固定公式展示处理器：
+     * 1、公式替换元素处理器
+     * @param fromula 解析公式
+     * @return
+     */
+    public String replaceLayoutChar(String fromula){
+        log.info("extendToCal入参:公式{},",fromula);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.replaceLayoutChar(fromula,null);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * 公式下标标注{n}替换为对应的下标值
+     * 1、公式下标标注{n}替换为对应的下标值处理器
+     * @param fromula
+     * @param flagIndex
+     * @return
+     */
+    public String replaceSubscript(String fromula,String flagIndex){
+        //用于word展示
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.replaceSubscript(fromula,flagIndex);
         String compile = fromulaEntity.compile();
         return compile;
     }

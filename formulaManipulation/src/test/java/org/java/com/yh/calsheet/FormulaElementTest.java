@@ -2,10 +2,9 @@ package org.java.com.yh.calsheet;
 
 import lombok.extern.slf4j.Slf4j;
 import org.element.FormulaElement;
-import org.entity.ElementParam;
 import org.junit.Test;
-import org.show.JkzhILayout;
-import java.util.List;
+import org.show.JkzhPrefixLayout;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -13,11 +12,13 @@ import java.util.Set;
 public class FormulaElementTest {
     @Test
     public void formulaElementTest(){
-        JkzhILayout jkzhILayout = new JkzhILayout();
-        Set<Map.Entry<String, String>> entries = jkzhILayout.getLayoutMap().entrySet();
+        JkzhPrefixLayout jkzhPrefixLayout = new JkzhPrefixLayout();
+        Set<Map.Entry<String, String>> entries = jkzhPrefixLayout.getLayoutMap().entrySet();
         for(Map.Entry<String, String> item:entries){
-            FormulaElement formulaElement = new FormulaElement(3,jkzhILayout,item.getKey(),"aaaaaaa");
-            log.info("元素:{}:{}",item.getKey(), formulaElement.getValue());
+            //if(item.getKey().equals("被动土压力下")){
+                FormulaElement formulaElement = new FormulaElement(3, jkzhPrefixLayout,item.getKey(),"aaaaaaa");
+                log.info("元素:{}:{}",item.getKey(), formulaElement.getValue());
+            //}
         }
     }
 }

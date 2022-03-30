@@ -25,9 +25,9 @@ public class ExpansionHandler implements IHandler<ExpansionParam>{
         ArrayList<String> subAnalysis = new ArrayList<String>(8);
         boolean isPush = Boolean.FALSE;
         //在对JkzhConfigEnum下 原始 latex、calculate、latexCal 展开之前做特殊处理。
-        //比如：在展开[<地面堆载+>[重度*厚度+...]]*主动土压力系数-2*粘聚力*math.sqrt(主动土压力系数)
+        //比如：在展开[<地面堆载+>[重度*厚度+...]]*主动土压力系数-2*黏聚力*math.sqrt(主动土压力系数)
         //的时候，是否在每个中文指标结束后添加_{n}标识:
-        //[<地面堆载_{n}+>[重度_{n}*厚度_{n}+...]]*主动土压力系数_{n}-2*粘聚力_{n}*math.sqrt(主动土压力系数_{n})
+        //[<地面堆载_{n}+>[重度_{n}*厚度_{n}+...]]*主动土压力系数_{n}-2*黏聚力_{n}*math.sqrt(主动土压力系数_{n})
         // 这样再展开后如下：
         // 一般展开后的公式，是通过_n下标，去匹配具体的值代入。而对于不带入参数的公式，是不需要这个特殊处理的。
         for(char ch:fromula.toCharArray()){
