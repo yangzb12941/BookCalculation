@@ -12,7 +12,6 @@
         <option value="$PROJECT_DIR$/bootstrap/pom.xml" />
         <option value="$PROJECT_DIR$/formulaManipulation/pom.xml" />
         <option value="$PROJECT_DIR$/solveEquations/pom.xml" />
-        <option value="$PROJECT_DIR$/webControl/pom.xml" />
         <option value="$PROJECT_DIR$/writeTemplate/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
@@ -21,6 +20,7 @@
       <set>
         <option value="$PROJECT_DIR$/LayoutElement/pom.xml" />
         <option value="$PROJECT_DIR$/layoutElement/pom.xml" />
+        <option value="$PROJECT_DIR$/webControl/pom.xml" />
       </set>
     </option>
   </component>
