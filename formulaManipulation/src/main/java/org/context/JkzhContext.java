@@ -28,7 +28,7 @@ public class JkzhContext extends AbstractContext{
     //基坑支护 土压力系数表
     private SoilPressureTable soilPressureTable;
 
-    //模板元素
+    //模板公共元素展示：不在每个单独的工况中展示的元素。
     private HashMap<String, BaseElement> elementTemplate;
 
     /**
