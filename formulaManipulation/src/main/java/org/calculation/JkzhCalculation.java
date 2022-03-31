@@ -190,8 +190,6 @@ public class JkzhCalculation{
         /**jkzhContext begin*/
         this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土层参数计算依据表",new TableElement(0,"土层参数计算依据表",this.jkzhContext.getSoilQualityTable().getTable()));
         this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土压力系数表",new TableElement(0,"土压力系数表",this.jkzhContext.getSoilPressureTable().getTable()));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("地面堆载",new TextElement(0,"地面堆载",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getSurcharge().toString()));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("开挖深度",new TextElement(0,"开挖深度",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getDepth().toString()));
         /**jkzhContext end*/
 
         /**jkzhElementLayout begin*/
@@ -209,6 +207,15 @@ public class JkzhCalculation{
         this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支点至基坑底面的距离",new SingleFormulaElement(1,this.jkzhPrefixLayout,"支点至基坑底面的距离",this.jkzhPrefixLayout.getLayoutMap().get("支点至基坑底面的距离")));
         this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("基坑底面至反弯点的距离",new SingleFormulaElement(1,this.jkzhPrefixLayout,"基坑底面至反弯点的距离",this.jkzhPrefixLayout.getLayoutMap().get("基坑底面至反弯点的距离")));
         /**jkzhElementLayout end*/
+
+        /**各工况参数 begin*/
+        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("坑内水位",new TextElement(0,"坑内水位",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getBDWarterDepth().toString()));
+        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("坑外水位",new TextElement(0,"坑外水位",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getZDWarterDepth().toString()));
+        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支撑位置",new TextElement(0,"支撑位置",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getAxis().toString()));
+        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("均布荷载",new TextElement(0,"均布荷载",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getSurcharge().toString()));
+        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("基坑挖深",new TextElement(0,"基坑挖深",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getDepth().toString()));
+        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("第几工况",new TextElement(0,"第几工况",String.valueOf(this.jkzhContext.getCalTimes()+1)));
+        /**各工况参数 end*/
     }
 
     //计算给定深度，返回深度所在土层

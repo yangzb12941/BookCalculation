@@ -3,6 +3,7 @@ package org.elementHandler;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.context.AbstractContext;
 import org.context.JkzhContext;
@@ -10,11 +11,9 @@ import org.element.BaseElement;
 import org.element.BlockElement;
 import org.enumUtils.ZDEqualsBDKindsEnum;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
+@Slf4j
 public class JkzhBlockElementHandler extends BlockElementHandler{
 
     private static volatile JkzhBlockElementHandler instance;
@@ -31,32 +30,49 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
     }
 
     @Override
-    public List<Map<String,Object>> getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate) {
+    public Object getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate) {
         IterableTemplate iterableTemplate = (IterableTemplate) metaTemplate;
         JkzhContext jkzhContext = (JkzhContext)abstractContext;
         List<BlockElement> blockElements = null;
-        if(iterableTemplate.getStartMark().getTagName().equals("主动土压力")){
+        List<Map<String, Object>> mapList = new ArrayList<>(64);
+        if(iterableTemplate.getStartMark().getTagName().equals("多工况")){
+            Object workingConditions = multipleWorkingConditions(jkzhContext, iterableTemplate);
+            return workingConditions;
+        }else if(iterableTemplate.getStartMark().getTagName().equals("主动土压力")){
             blockElements = zdPressure((JkzhContext) abstractContext,iterableTemplate);
+            List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+            mapList.addAll(maps);
         }else if(iterableTemplate.getStartMark().getTagName().equals("被动土压力")){
             blockElements = bdPressure((JkzhContext) abstractContext,iterableTemplate);
+            List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+            mapList.addAll(maps);
         }else if(iterableTemplate.getStartMark().getTagName().equals("主动土压力合力")){
             blockElements = zdPressureResultant((JkzhContext) abstractContext,iterableTemplate);
+            List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+            mapList.addAll(maps);
         }else if(iterableTemplate.getStartMark().getTagName().equals("被动土压力合力")){
             blockElements = bdPressureResultant((JkzhContext) abstractContext,iterableTemplate);
+            List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+            mapList.addAll(maps);
         }else if(iterableTemplate.getStartMark().getTagName().equals("第一种情况")){
             if(jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第一种情况.getType())){
                 blockElements = zDEqualsBD((JkzhContext) abstractContext,iterableTemplate);
+                List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+                mapList.addAll(maps);
             }
         }else if(iterableTemplate.getStartMark().getTagName().equals("第二种情况")){
             if(jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第二种情况.getType())){
                 blockElements = zDEqualsBD((JkzhContext) abstractContext,iterableTemplate);
+                List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+                mapList.addAll(maps);
             }
         }else if(iterableTemplate.getStartMark().getTagName().equals("第三种情况")){
             if(jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第三种情况.getType())){
                 blockElements = zDEqualsBD((JkzhContext) abstractContext,iterableTemplate);
+                List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+                mapList.addAll(maps);
             }
         }
-        List<Map<String, Object>> mapList = blockElementToListMap(blockElements);
         return mapList;
     }
 
@@ -121,5 +137,24 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
             blockElements.add(blockElement);
         }
         return blockElements;
+    }
+
+    private Object multipleWorkingConditions(JkzhContext jkzhContext, IterableTemplate iterableTemplate){
+        Map<String, Object> values = new HashMap<String, Object>() {
+            {
+                for (MetaTemplate item:iterableTemplate.getTemplates()) {
+                    if(item instanceof RunTemplate){
+                        String tagName = ((RunTemplate) item).getTagName();
+                        log.info("RunTemplate TagName:{}",tagName);
+                        put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,item));
+                    }else if (item instanceof IterableTemplate){
+                        String tagName = ((IterableTemplate)item).getStartMark().getTagName();
+                        log.info("IterableTemplate TagName:{}",tagName);
+                        put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,item));
+                    }
+                }
+            }
+        };
+        return values;
     }
 }

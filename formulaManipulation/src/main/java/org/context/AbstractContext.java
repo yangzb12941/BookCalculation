@@ -14,5 +14,5 @@ public abstract class AbstractContext {
     private List<HashMap<String,String>> temporaryValues;
 
     //当前第几工况
-    private int calTimes;
+    private Integer calTimes;
 }

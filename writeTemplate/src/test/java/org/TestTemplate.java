@@ -47,7 +47,7 @@ public class TestTemplate {
 
         XWPFTemplate compile = XWPFTemplate.compile("src\\test\\templates\\铁男基坑支护模板.docx");
         List<MetaTemplate> elementTemplates = compile.getElementTemplates();
-        Map<String, Object> valuesPart = new HashMap<String, Object>() {
+        Map<String, Object> values = new HashMap<String, Object>() {
             {
                 for (MetaTemplate item:elementTemplates) {
                     if(item instanceof RunTemplate){
@@ -62,12 +62,7 @@ public class TestTemplate {
                 }
             }
         };
-        Map<String, Object> valuesAll = new HashMap<String, Object>() {
-            {
-                put("", valuesPart);
-            }
-        };
-        compile.render(valuesAll).writeToFile("out_基坑支护设计排桩法模板.docx");
+        compile.render(values).writeToFile("out_基坑支护设计排桩法模板.docx");
     }
 
     private List<JkzhBasicParam> createJkzhBasicParam(){
