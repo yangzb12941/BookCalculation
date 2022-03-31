@@ -6,6 +6,7 @@ import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.calParam.CalResult;
+import org.calculation.CreateFixedElementHandle;
 import org.calculation.JkzhCalculation;
 import org.context.JkzhContext;
 import org.context.JkzhContextFactory;
@@ -26,24 +27,29 @@ public class TestTemplate {
     public void writeFormulaToTableCellTest() throws IOException {
         List<JkzhBasicParam> jkzhBasicParams = createJkzhBasicParam();
         final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParams, createTable());
-        jkzhContext.refresh(1);
         JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhContext);
-        //计算主动土压力
-        jkzhCalculation.zdPressure();
-        //计算被动土压力
-        jkzhCalculation.bdPressure(7.0);
-        //计算土压力零点
-        jkzhCalculation.pressureZero(7.0);
-        //计算主动土压力合力
-        jkzhCalculation.zdResultantEarthPressures();
-        //主动土压力合力作用点位置
-        jkzhCalculation.zdPositionAction();
-        //被动土压力合力及作用点位置
-        jkzhCalculation.bdResultantEarthPressures(7.0);
-        //被动土压力合力作用点位置
-        jkzhCalculation.bdPositionAction(7.0);
-        //支撑处水平力计算
-        jkzhCalculation.calStrutForce(7.0);
+        for (int i = 1; i < 2;i++) {
+            jkzhContext.refresh(i,new CreateFixedElementHandle(
+                    jkzhCalculation.getJkzhFromulaHandle(),
+                    jkzhCalculation.getJkzhPrefixLayout(),
+                    jkzhCalculation.getJkzhContext()));
+            //计算主动土压力
+            jkzhCalculation.zdPressure();
+            //计算被动土压力
+            jkzhCalculation.bdPressure(7.0);
+            //计算土压力零点
+            jkzhCalculation.pressureZero(7.0);
+            //计算主动土压力合力
+            jkzhCalculation.zdResultantEarthPressures();
+            //主动土压力合力作用点位置
+            jkzhCalculation.zdPositionAction();
+            //被动土压力合力及作用点位置
+            jkzhCalculation.bdResultantEarthPressures(7.0);
+            //被动土压力合力作用点位置
+            jkzhCalculation.bdPositionAction(7.0);
+            //支撑处水平力计算
+            jkzhCalculation.calStrutForce(7.0);
+        }
 
         XWPFTemplate compile = XWPFTemplate.compile("src\\test\\templates\\铁男基坑支护模板.docx");
         List<MetaTemplate> elementTemplates = compile.getElementTemplates();
@@ -78,6 +84,18 @@ public class TestTemplate {
         jkzhBasicParam.setCalResult(calResult);
         jkzhBasicParam.setCalTimes(1);
         jkzhBasicParams.add(jkzhBasicParam);
+
+        JkzhBasicParam jkzhBasicParam2 = new JkzhBasicParam();
+        jkzhBasicParam2.setSurcharge(20.0);
+        jkzhBasicParam2.setAxis(0.4);
+        jkzhBasicParam2.setDepth(7.0);
+        jkzhBasicParam2.setZDWarterDepth(2.5);
+        jkzhBasicParam2.setBDWarterDepth(10.5);
+        jkzhBasicParam2.setWaterConstant(20.0);
+        CalResult calResult2 = new CalResult();
+        jkzhBasicParam.setCalResult(calResult2);
+        jkzhBasicParam.setCalTimes(1);
+        jkzhBasicParams.add(jkzhBasicParam2);
         return jkzhBasicParams;
     }
 

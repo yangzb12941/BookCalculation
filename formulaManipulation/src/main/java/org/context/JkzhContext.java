@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.calParam.JkzhBasicParam;
+import org.calculation.ICreateFixedElement;
 import org.element.BaseElement;
 import org.table.SoilPressureTable;
 import org.table.SoilQualityTable;
@@ -27,16 +28,20 @@ public class JkzhContext extends AbstractContext{
     //基坑支护 土压力系数表
     private SoilPressureTable soilPressureTable;
 
+    //模板元素
+    private HashMap<String, BaseElement> elementTemplate;
+
     /**
      * 更具当前第几工况，刷新上下文数据
      * 总土层数、主动土层水位所在第几层土、被动土层水位所在第几层土、计算开挖面所在第几层土
      * 在计算各个工况前，都要重新刷新一下当前上下文
      */
-    public void refresh(int calTimes){
+    public void refresh(int calTimes, ICreateFixedElement iCreateFixedElement){
         //当前计算第几个工况
         super.setCalTimes(calTimes-1);
         //初始化集合
         initialize();
+        iCreateFixedElement.createFixedElement();
         //总土层数
         calAllLands(soilQualityTable,this.getJkzhBasicParams().get(super.getCalTimes()));
         //计算主动土层 水位所在第几层土
@@ -46,7 +51,6 @@ public class JkzhContext extends AbstractContext{
         //计算开挖面所在第几层土
         calDepthLand(soilQualityTable,this.getJkzhBasicParams().get(super.getCalTimes()));
     }
-
 
     /**
      * 总土层数

@@ -1,6 +1,7 @@
 package org.calculation;
 
 import com.googlecode.aviator.AviatorEvaluator;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
@@ -23,6 +24,7 @@ import java.util.Objects;
  * 基坑支护计算
  */
 @Slf4j
+@Data
 public class JkzhCalculation{
 
     private JkzhFromulaHandle jkzhFromulaHandle;
@@ -164,58 +166,29 @@ public class JkzhCalculation{
      * 把模板中的固定元素，填进模板元素集合中
      */
     private void createFixedElement(){
-        /**固定计公式begin*/
-        String s_1 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力.getLatex());
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动土压力计算公式",new FormulaElement(0,this.jkzhPrefixLayout,"主动土压力计算公式",s_1));
-        String s_2 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力系数.getLatex());
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动土压力系数计算公式",new FormulaElement(0,this.jkzhPrefixLayout,"主动土压力系数计算公式",s_2));
-
-        String s_3 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.被动土压力.getLatex());
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土压力计算公式",new FormulaElement(0,this.jkzhPrefixLayout,"被动土压力计算公式",s_3));
-        String s_4 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.被动土压力系数.getLatex());
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土压力系数计算公式",new FormulaElement(0,this.jkzhPrefixLayout,"被动土压力系数计算公式",s_4));
-
-        String s_5 = jkzhFromulaHandle.replaceSubscript(JkzhConfigEnum.支撑轴力.getLatex(),"1");
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支反力计算公式",new FormulaElement(1,this.jkzhPrefixLayout,"支反力计算公式",s_5));
-        /**固定计公式end*/
-
-        /**jkzhILayout begin*/
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("黏聚力",new SingleFormulaElement(0,this.jkzhPrefixLayout,"黏聚力",this.jkzhPrefixLayout.getLayoutMap().get("黏聚力")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("内摩擦角",new SingleFormulaElement(0,this.jkzhPrefixLayout,"内摩擦角",this.jkzhPrefixLayout.getLayoutMap().get("内摩擦角")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土压力强度顶面",new TextElement(0,"土压力强度顶面",this.jkzhPrefixLayout.getLayoutMap().get("土压力强度顶面")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土压力强度底面",new TextElement(0,"土压力强度底面",this.jkzhPrefixLayout.getLayoutMap().get("土压力强度底面")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土层厚度",new TextElement(0,"土层厚度",this.jkzhPrefixLayout.getLayoutMap().get("土层厚度")));
-        /**jkzhILayout end*/
-
         /**jkzhContext begin*/
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土层参数计算依据表",new TableElement(0,"土层参数计算依据表",this.jkzhContext.getSoilQualityTable().getTable()));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土压力系数表",new TableElement(0,"土压力系数表",this.jkzhContext.getSoilPressureTable().getTable()));
+        jkzhContext.getElementTemplate().put("土层参数计算依据表",new TableElement(0,"土层参数计算依据表",jkzhContext.getSoilQualityTable().getTable()));
+        jkzhContext.getElementTemplate().put("土压力系数表",new TableElement(0,"土压力系数表",jkzhContext.getSoilPressureTable().getTable()));
         /**jkzhContext end*/
 
-        /**jkzhElementLayout begin*/
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支护结构外侧",new SingleFormulaElement(0,this.jkzhPrefixLayout,"支护结构外侧",this.jkzhPrefixLayout.getLayoutMap().get("支护结构外侧")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支护结构内侧",new SingleFormulaElement(0,this.jkzhPrefixLayout,"支护结构内侧",this.jkzhPrefixLayout.getLayoutMap().get("支护结构内侧")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支护结构外侧应力",new SingleFormulaElement(0,this.jkzhPrefixLayout,"支护结构外侧应力",this.jkzhPrefixLayout.getLayoutMap().get("支护结构外侧应力")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支护结构内侧应力",new SingleFormulaElement(0,this.jkzhPrefixLayout,"支护结构内侧应力",this.jkzhPrefixLayout.getLayoutMap().get("支护结构内侧应力")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动土压力系数",new SingleFormulaElement(0,this.jkzhPrefixLayout,"主动土压力系数",this.jkzhPrefixLayout.getLayoutMap().get("主动土压力系数")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土压力系数",new SingleFormulaElement(0,this.jkzhPrefixLayout,"被动土压力系数",this.jkzhPrefixLayout.getLayoutMap().get("被动土压力系数")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动合力至反弯点的距离",new SingleFormulaElement(1,this.jkzhPrefixLayout,"被动合力至反弯点的距离",this.jkzhPrefixLayout.getLayoutMap().get("被动合力至反弯点的距离")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("各层土的被动合力",new SingleFormulaElement(0,this.jkzhPrefixLayout,"各层土的被动合力",this.jkzhPrefixLayout.getLayoutMap().get("各层土的被动合力")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("轴向支反力",new SingleFormulaElement(1,this.jkzhPrefixLayout,"轴向支反力",this.jkzhPrefixLayout.getLayoutMap().get("轴向支反力")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动合力至反弯点的距离",new SingleFormulaElement(1,this.jkzhPrefixLayout,"主动合力至反弯点的距离",this.jkzhPrefixLayout.getLayoutMap().get("主动合力至反弯点的距离")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("各层土的主动合力",new SingleFormulaElement(0,this.jkzhPrefixLayout,"各层土的主动合力",this.jkzhPrefixLayout.getLayoutMap().get("各层土的主动合力")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支点至基坑底面的距离",new SingleFormulaElement(1,this.jkzhPrefixLayout,"支点至基坑底面的距离",this.jkzhPrefixLayout.getLayoutMap().get("支点至基坑底面的距离")));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("基坑底面至反弯点的距离",new SingleFormulaElement(1,this.jkzhPrefixLayout,"基坑底面至反弯点的距离",this.jkzhPrefixLayout.getLayoutMap().get("基坑底面至反弯点的距离")));
-        /**jkzhElementLayout end*/
+        String s_1 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力.getLatex());
+        jkzhContext.getElementTemplate().put("主动土压力计算公式",new FormulaElement(0,jkzhPrefixLayout,"主动土压力计算公式",s_1));
+        String s_2 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.主动土压力系数.getLatex());
+        jkzhContext.getElementTemplate().put("主动土压力系数计算公式",new FormulaElement(0,jkzhPrefixLayout,"主动土压力系数计算公式",s_2));
 
-        /**各工况参数 begin*/
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("坑内水位",new TextElement(0,"坑内水位",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getBDWarterDepth().toString()));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("坑外水位",new TextElement(0,"坑外水位",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getZDWarterDepth().toString()));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支撑位置",new TextElement(0,"支撑位置",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getAxis().toString()));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("均布荷载",new TextElement(0,"均布荷载",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getSurcharge().toString()));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("基坑挖深",new TextElement(0,"基坑挖深",this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getDepth().toString()));
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("第几工况",new TextElement(0,"第几工况",String.valueOf(this.jkzhContext.getCalTimes()+1)));
-        /**各工况参数 end*/
+        String s_3 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.被动土压力.getLatex());
+        jkzhContext.getElementTemplate().put("被动土压力计算公式",new FormulaElement(0,jkzhPrefixLayout,"被动土压力计算公式",s_3));
+        String s_4 = jkzhFromulaHandle.replaceLayoutChar(JkzhConfigEnum.被动土压力系数.getLatex());
+        jkzhContext.getElementTemplate().put("被动土压力系数计算公式",new FormulaElement(0,jkzhPrefixLayout,"被动土压力系数计算公式",s_4));
+
+        jkzhContext.getElementTemplate().put("支护结构外侧",new SingleFormulaElement(0,jkzhPrefixLayout,"支护结构外侧",jkzhPrefixLayout.getLayoutMap().get("支护结构外侧")));
+        jkzhContext.getElementTemplate().put("支护结构外侧应力",new SingleFormulaElement(0,jkzhPrefixLayout,"支护结构外侧应力",jkzhPrefixLayout.getLayoutMap().get("支护结构外侧应力")));
+        jkzhContext.getElementTemplate().put("支护结构内侧应力",new SingleFormulaElement(0,jkzhPrefixLayout,"支护结构内侧应力",jkzhPrefixLayout.getLayoutMap().get("支护结构内侧应力")));
+        jkzhContext.getElementTemplate().put("主动土压力系数",new SingleFormulaElement(0,jkzhPrefixLayout,"主动土压力系数",jkzhPrefixLayout.getLayoutMap().get("主动土压力系数")));
+        jkzhContext.getElementTemplate().put("被动土压力系数",new SingleFormulaElement(0,jkzhPrefixLayout,"被动土压力系数",jkzhPrefixLayout.getLayoutMap().get("被动土压力系数")));
+        jkzhContext.getElementTemplate().put("黏聚力",new SingleFormulaElement(0,jkzhPrefixLayout,"黏聚力",jkzhPrefixLayout.getLayoutMap().get("黏聚力")));
+        jkzhContext.getElementTemplate().put("内摩擦角",new SingleFormulaElement(0,jkzhPrefixLayout,"内摩擦角",jkzhPrefixLayout.getLayoutMap().get("内摩擦角")));
+        jkzhContext.getElementTemplate().put("支护结构内侧",new SingleFormulaElement(0,jkzhPrefixLayout,"支护结构内侧",jkzhPrefixLayout.getLayoutMap().get("支护结构内侧")));
     }
 
     //计算给定深度，返回深度所在土层

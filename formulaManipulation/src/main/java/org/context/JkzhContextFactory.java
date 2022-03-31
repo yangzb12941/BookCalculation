@@ -33,9 +33,10 @@ public class JkzhContextFactory {
         SoilQualityTable soilQualityTable = new SoilQualityTable();
         soilQualityTable.setTable(table);
         jkzhContext.setSoilQualityTable(soilQualityTable);
-
         //土压力系数表计算
         createContextHandle(jkzhContext);
+        HashMap<String, BaseElement> elementTemplate = new HashMap<String,BaseElement>(32);
+        jkzhContext.setElementTemplate(elementTemplate);
         return jkzhContext;
     }
 

@@ -2,6 +2,7 @@ package org.java.com.yh.calsheet;
 
 import lombok.extern.slf4j.Slf4j;
 import org.calParam.CalResult;
+import org.calculation.CreateFixedElementHandle;
 import org.calculation.JkzhCalculation;
 import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
@@ -44,8 +45,11 @@ public class ZDPressureTest {
     public void execute() {
         List<JkzhBasicParam> jkzhBasicParams = createJkzhBasicParam();
         final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParams, createTable());
-        jkzhContext.refresh(1);
         JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhContext);
+        jkzhContext.refresh(1,new CreateFixedElementHandle(
+                jkzhCalculation.getJkzhFromulaHandle(),
+                jkzhCalculation.getJkzhPrefixLayout(),
+                jkzhCalculation.getJkzhContext()));
         JkzhCalTemporaryPart jkzhCalTemporaryPart = new JkzhCalTemporaryPart();
         FromulaEntity fromulaToCal = creatFromulaToCal(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
         FromulaEntity fromulaToLatex = creatFromulaToLatex(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
