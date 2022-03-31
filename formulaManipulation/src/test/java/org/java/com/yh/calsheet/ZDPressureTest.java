@@ -66,8 +66,8 @@ public class ZDPressureTest {
             paramCalUp.setEndFloor(i);
             String calUp = fromulaToCal.compile();
 
-            this.jkzhContext.getTemporaryValue().put("主动土压力上" + i, calUp);
-            this.jkzhContext.getElementTemplate().put("主动土压力上" + i, new FormulaElement(i, jkzhCalTemporaryPart, "主动土压力上", latexCalUp + "=" + calUp + "kPa"));
+            this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土压力上" + i, calUp);
+            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动土压力上" + i, new FormulaElement(i, jkzhCalTemporaryPart, "主动土压力上", latexCalUp + "=" + calUp + "kPa"));
             log.info("主动土压力第{}层展示公式—上:{}={}", i, latexCalUp, calUp);
 
             paramUp.setTimes(i);
@@ -80,9 +80,9 @@ public class ZDPressureTest {
             paramCalUp.setEndFloor(i);
             String zdCalRtDown = fromulaToCal.compile();
             log.info("主动土压力第{}层展示公式-下:{}={}",i,latexCalDown,zdCalRtDown);
-            this.jkzhContext.getElementTemplate().put("主动土层"+i,new TextElement(i,"主动土层",String.valueOf(i)));
-            this.jkzhContext.getTemporaryValue().put("主动土压力下"+i,zdCalRtDown);
-            this.jkzhContext.getElementTemplate().put("主动土压力下"+i,new FormulaElement(i, jkzhCalTemporaryPart,"主动土压力下",latexCalDown+"="+zdCalRtDown +"kPa"));
+            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动土层"+i,new TextElement(i,"主动土层",String.valueOf(i)));
+            this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土压力下"+i,zdCalRtDown);
+            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动土压力下"+i,new FormulaElement(i, jkzhCalTemporaryPart,"主动土压力下",latexCalDown+"="+zdCalRtDown +"kPa"));
         }
     }
     private FromulaEntity creatFromulaToCal(JkzhGetValueModelEnum jkzhGetValueModelEnum,JkzhConfigEnum jkzhConfigEnum,WaterWhichEnum waterWhichEnum){

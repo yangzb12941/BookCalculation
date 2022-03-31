@@ -109,11 +109,11 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
             for(MetaTemplate templates : iterableTemplate.getTemplates()){
                 RunTemplate temp = (RunTemplate)templates;
                 String key = temp.getTagName() + land;
-                BaseElement value = jkzhContext.getElementTemplate().get(key);
+                BaseElement value = jkzhContext.getElementTemplates().get(jkzhContext.getCalTimes()).get(key);
                 if(Objects.nonNull(value)){
                     baseElements.add(value);
                 }else{
-                    value = jkzhContext.getElementTemplate().get(temp.getTagName());
+                    value = jkzhContext.getElementTemplates().get(jkzhContext.getCalTimes()).get(temp.getTagName());
                     baseElements.add(value);
                 }
             }

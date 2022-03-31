@@ -7,6 +7,7 @@ import org.calParam.JkzhBasicParam;
 import org.table.SoilPressureTable;
 import org.table.SoilQualityTable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,11 +22,11 @@ public class JkzhContextFactory {
     public static JkzhContext getJkzhContext(List<JkzhBasicParam> jkzhBasicParams, String[][] table){
         //①、生成土压力系数表
         JkzhContext jkzhContext = (JkzhContext) FactoryContext.getContext(JkzhContext.class);
-        HashMap<String,String> temporaryValue = new HashMap<>(128);
-        jkzhContext.setTemporaryValue(temporaryValue);
+        List<HashMap<String,String>> temporaryValues = new ArrayList<HashMap<String,String>>(jkzhBasicParams.size());
+        jkzhContext.setTemporaryValues(temporaryValues);
 
-        HashMap<String, BaseElement> elementTemplate = new HashMap<>(128);
-        jkzhContext.setElementTemplate(elementTemplate);
+        List<HashMap<String, BaseElement>> elementTemplates = new ArrayList<HashMap<String,BaseElement>>(jkzhBasicParams.size());
+        jkzhContext.setElementTemplates(elementTemplates);
 
         //基础参数拼装
         jkzhContext.setJkzhBasicParams(jkzhBasicParams);

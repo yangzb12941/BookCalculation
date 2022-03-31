@@ -27,7 +27,7 @@ public class TableElementHandler implements IElementHandler<TableRenderData>{
     @Override
     public TableRenderData getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate) {
         RunTemplate runTemplate = (RunTemplate) metaTemplate;
-        BaseElement baseElement = abstractContext.getElementTemplate().get(runTemplate.getTagName());
+        BaseElement baseElement = abstractContext.getElementTemplates().get(abstractContext.getCalTimes()).get(runTemplate.getTagName());
         RowRenderData[] rowRenderData = soilPressureTable(baseElement);
         return Tables.create(rowRenderData);
     }

@@ -116,7 +116,7 @@ public class JkzhGetValues implements GetValues {
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), i, 2);
                                 addm += Double.valueOf(hdValue);
                             }
-                            valueArray[index] = String.format("%.2f",jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getPressureZero() - addm + Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue())));
+                            valueArray[index] = String.format("%.2f",jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getPressureZero() - addm + Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()))));
                         }
                     } else if (this.model == JkzhGetValueModelEnum.被动支撑轴力计算) {
                         Double addm = 0.0;
@@ -131,10 +131,10 @@ public class JkzhGetValues implements GetValues {
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), i, 2);
                                 addm += Double.valueOf(hdValue);
                             }
-                            valueArray[index] = String.format("%.2f",jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getPressureZero() - addm + Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue())));
+                            valueArray[index] = String.format("%.2f",jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getPressureZero() - addm + Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()))));
                         }
                     } else if (this.model == JkzhGetValueModelEnum.支撑轴力计算) {
-                        valueArray[index] = String.format("%.2f",Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue())));
+                        valueArray[index] = String.format("%.2f",Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()))));
                     }
                     break;
                 }
@@ -179,13 +179,13 @@ public class JkzhGetValues implements GetValues {
                 case "被动土压力上":
                 case "主动土压力下":
                 case "被动土压力下": {
-                    String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue());
+                    String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                     valueArray[index] = vMap_1;
                     break;
                 }
                 case "支撑轴力主动":
                 case "支撑轴力被动": {
-                    String vMap_2 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue());
+                    String vMap_2 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                     valueArray[index] = vMap_2;
                     break;
                 }
@@ -202,7 +202,7 @@ public class JkzhGetValues implements GetValues {
                     break;
                 }
                 case "支撑轴力":{
-                    String vMap_3 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValue());
+                    String vMap_3 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                     valueArray[index] = vMap_3;
                     break;
                 }

@@ -26,7 +26,7 @@ public class StringElementHandler implements IElementHandler<String>{
     @Override
     public String getElementValue(AbstractContext abstractContext, MetaTemplate metaTemplate) {
         RunTemplate runTemplate = (RunTemplate) metaTemplate;
-        BaseElement baseElement = abstractContext.getElementTemplate().get(runTemplate.getTagName());
+        BaseElement baseElement = abstractContext.getElementTemplates().get(abstractContext.getCalTimes()).get(runTemplate.getTagName());
         if(Objects.nonNull(baseElement)){
             return (String)baseElement.getValue();
         }else{
