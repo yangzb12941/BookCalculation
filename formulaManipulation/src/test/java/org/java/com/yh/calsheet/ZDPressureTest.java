@@ -1,6 +1,7 @@
 package org.java.com.yh.calsheet;
 
 import lombok.extern.slf4j.Slf4j;
+import org.calParam.CalResult;
 import org.calculation.JkzhCalculation;
 import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
@@ -19,9 +20,11 @@ import org.handleParams.WaterHandlerParams;
 import org.handler.*;
 import org.junit.Test;
 import org.show.JkzhCalTemporaryPart;
-import org.table.JkzhBasicParam;
+import org.calParam.JkzhBasicParam;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 public class ZDPressureTest {
@@ -39,14 +42,14 @@ public class ZDPressureTest {
     private JkzhContext jkzhContext;
     @Test
     public void execute() {
-        JkzhBasicParam jkzhBasicParam = createJkzhBasicParam();
-        final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParam, createTable());
-
+        List<JkzhBasicParam> jkzhBasicParams = createJkzhBasicParam();
+        final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParams, createTable());
+        jkzhContext.refresh(1);
         JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhContext);
         JkzhCalTemporaryPart jkzhCalTemporaryPart = new JkzhCalTemporaryPart();
         FromulaEntity fromulaToCal = creatFromulaToCal(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
         FromulaEntity fromulaToLatex = creatFromulaToLatex(JkzhGetValueModelEnum.主动土压力计算, JkzhConfigEnum.主动土压力, WaterWhichEnum.主动侧水位);
-        int layer = this.jkzhContext.getJkzhBasicParam().getAllLands();
+        int layer = this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getAllLands();
         //②、计算主动土压力强度
         for(int i = 1; i <= layer; i++){
             ExpansionHandler handlerLatexUp = (ExpansionHandler) fromulaToLatex.getHandler(ExpansionHandler.class);
@@ -88,11 +91,11 @@ public class ZDPressureTest {
         FromulaEntity calFromulaEntity = new FromulaEntity(jkzhConfigEnum.getCalculate());
         calFromulaEntity
                 //添加首层土判断处理器
-                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.jkzhContext.getJkzhBasicParam(),0,0,jkzhConfigEnum)))
+                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()),0,0,jkzhConfigEnum)))
                 //添加地面堆载处理器
-                .addHandler(new SurchargeHandler().setParams(this.jkzhContext.getJkzhBasicParam()))
+                .addHandler(new SurchargeHandler().setParams(this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes())))
                 //添加水土分算处理器
-                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(this.jkzhContext.getSoilQualityTable(),this.jkzhContext.getJkzhBasicParam(), waterWhichEnum)))
+                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(this.jkzhContext.getSoilQualityTable(),this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()), waterWhichEnum)))
                 //添加元素标记处理器
                 .addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
                 //添加展开公式处理器
@@ -112,11 +115,11 @@ public class ZDPressureTest {
         FromulaEntity latexFromulaEntity = new FromulaEntity(JkzhConfigEnum.主动土压力.getLatexCal());
         latexFromulaEntity
                 //添加首层土判断处理器
-                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.jkzhContext.getJkzhBasicParam(),0,0,jkzhConfigEnum)))
+                .addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()),0,0,jkzhConfigEnum)))
                 //添加地面堆载处理器
-                .addHandler(new SurchargeHandler().setParams(this.jkzhContext.getJkzhBasicParam()))
+                .addHandler(new SurchargeHandler().setParams(this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes())))
                 //添加水土分算处理器
-                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(this.jkzhContext.getSoilQualityTable(),this.jkzhContext.getJkzhBasicParam(), waterWhichEnum)))
+                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(this.jkzhContext.getSoilQualityTable(),this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()), waterWhichEnum)))
                 //添加元素标记处理器
                 .addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
                 //添加展开公式处理器
@@ -128,7 +131,8 @@ public class ZDPressureTest {
         return latexFromulaEntity;
     }
 
-    private JkzhBasicParam createJkzhBasicParam(){
+    private List<JkzhBasicParam> createJkzhBasicParam(){
+        List<JkzhBasicParam> jkzhBasicParams = new ArrayList<>();
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
         jkzhBasicParam.setSurcharge(20.0);
         jkzhBasicParam.setAxis(0.4);
@@ -136,7 +140,11 @@ public class ZDPressureTest {
         jkzhBasicParam.setZDWarterDepth(2.5);
         jkzhBasicParam.setBDWarterDepth(10.5);
         jkzhBasicParam.setWaterConstant(20.0);
-        return jkzhBasicParam;
+        CalResult calResult = new CalResult();
+        jkzhBasicParam.setCalResult(calResult);
+        jkzhBasicParam.setCalTimes(1);
+        jkzhBasicParams.add(jkzhBasicParam);
+        return jkzhBasicParams;
     }
 
     private String[][] createTable(){

@@ -44,15 +44,15 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
         }else if(iterableTemplate.getStartMark().getTagName().equals("被动土压力合力")){
             blockElements = bdPressureResultant((JkzhContext) abstractContext,iterableTemplate);
         }else if(iterableTemplate.getStartMark().getTagName().equals("第一种情况")){
-            if(jkzhContext.getJkzhBasicParam().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第一种情况.getType())){
+            if(jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第一种情况.getType())){
                 blockElements = zDEqualsBD((JkzhContext) abstractContext,iterableTemplate);
             }
         }else if(iterableTemplate.getStartMark().getTagName().equals("第二种情况")){
-            if(jkzhContext.getJkzhBasicParam().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第二种情况.getType())){
+            if(jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第二种情况.getType())){
                 blockElements = zDEqualsBD((JkzhContext) abstractContext,iterableTemplate);
             }
         }else if(iterableTemplate.getStartMark().getTagName().equals("第三种情况")){
-            if(jkzhContext.getJkzhBasicParam().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第三种情况.getType())){
+            if(jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getZDEqualsBDKinds().equals(ZDEqualsBDKindsEnum.土压力零点第三种情况.getType())){
                 blockElements = zDEqualsBD((JkzhContext) abstractContext,iterableTemplate);
             }
         }
@@ -72,27 +72,27 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
     }
 
     private List<BlockElement> zdPressure(JkzhContext jkzhContext, IterableTemplate iterableTemplate){
-        int allLands = jkzhContext.getJkzhBasicParam().getAllLands();
+        int allLands = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getAllLands();
         List<BlockElement> blockElements = creatBlockElement(jkzhContext, iterableTemplate, 1, allLands);
         return blockElements;
     }
 
     private List<BlockElement> bdPressure(JkzhContext jkzhContext, IterableTemplate iterableTemplate){
-        int depthLand = jkzhContext.getJkzhBasicParam().getAtDepthLand();
-        int allLands = jkzhContext.getJkzhBasicParam().getAllLands();
+        int depthLand = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtDepthLand();
+        int allLands = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getAllLands();
         List<BlockElement> blockElements = creatBlockElement(jkzhContext,iterableTemplate, depthLand, allLands);
         return blockElements;
     }
 
     private List<BlockElement> zdPressureResultant (JkzhContext jkzhContext, IterableTemplate iterableTemplate){
-        int zoneLand = jkzhContext.getJkzhBasicParam().getAtZoneLand();
+        int zoneLand = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand();
         List<BlockElement> blockElements = creatBlockElement(jkzhContext,iterableTemplate, 1, zoneLand);
         return blockElements;
     }
 
     private List<BlockElement> bdPressureResultant(JkzhContext jkzhContext, IterableTemplate iterableTemplate){
-        int zoneLand = jkzhContext.getJkzhBasicParam().getAtZoneLand();
-        int atDepthLand = jkzhContext.getJkzhBasicParam().getAtDepthLand();
+        int zoneLand = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand();
+        int atDepthLand = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtDepthLand();
         List<BlockElement> blockElements = creatBlockElement(jkzhContext,iterableTemplate, atDepthLand, zoneLand);
         return blockElements;
     }

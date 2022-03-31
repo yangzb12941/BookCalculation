@@ -2,7 +2,7 @@ package org.handleParams;
 
 import org.enums.WaterCalEnum;
 import org.enums.WaterWhichEnum;
-import org.table.JkzhBasicParam;
+import org.calParam.JkzhBasicParam;
 import org.table.SoilQualityTable;
 
 public class WaterHandlerParams extends AbstractHandleParams{
@@ -40,14 +40,14 @@ public class WaterHandlerParams extends AbstractHandleParams{
     private Boolean isUnderWater(){
         //主动侧水位
         if(this.waterWhichEnum.getKey().equals(WaterWhichEnum.主动侧水位.getKey())){
-            if(this.curFloor >= this.jkzhBasicParam.getZDWaterLand()){
+            if(this.curFloor >= this.jkzhBasicParam.getCalResult().getZDWaterLand()){
                 return Boolean.TRUE;
             }else{
                 return Boolean.FALSE;
             }
         }else{
             //被东侧水位
-            if(this.curFloor >= this.jkzhBasicParam.getBDWaterLand()){
+            if(this.curFloor >= this.jkzhBasicParam.getCalResult().getBDWaterLand()){
                 return Boolean.TRUE;
             }else{
                 return Boolean.FALSE;

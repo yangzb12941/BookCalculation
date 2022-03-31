@@ -214,17 +214,33 @@ public class JkzhFromulaHandle{
 
     /**
      * @param fromula 公式字符串
-     * @param curFloor 当前层
+     * @param curTimes 当前第几工况
      * @param iLayout 公式展示字符集
      * @return
      */
-    public String replaceExtendToCal(String fromula,
-                                     int curFloor,
+    public String strutForceExtendToLatex(int curTimes,
+                                     JkzhGetValues jkzhGetValues,
+                                     String fromula,
                                      ILayout iLayout){
-        log.info("extendToCal入参:公式{},当前层:{}",fromula,curFloor);
+        log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
         //处理计算结果的公式
-        ExpansionParam expansionParam = new ExpansionParam(curFloor,curFloor,curFloor);
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.replaceExtendToCal(fromula,expansionParam,iLayout);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.strutForceExtendToLatex(curTimes,jkzhGetValues,fromula,iLayout);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * @param fromula 公式字符串
+     * @param curTimes 当前第几工况
+     * @param jkzhGetValues 获取值
+     * @return
+     */
+    public String strutForceExtendToCal(int curTimes,
+                                        String fromula,
+                                        JkzhGetValues jkzhGetValues){
+        log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.strutForceExtendToCal(curTimes,jkzhGetValues,fromula);
         String compile = fromulaEntity.compile();
         return compile;
     }

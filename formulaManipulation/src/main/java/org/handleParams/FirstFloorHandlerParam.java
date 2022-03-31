@@ -1,7 +1,7 @@
 package org.handleParams;
 
+import org.calParam.JkzhBasicParam;
 import org.config.JkzhConfigEnum;
-import org.table.JkzhBasicParam;
 
 public class FirstFloorHandlerParam extends AbstractHandleParams {
     private int curFloor;//当前计算土层

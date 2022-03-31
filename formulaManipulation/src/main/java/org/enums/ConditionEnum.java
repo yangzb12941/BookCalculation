@@ -7,7 +7,9 @@ public enum ConditionEnum {
     水土分算("水土分算",
             "②"),
     首层土计算("首层土计算",
-            "③"),;
+            "③"),
+    多工况支撑计算("多工况支撑计算",
+            "④"),;
 
     private final String key;//公式类型
     private final String value;//存原始公式展示

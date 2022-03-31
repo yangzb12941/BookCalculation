@@ -5,14 +5,16 @@ import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import lombok.extern.slf4j.Slf4j;
+import org.calParam.CalResult;
 import org.calculation.JkzhCalculation;
 import org.context.JkzhContext;
 import org.context.JkzhContextFactory;
 import org.elementHandler.ElementHandlerUtils;
 import org.junit.Test;
-import org.table.JkzhBasicParam;
+import org.calParam.JkzhBasicParam;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +24,9 @@ public class TestTemplate {
     @Test
     //往表格里插入计算公式测试
     public void writeFormulaToTableCellTest() throws IOException {
-        JkzhBasicParam jkzhBasicParam = createJkzhBasicParam();
-        final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParam, createTable());
-
+        List<JkzhBasicParam> jkzhBasicParams = createJkzhBasicParam();
+        final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParams, createTable());
+        jkzhContext.refresh(1);
         JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhContext);
         //计算主动土压力
         jkzhCalculation.zdPressure();
@@ -63,7 +65,8 @@ public class TestTemplate {
         compile.render(values).writeToFile("out_基坑支护设计排桩法模板.docx");
     }
 
-    private JkzhBasicParam createJkzhBasicParam(){
+    private List<JkzhBasicParam> createJkzhBasicParam(){
+        List<JkzhBasicParam> jkzhBasicParams = new ArrayList<>();
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
         jkzhBasicParam.setSurcharge(20.0);
         jkzhBasicParam.setAxis(0.4);
@@ -71,7 +74,11 @@ public class TestTemplate {
         jkzhBasicParam.setZDWarterDepth(2.5);
         jkzhBasicParam.setBDWarterDepth(10.5);
         jkzhBasicParam.setWaterConstant(20.0);
-        return jkzhBasicParam;
+        CalResult calResult = new CalResult();
+        jkzhBasicParam.setCalResult(calResult);
+        jkzhBasicParam.setCalTimes(1);
+        jkzhBasicParams.add(jkzhBasicParam);
+        return jkzhBasicParams;
     }
 
     private String[][] createTable(){

@@ -10,6 +10,7 @@ org\aviatorPlugins\MathRadiansFunction.class
 org\table\SoilPressureTable.class
 org\handler\CalHandler.class
 org\handleParams\FirstFloorHandlerParam.class
+org\handler\StrutForceHandler.class
 org\enums\ConditionEnum.class
 org\enums\StateMachineEnum.class
 org\element\TextElement.class
@@ -21,11 +22,13 @@ org\handler\FirstFloorHandler.class
 org\enums\WaterWhichEnum.class
 org\handler\ReplaceSubscriptHandler.class
 org\handler\SolveEquationsHandler.class
-org\table\JkzhBasicParam.class
 org\handler\SurchargeHandler.class
 org\context\JkzhContextFactory.class
 org\show\JkzhCalTemporaryPart.class
+org\calParam\BasicParams.class
+org\calParam\CalResult.class
 org\constant\Constant.class
+org\handleParams\StrutForceHandlerParam.class
 org\fromulaEntity\FromulaEntity.class
 org\handle\JkzhFromulaEntityFactory.class
 org\element\BlockElement.class
@@ -35,6 +38,7 @@ org\config\JkzhConfigEnum.class
 org\enums\WaterCalEnum.class
 org\handler\WaterHandler.class
 org\calculation\JkzhCalculation.class
+org\calParam\JkzhBasicParam.class
 org\element\FormulaElement.class
 org\element\TableElement.class
 org\context\FactoryContext.class

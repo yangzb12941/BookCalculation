@@ -9,6 +9,7 @@ import org.enums.WaterWhichEnum;
 import org.fromulaEntity.FromulaEntity;
 import org.getValue.JkzhGetValues;
 import org.handleParams.FirstFloorHandlerParam;
+import org.handleParams.StrutForceHandlerParam;
 import org.handleParams.WaterHandlerParams;
 import org.handler.*;
 import org.show.ILayout;
@@ -59,14 +60,14 @@ public class JkzhFromulaEntityFactory {
 		calFromulaEntity
 				//添加首层土判断处理器
 				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(
-						jkzhGetValues.getJkzhContext().getJkzhBasicParam(),
+						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
 						time+beginFloor,
 						beginFloor,
 						jkzhConfigEnum)))
 				//添加地面堆载处理器
-				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParam()))
+				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
 				//添加水土分算处理器
-				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParam(), waterWhichEnum)))
+				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()), waterWhichEnum)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
@@ -107,14 +108,14 @@ public class JkzhFromulaEntityFactory {
 		calFromulaEntity
 				//添加首层土判断处理器
 				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(
-						jkzhGetValues.getJkzhContext().getJkzhBasicParam(),
+						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
 						time+beginFloor,
 						beginFloor,
 						jkzhConfigEnum)))
 				//添加地面堆载处理器
-				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParam()))
+				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
 				//添加水土分算处理器
-				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParam(), waterWhichEnum)))
+				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()), waterWhichEnum)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
@@ -152,14 +153,14 @@ public class JkzhFromulaEntityFactory {
 		latexFromulaEntity
 				//添加首层土判断处理器
 				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(
-						jkzhGetValues.getJkzhContext().getJkzhBasicParam(),
+						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
 						time+beginFloor,
 						beginFloor,
 						jkzhConfigEnum)))
 				//添加地面堆载处理器
-				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParam()))
+				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
 				//添加水土分算处理器
-				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParam(), waterWhichEnum)))
+				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()), waterWhichEnum)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
@@ -212,19 +213,49 @@ public class JkzhFromulaEntityFactory {
 	 * @param iLayout
 	 * @return
 	 */
-	public FromulaEntity replaceExtendToCal(String fromula,
-											ExpansionParam expansionParam,
+	public FromulaEntity strutForceExtendToLatex(int curFloor,
+											JkzhGetValues jkzhGetValues,
+											String fromula,
 											ILayout iLayout){
 		//用于计算结果
 		FromulaEntity calFromulaEntity = new FromulaEntity(fromula);
 		calFromulaEntity
+				//多工况支撑轴计算处理器
+				.addHandler(new StrutForceHandler().setParams(new StrutForceHandlerParam(curFloor)))
 				//公式替换元素处理器
 				.addHandler(new ReplaceLayoutHandler().setParams(iLayout))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(expansionParam));
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor,1,curFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
 		return calFromulaEntity;
+	}
+
+	/**
+	 * 需扩展计算结果
+	 * @param jkzhGetValues
+	 * @param fromula
+	 * @return
+	 */
+	public FromulaEntity strutForceExtendToCal(int curFloor,
+											   JkzhGetValues jkzhGetValues,
+											   String fromula){
+		//用于word展示
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
+				//多工况支撑轴计算处理器
+				.addHandler(new StrutForceHandler().setParams(new StrutForceHandlerParam(curFloor)))
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor,1,curFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
+				//添加值填充处理器
+				.addHandler(new CalHandler());
+		return latexFromulaEntity;
 	}
 
 	/**

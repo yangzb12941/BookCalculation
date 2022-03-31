@@ -1,21 +1,113 @@
 package org.context;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
-import org.table.JkzhBasicParam;
+import lombok.extern.slf4j.Slf4j;
+import org.calParam.JkzhBasicParam;
 import org.table.SoilPressureTable;
 import org.table.SoilQualityTable;
+
+import java.util.List;
 
 /**
  * 基坑支护计算上下文对象
  */
 @Data
+@Slf4j
 public class JkzhContext extends AbstractContext{
+
     //基坑支护计算 基本参数
-    private JkzhBasicParam jkzhBasicParam;
+    private List<JkzhBasicParam> jkzhBasicParams;
 
     //土层参数计算依据表
     private SoilQualityTable soilQualityTable;
 
     //基坑支护 土压力系数表
     private SoilPressureTable soilPressureTable;
+
+    //当前第几工况
+    private int calTimes;
+
+    /**
+     * 更具当前第几工况，刷新上下文数据
+     * 总土层数、主动土层水位所在第几层土、被动土层水位所在第几层土、计算开挖面所在第几层土
+     * 在计算各个工况前，都要重新刷新一下当前上下文
+     */
+    public void refresh(int calTimes){
+        //当前计算第几个工况
+        this.calTimes = calTimes-1;
+        //总土层数
+        calAllLands(soilQualityTable,this.getJkzhBasicParams().get(this.calTimes));
+        //计算主动土层 水位所在第几层土
+        calZDWaterLand(soilQualityTable,this.getJkzhBasicParams().get(this.calTimes));
+        //计算被动土层 水位所在第几层土
+        calBDWaterLand(soilQualityTable,this.getJkzhBasicParams().get(this.calTimes));
+        //计算开挖面所在第几层土
+        calDepthLand(soilQualityTable,this.getJkzhBasicParams().get(this.calTimes));
+    }
+
+
+    /**
+     * 总土层数
+     * @param soilQualityTable 土层参数表
+     * @param jkzhBasicParam 基础参数
+     */
+    private void calAllLands(SoilQualityTable soilQualityTable,JkzhBasicParam jkzhBasicParam){
+        jkzhBasicParam.setAllLands(soilQualityTable.getTable().length -1);
+    }
+
+    /**
+     * 计算主动土层 水位所在第几层土
+     * @param soilQualityTable 土层参数表
+     * @param jkzhBasicParam 基础参数
+     */
+    private void calZDWaterLand(SoilQualityTable soilQualityTable,JkzhBasicParam jkzhBasicParam){
+        Double addm = 0.0;
+        //计算开挖深度这层土的剩余厚度
+        for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
+            String hdValue = soilQualityTable.getTable()[floor][2];
+            addm += Double.valueOf(hdValue);
+            if(addm.compareTo(jkzhBasicParam.getZDWarterDepth())>=0){
+                jkzhBasicParam.getCalResult().setZDWaterLand(floor);
+                break;
+            }
+        }
+    }
+
+    /**
+     * 计算被动土层 水位所在第几层土
+     * @param soilQualityTable 土层参数表
+     * @param jkzhBasicParam 基础参数
+     */
+    private void calBDWaterLand(SoilQualityTable soilQualityTable,JkzhBasicParam jkzhBasicParam){
+        Double addm = 0.0;
+        //计算开挖深度这层土的剩余厚度
+        for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
+            String hdValue = soilQualityTable.getTable()[floor][2];
+            addm += Double.valueOf(hdValue);
+            if(addm.compareTo(jkzhBasicParam.getBDWarterDepth())>=0){
+                jkzhBasicParam.getCalResult().setBDWaterLand(floor);
+                break;
+            }
+        }
+    }
+
+
+    /**
+     * 计算开挖面所在第几层土
+     * @param soilQualityTable 土层参数表
+     * @param jkzhBasicParam 基础参数
+     */
+    private void calDepthLand(SoilQualityTable soilQualityTable,JkzhBasicParam jkzhBasicParam){
+        Double addm = 0.0;
+        //计算开挖深度这层土的剩余厚度
+        for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
+            String hdValue = soilQualityTable.getTable()[floor][2];
+            addm += Double.valueOf(hdValue);
+            if(addm.compareTo(jkzhBasicParam.getDepth())>=0){
+                jkzhBasicParam.getCalResult().setAtDepthLand(floor);
+                break;
+            }
+        }
+    }
 }
