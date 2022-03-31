@@ -18,8 +18,17 @@
       <module name="bootstrap" target="1.8" />
       <module name="formulaManipulation" target="1.8" />
       <module name="solveEquations" target="1.8" />
-      <module name="webControl" target="1.5" />
+      <module name="webControl" target="1.8" />
       <module name="writeTemplate" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="bootstrap" options="-parameters" />
+      <module name="formulaManipulation" options="-parameters" />
+      <module name="solveEquations" options="-parameters" />
+      <module name="webControl" options="-parameters" />
+      <module name="writeTemplate" options="-parameters" />
+    </option>
   </component>
 </project>

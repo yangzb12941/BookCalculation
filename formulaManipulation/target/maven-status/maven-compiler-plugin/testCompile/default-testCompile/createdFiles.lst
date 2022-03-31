@@ -1,8 +1,5 @@
-org\java\com\yh\calsheet\WriteFormulaToTableCell$1.class
 org\java\com\yh\calsheet\SoilPressureTableTest.class
-org\java\com\yh\JKZH\Config\TestConfigEnum.class
 org\java\com\yh\calsheet\GetParamTest.class
-org\java\com\yh\calsheet\WriteFormulaToTableCell.class
 org\java\com\yh\calsheet\ExpansionHandlerTest.class
 org\java\com\yh\calsheet\YhCalSheetApplicationTests.class
 org\java\com\yh\calsheet\ReviseHandlerTest.class

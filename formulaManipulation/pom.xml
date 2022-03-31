@@ -17,26 +17,12 @@
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
-    <properties>
-        <poi.version>5.2.0</poi.version>
-    </properties>
-    <repositories>
-        <repository>
-            <id>com.e-iceblue</id>
-            <url>http://repo.e-iceblue.cn/repository/maven-public/</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>${poi.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.aviator</groupId>
@@ -49,19 +35,9 @@
             <version>0.1.5</version>
         </dependency>
         <dependency>
-            <groupId> e-iceblue </groupId>
-            <artifactId>spire.doc</artifactId>
-            <version>5.2.3</version>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.69</version>
-        </dependency>
-        <dependency>
-            <groupId>com.deepoove</groupId>
-            <artifactId>poi-tl</artifactId>
-            <version>1.11.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ant</groupId>

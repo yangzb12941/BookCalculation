@@ -1,4 +1,4 @@
-package org.java.com.yh.JKZH.Config;
+package org;
 
 /**
  *  排桩模板配置类
