@@ -139,22 +139,35 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
         return blockElements;
     }
 
+    /**
+     * 多工况模板值匹配
+     * @param jkzhContext
+     * @param iterableTemplate
+     * @return
+     */
     private Object multipleWorkingConditions(JkzhContext jkzhContext, IterableTemplate iterableTemplate){
-        Map<String, Object> values = new HashMap<String, Object>() {
-            {
-                for (MetaTemplate item:iterableTemplate.getTemplates()) {
-                    if(item instanceof RunTemplate){
-                        String tagName = ((RunTemplate) item).getTagName();
-                        log.info("RunTemplate TagName:{}",tagName);
-                        put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,item));
-                    }else if (item instanceof IterableTemplate){
-                        String tagName = ((IterableTemplate)item).getStartMark().getTagName();
-                        log.info("IterableTemplate TagName:{}",tagName);
-                        put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,item));
+        List<Map<String, Object>> values = new ArrayList<>();
+        for (int index =1;index<=jkzhContext.getElementTemplates().size()-1;index++) {
+            jkzhContext.setCalTimes(index);
+            Map<String, Object> valueMap = new HashMap<String, Object>() {
+                {
+                    for (MetaTemplate item:iterableTemplate.getTemplates()) {
+                        if(item instanceof RunTemplate){
+                            String tagName = ((RunTemplate) item).getTagName();
+                            log.info("RunTemplate TagName:{}",tagName);
+                            put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,item));
+                        }else if (item instanceof IterableTemplate){
+                            String tagName = ((IterableTemplate)item).getStartMark().getTagName();
+                            log.info("IterableTemplate TagName:{}",tagName);
+                            put(tagName, ElementHandlerUtils.getElementValue(jkzhContext,item));
+                        }
                     }
                 }
-            }
-        };
+            };
+            values.add(valueMap);
+        }
+        //多工况模板元素迭代完，重新设置回解析模板非多工况部分填充值
+        jkzhContext.setCalTimes(0);
         return values;
     }
 }

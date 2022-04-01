@@ -55,6 +55,8 @@ public class TestTemplate {
         List<MetaTemplate> elementTemplates = compile.getElementTemplates();
         Map<String, Object> values = new HashMap<String, Object>() {
             {
+                //设置解析模板非多工况部分填充值
+                jkzhContext.setCalTimes(0);
                 for (MetaTemplate item:elementTemplates) {
                     if(item instanceof RunTemplate){
                         String tagName = ((RunTemplate) item).getTagName();
