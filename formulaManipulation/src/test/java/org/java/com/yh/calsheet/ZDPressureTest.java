@@ -99,7 +99,10 @@ public class ZDPressureTest {
                 //添加地面堆载处理器
                 .addHandler(new SurchargeHandler().setParams(this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes())))
                 //添加水土分算处理器
-                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(this.jkzhContext.getSoilQualityTable(),this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()), waterWhichEnum)))
+                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(
+                        this.jkzhContext.getSoilQualityTable(),
+                        this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()),
+                        waterWhichEnum,1)))
                 //添加元素标记处理器
                 .addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
                 //添加展开公式处理器
@@ -123,7 +126,10 @@ public class ZDPressureTest {
                 //添加地面堆载处理器
                 .addHandler(new SurchargeHandler().setParams(this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes())))
                 //添加水土分算处理器
-                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(this.jkzhContext.getSoilQualityTable(),this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()), waterWhichEnum)))
+                .addHandler(new WaterHandler().setParams(new WaterHandlerParams(
+                        this.jkzhContext.getSoilQualityTable(),
+                        this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()),
+                        waterWhichEnum,1)))
                 //添加元素标记处理器
                 .addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
                 //添加展开公式处理器

@@ -12,10 +12,14 @@ public class WaterHandlerParams extends AbstractHandleParams{
     private SoilQualityTable soilQualityTable;
     private JkzhBasicParam jkzhBasicParam;
 
-    public WaterHandlerParams(SoilQualityTable soilQualityTable,JkzhBasicParam jkzhBasicParam,WaterWhichEnum waterWhichEnum) {
+    public WaterHandlerParams(SoilQualityTable soilQualityTable,
+                              JkzhBasicParam jkzhBasicParam,
+                              WaterWhichEnum waterWhichEnum,
+                              Integer curFloor) {
         this.soilQualityTable = soilQualityTable;
         this.jkzhBasicParam = jkzhBasicParam;
         this.waterWhichEnum = waterWhichEnum;
+        this.curFloor = curFloor;
     }
 
     public Boolean getValue() {
@@ -27,10 +31,6 @@ public class WaterHandlerParams extends AbstractHandleParams{
             }
         }
         return Boolean.FALSE;
-    }
-
-    public void setCurFloor(int curFloor){
-        this.curFloor = curFloor;
     }
 
     /**

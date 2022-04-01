@@ -321,6 +321,7 @@ public class JkzhCalculation{
     private void thirdCasePressureZero(Double depth){
         double pressureZero = depth * 1.2;
         this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().setPressureZero(pressureZero);
+        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土压力零点值",new TextElement(1,"土压力零点值",String.format("%f.2",pressureZero)));
         this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("零点土压力值",new TextElement(1,"零点土压力值",String.valueOf(pressureZero)));
     }
 

@@ -17,6 +17,7 @@ E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\or
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\handle\JkzhFromulaEntityFactory.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\show\JkzhFormulaLayout.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\entity\ElementParam.java
+E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\calculation\CreateFixedElementHandle.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\context\JkzhContextFactory.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\fromulaEntity\FromulaEntity.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\show\JkzhCalTemporaryPart.java
@@ -37,6 +38,7 @@ E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\or
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\enumUtils\ZDEqualsBDKindsEnum.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\handler\FirstFloorHandler.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\calParam\BasicParams.java
+E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\calculation\ICreateFixedElement.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\handler\IHandler.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\element\TextElement.java
 E:\SelfWorkspace\yh-project\BookCalculation\formulaManipulation\src\main\java\org\handler\ReplaceLayoutHandler.java

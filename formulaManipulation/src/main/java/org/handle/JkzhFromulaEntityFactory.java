@@ -67,7 +67,11 @@ public class JkzhFromulaEntityFactory {
 				//添加地面堆载处理器
 				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
 				//添加水土分算处理器
-				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()), waterWhichEnum)))
+				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(
+						jkzhGetValues.getJkzhContext().getSoilQualityTable(),
+						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
+						waterWhichEnum,
+						endFloor)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
@@ -115,7 +119,11 @@ public class JkzhFromulaEntityFactory {
 				//添加地面堆载处理器
 				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
 				//添加水土分算处理器
-				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()), waterWhichEnum)))
+				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(
+						jkzhGetValues.getJkzhContext().getSoilQualityTable(),
+						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
+						waterWhichEnum,
+						endFloor)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
@@ -160,7 +168,11 @@ public class JkzhFromulaEntityFactory {
 				//添加地面堆载处理器
 				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
 				//添加水土分算处理器
-				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(jkzhGetValues.getJkzhContext().getSoilQualityTable(),jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()), waterWhichEnum)))
+				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(
+						jkzhGetValues.getJkzhContext().getSoilQualityTable(),
+						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
+						waterWhichEnum,
+						endFloor)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器

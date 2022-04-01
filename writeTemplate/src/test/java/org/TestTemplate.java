@@ -81,9 +81,9 @@ public class TestTemplate {
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
         jkzhBasicParam.setSurcharge(20.0);
         jkzhBasicParam.setAxis(0.4);
-        jkzhBasicParam.setDepth(7.0);
+        jkzhBasicParam.setDepth(5.9);
         jkzhBasicParam.setZDWarterDepth(2.5);
-        jkzhBasicParam.setBDWarterDepth(10.5);
+        jkzhBasicParam.setBDWarterDepth(6.4);
         jkzhBasicParam.setWaterConstant(20.0);
         CalResult calResult = new CalResult();
         jkzhBasicParam.setCalResult(calResult);
@@ -93,7 +93,7 @@ public class TestTemplate {
         JkzhBasicParam jkzhBasicParam2 = new JkzhBasicParam();
         jkzhBasicParam2.setSurcharge(20.0);
         jkzhBasicParam2.setAxis(0.4);
-        jkzhBasicParam2.setDepth(7.0);
+        jkzhBasicParam2.setDepth(10.0);
         jkzhBasicParam2.setZDWarterDepth(2.5);
         jkzhBasicParam2.setBDWarterDepth(10.5);
         jkzhBasicParam2.setWaterConstant(20.0);
@@ -107,10 +107,14 @@ public class TestTemplate {
         //土压力系数头
         String[][] table = {
                 {"岩土层分布（从上至下）及分布特征序号", "土层名称","厚度(m)\nh","重度(kN/m3)\nγ","黏聚力(kPa)\nc","内摩擦角(°)\nΨ","计算方式"},
-                {"1", "人工填土","1.2","18.0","5.7","13.5","水土合算"},
-                {"2", "淤泥质粉质黏土","5","17.8","8.2","9.6","水土合算"},
-                {"3", "粉质黏土","3.8","20.0","14","16.2","水土分算"},
-                {"4", "黏性土","7.4","20.5","22","20.8","水土合算"},
+                {"1", "①2素填土","2.30","19.30","8.00","4.00","水土合算"},
+                {"2", "④1粘土","2.40","18.50","7.80","3.50","水土合算"},
+                {"3", "⑥2淤泥质粘土","3.30","17.50","3.80","3.50","水土合算"},
+                {"4", "⑥3粉质粘土","9.00","19.10","12.50","13.30","水土合算"},
+                {"5", "⑦粘土","2.00","17.90","12.40","5.50","水土合算"},
+                {"6", "⑧1粉质粘土","3.00","20.40","14.10","10.70","水土合算"},
+                {"7", "⑧2粉土","4.90","20.00","10.80","26.90","水土分算"},
+                {"8", "⑨1粉质粘土","6","19.70","14.80","16.50","水土合算"},
         };
         return table;
     }
