@@ -356,8 +356,8 @@ public class JkzhCalculation{
                 result = i;
                 jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().setAtZoneLand(i);
                 jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().setZDEqualsBDKinds(ZDEqualsBDKindsEnum.土压力零点第一种情况.getType());
-                this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动减被动顶",new FormulaElement(result,this.jkzhPrefixLayout,"主动减被动顶",zdUp+"-"+bdUp+"="+oneS));
-                this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动减被动底",new FormulaElement(result,this.jkzhPrefixLayout,"主动减被动底",zdDown+"-"+bdDown+"="+twoS));
+                this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动减被动顶",new FormulaElement(result,this.jkzhPrefixLayout,"主动减被动顶",zdUp+"-"+bdUp+"="+oneS+"Kpa"));
+                this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动减被动底",new FormulaElement(result,this.jkzhPrefixLayout,"主动减被动底",zdDown+"-"+bdDown+"="+twoS+"Kpa"));
                 break;
             }
         }
@@ -805,6 +805,6 @@ public class JkzhCalculation{
                 jkzhZCZLGetValues);
         log.info("支撑轴力计算:{}={}={}",zlLatexCal,zlCalculate,zlCalculate);
         this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("支撑轴力",zlCalculate);
-        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支点反力计算",new FormulaElement(atZoneLand,this.jkzhPrefixLayout,"支点反力计算",zlLatexCal+"="+zlCalculate+"kN"));
+        this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支点反力计算",new FormulaElement(this.jkzhContext.getCalTimes(),this.jkzhPrefixLayout,"支点反力计算",zlLatexCal+"="+zlCalculate+"kN"));
     }
 }

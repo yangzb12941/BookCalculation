@@ -36,19 +36,19 @@ public class TestTemplate {
             //计算主动土压力
             jkzhCalculation.zdPressure();
             //计算被动土压力
-            jkzhCalculation.bdPressure(7.0);
+            jkzhCalculation.bdPressure(jkzhBasicParams.get(i).getDepth());
             //计算土压力零点
-            jkzhCalculation.pressureZero(7.0);
+            jkzhCalculation.pressureZero(jkzhBasicParams.get(i).getDepth());
             //计算主动土压力合力
             jkzhCalculation.zdResultantEarthPressures();
             //主动土压力合力作用点位置
             jkzhCalculation.zdPositionAction();
             //被动土压力合力及作用点位置
-            jkzhCalculation.bdResultantEarthPressures(7.0);
+            jkzhCalculation.bdResultantEarthPressures(jkzhBasicParams.get(i).getDepth());
             //被动土压力合力作用点位置
-            jkzhCalculation.bdPositionAction(7.0);
+            jkzhCalculation.bdPositionAction(jkzhBasicParams.get(i).getDepth());
             //支撑处水平力计算
-            jkzhCalculation.calStrutForce(7.0);
+            jkzhCalculation.calStrutForce(jkzhBasicParams.get(i).getDepth());
         }
 
         XWPFTemplate compile = XWPFTemplate.compile("src\\test\\templates\\铁男基坑支护模板.docx");
