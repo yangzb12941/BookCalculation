@@ -185,7 +185,7 @@ public class JkzhGetValues implements GetValues {
                 }
                 case "支撑轴力主动":
                 case "支撑轴力被动": {
-                    String vMap_2 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
+                    String vMap_2 = getValuesFromMap(elementParam.getName(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                     valueArray[index] = vMap_2;
                     break;
                 }
@@ -202,7 +202,7 @@ public class JkzhGetValues implements GetValues {
                     break;
                 }
                 case "支撑轴力":{
-                    String vMap_3 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
+                    String vMap_3 = getValuesFromMap(elementParam.getName() , jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()-1));
                     valueArray[index] = vMap_3;
                     break;
                 }

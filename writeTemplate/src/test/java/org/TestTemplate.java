@@ -28,7 +28,7 @@ public class TestTemplate {
         List<JkzhBasicParam> jkzhBasicParams = createJkzhBasicParam();
         final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParams, createTable());
         JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhContext);
-        for (int i = 1; i < 2;i++) {
+        for (int i = 1; i <= 2;i++) {
             jkzhContext.refresh(i,new CreateFixedElementHandle(
                     jkzhCalculation.getJkzhFromulaHandle(),
                     jkzhCalculation.getJkzhPrefixLayout(),
@@ -73,6 +73,9 @@ public class TestTemplate {
 
     private List<JkzhBasicParam> createJkzhBasicParam(){
         List<JkzhBasicParam> jkzhBasicParams = new ArrayList<>();
+        //为空对象，没有工况参数值
+        jkzhBasicParams.add(new JkzhBasicParam());
+
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
         jkzhBasicParam.setSurcharge(20.0);
         jkzhBasicParam.setAxis(0.4);
@@ -82,7 +85,7 @@ public class TestTemplate {
         jkzhBasicParam.setWaterConstant(20.0);
         CalResult calResult = new CalResult();
         jkzhBasicParam.setCalResult(calResult);
-        jkzhBasicParam.setCalTimes(1);
+
         jkzhBasicParams.add(jkzhBasicParam);
 
         JkzhBasicParam jkzhBasicParam2 = new JkzhBasicParam();
@@ -93,8 +96,7 @@ public class TestTemplate {
         jkzhBasicParam2.setBDWarterDepth(10.5);
         jkzhBasicParam2.setWaterConstant(20.0);
         CalResult calResult2 = new CalResult();
-        jkzhBasicParam.setCalResult(calResult2);
-        jkzhBasicParam.setCalTimes(1);
+        jkzhBasicParam2.setCalResult(calResult2);
         jkzhBasicParams.add(jkzhBasicParam2);
         return jkzhBasicParams;
     }

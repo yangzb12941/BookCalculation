@@ -26,7 +26,4 @@ public class JkzhBasicParam extends BasicParams{
 
 	//基内外水位(被动土侧水位)
 	private Double bDWarterDepth = 0.0;
-
-	//当前第几工况
-	private Integer calTimes;
 }

@@ -146,7 +146,6 @@ public class ZDPressureTest {
         jkzhBasicParam.setWaterConstant(20.0);
         CalResult calResult = new CalResult();
         jkzhBasicParam.setCalResult(calResult);
-        jkzhBasicParam.setCalTimes(1);
         jkzhBasicParams.add(jkzhBasicParam);
         return jkzhBasicParams;
     }

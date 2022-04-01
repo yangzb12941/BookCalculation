@@ -28,9 +28,6 @@ public class JkzhContext extends AbstractContext{
     //基坑支护 土压力系数表
     private SoilPressureTable soilPressureTable;
 
-    //模板公共元素展示：不在每个单独的工况中展示的元素。
-    private HashMap<String, BaseElement> elementTemplate;
-
     /**
      * 更具当前第几工况，刷新上下文数据
      * 总土层数、主动土层水位所在第几层土、被动土层水位所在第几层土、计算开挖面所在第几层土
@@ -38,7 +35,7 @@ public class JkzhContext extends AbstractContext{
      */
     public void refresh(int calTimes, ICreateFixedElement iCreateFixedElement){
         //当前计算第几个工况
-        super.setCalTimes(calTimes-1);
+        super.setCalTimes(calTimes);
         //初始化集合
         initialize();
         iCreateFixedElement.createFixedElement();

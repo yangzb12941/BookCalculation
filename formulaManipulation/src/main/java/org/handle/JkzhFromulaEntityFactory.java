@@ -227,7 +227,7 @@ public class JkzhFromulaEntityFactory {
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor,1,curFloor)))
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor-1,1,curFloor)))
 				//添加值填充处理器
 				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
 		return calFromulaEntity;
@@ -250,7 +250,7 @@ public class JkzhFromulaEntityFactory {
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor,1,curFloor)))
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor-1,1,curFloor)))
 				//添加值填充处理器
 				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
 				//添加值填充处理器
