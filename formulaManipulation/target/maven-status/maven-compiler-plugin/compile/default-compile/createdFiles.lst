@@ -12,6 +12,7 @@ org\handler\CalHandler.class
 org\handleParams\FirstFloorHandlerParam.class
 org\handler\StrutForceHandler.class
 org\enums\ConditionEnum.class
+org\enums\CalculateSectionEnum.class
 org\enums\StateMachineEnum.class
 org\element\TextElement.class
 org\show\JkzhPrefixLayout.class

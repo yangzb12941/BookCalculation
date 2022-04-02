@@ -1,5 +1,6 @@
 package org.handleParams;
 
+import org.enums.CalculateSectionEnum;
 import org.enums.WaterCalEnum;
 import org.enums.WaterWhichEnum;
 import org.calParam.JkzhBasicParam;
@@ -11,14 +12,17 @@ public class WaterHandlerParams extends AbstractHandleParams{
     private WaterWhichEnum waterWhichEnum;
     private SoilQualityTable soilQualityTable;
     private JkzhBasicParam jkzhBasicParam;
+    private CalculateSectionEnum calculateSectionEnum;//计算切面
 
     public WaterHandlerParams(SoilQualityTable soilQualityTable,
                               JkzhBasicParam jkzhBasicParam,
                               WaterWhichEnum waterWhichEnum,
+                              CalculateSectionEnum calculateSectionEnum,
                               Integer curFloor) {
         this.soilQualityTable = soilQualityTable;
         this.jkzhBasicParam = jkzhBasicParam;
         this.waterWhichEnum = waterWhichEnum;
+        this.calculateSectionEnum = calculateSectionEnum;
         this.curFloor = curFloor;
     }
 
@@ -61,9 +65,14 @@ public class WaterHandlerParams extends AbstractHandleParams{
         //判断开挖深度在第几层土层
         String[][] table = soilQualityTable.getTable();
         Double sumLands = 0.0;
-        int atLand = 0;
-        for(int floor = 1;floor <=this.curFloor; floor++){
-            sumLands += Double.valueOf(table[floor][2]);
+        if(calculateSectionEnum == CalculateSectionEnum.上顶面){
+            for(int floor = 1;floor <this.curFloor; floor++){
+                sumLands += Double.valueOf(table[floor][2]);
+            }
+        }else if(calculateSectionEnum == CalculateSectionEnum.下底面){
+            for(int floor = 1;floor <=this.curFloor; floor++){
+                sumLands += Double.valueOf(table[floor][2]);
+            }
         }
         return sumLands;
     }

@@ -4,6 +4,7 @@ package org.handle;
 import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
 import org.entity.ExpansionParam;
+import org.enums.CalculateSectionEnum;
 import org.enums.WaterWhichEnum;
 import org.fromulaEntity.FromulaEntity;
 import org.getValue.JkzhGetValues;
@@ -24,6 +25,7 @@ public class JkzhFromulaHandle{
      * @param time 展开次数
      * @param beginFloor 第几层开始
      * @param endFloor 第几层开始
+     * @param calculateSectionEnum 计算切面
      * @param jkzhConfigEnum 被解析的基础公式
      * @param waterWhichEnum 水土合算、水土分算
      * @param jkzhGetValues 获取值的方式
@@ -32,12 +34,13 @@ public class JkzhFromulaHandle{
     public String soilPressureToCal(int time,
                                     int beginFloor,
                                     int endFloor,
+                                    CalculateSectionEnum calculateSectionEnum,
                                     JkzhConfigEnum jkzhConfigEnum,
                                     WaterWhichEnum waterWhichEnum,
                                     JkzhGetValues jkzhGetValues){
         log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
         //处理计算结果的公式
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToCal(time,beginFloor,endFloor,jkzhGetValues,jkzhConfigEnum, waterWhichEnum);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToCal(time,beginFloor,endFloor,calculateSectionEnum,jkzhGetValues,jkzhConfigEnum, waterWhichEnum);
         String fillingCal = fromulaEntity.compile();
         return fillingCal;
     }
@@ -47,6 +50,7 @@ public class JkzhFromulaHandle{
      * @param time 展开次数
      * @param beginFloor 第几层开始
      * @param endFloor 第几层开始
+     * @param calculateSectionEnum 计算切面
      * @param jkzhConfigEnum 被解析的基础公式
      * @param waterWhichEnum 水土合算、水土分算
      * @param jkzhGetValues 获取值的方式
@@ -55,12 +59,13 @@ public class JkzhFromulaHandle{
     public String calSolveEquations(int time,
                                     int beginFloor,
                                     int endFloor,
+                                    CalculateSectionEnum calculateSectionEnum,
                                     JkzhConfigEnum jkzhConfigEnum,
                                     WaterWhichEnum waterWhichEnum,
                                     JkzhGetValues jkzhGetValues){
         log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
         //处理计算结果的公式
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.calSolveEquations(time,beginFloor,endFloor,jkzhGetValues,jkzhConfigEnum, waterWhichEnum);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.calSolveEquations(time,beginFloor,endFloor,calculateSectionEnum,jkzhGetValues,jkzhConfigEnum, waterWhichEnum);
         String fillingCal = fromulaEntity.compile();
         return fillingCal;
     }
@@ -70,6 +75,7 @@ public class JkzhFromulaHandle{
      * @param time 展开次数
      * @param beginFloor 第几层开始
      * @param endFloor 第几层开始
+     * @param calculateSectionEnum 计算切面
      * @param jkzhConfigEnum 被解析的基础公式
      * @param waterWhichEnum 水土合算、水土分算
      * @param jkzhGetValues 获取值的方式
@@ -78,12 +84,20 @@ public class JkzhFromulaHandle{
     public String soilPressureToLatex(int time,
                                       int beginFloor,
                                       int endFloor,
+                                      CalculateSectionEnum calculateSectionEnum,
                                       JkzhConfigEnum jkzhConfigEnum,
                                       WaterWhichEnum waterWhichEnum,
                                       JkzhGetValues jkzhGetValues){
         log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
         //处理计算结果的公式
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToLatex(time,beginFloor,endFloor,jkzhGetValues, jkzhConfigEnum, waterWhichEnum);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToLatex(
+                time,
+                beginFloor,
+                endFloor,
+                calculateSectionEnum,
+                jkzhGetValues,
+                jkzhConfigEnum,
+                waterWhichEnum);
         String fillingLatex = fromulaEntity.compile();
         return fillingLatex;
     }

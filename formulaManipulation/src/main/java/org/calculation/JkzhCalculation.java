@@ -11,6 +11,7 @@ import org.element.SingleFormulaElement;
 import org.element.TableElement;
 import org.element.TextElement;
 import org.enumUtils.ZDEqualsBDKindsEnum;
+import org.enums.CalculateSectionEnum;
 import org.enums.WaterWhichEnum;
 import org.getValue.JkzhGetValues;
 import org.handle.JkzhFromulaHandle;
@@ -54,6 +55,7 @@ public class JkzhCalculation{
                     i-1,
                     1,
                     i,
+                    CalculateSectionEnum.上顶面,
                     JkzhConfigEnum.主动土压力,
                     WaterWhichEnum.主动侧水位,
                     jkzhGetValues);
@@ -61,6 +63,7 @@ public class JkzhCalculation{
                     i-1,
                     1,
                     i,
+                    CalculateSectionEnum.上顶面,
                     JkzhConfigEnum.主动土压力,
                     WaterWhichEnum.主动侧水位,
                     jkzhGetValues);
@@ -71,6 +74,7 @@ public class JkzhCalculation{
                     i,
                     1,
                     i,
+                    CalculateSectionEnum.下底面,
                     JkzhConfigEnum.主动土压力,
                     WaterWhichEnum.主动侧水位,
                     jkzhGetValues);
@@ -78,6 +82,7 @@ public class JkzhCalculation{
                     i,
                     1,
                     i,
+                    CalculateSectionEnum.下底面,
                     JkzhConfigEnum.主动土压力,
                     WaterWhichEnum.主动侧水位,
                     jkzhGetValues);
@@ -104,6 +109,7 @@ public class JkzhCalculation{
                     i,
                     atLand,
                     i+atLand,
+                    CalculateSectionEnum.上顶面,
                     JkzhConfigEnum.被动土压力,
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
@@ -111,6 +117,7 @@ public class JkzhCalculation{
                     i,
                     atLand,
                     i+atLand,
+                    CalculateSectionEnum.上顶面,
                     JkzhConfigEnum.被动土压力,
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
@@ -121,6 +128,7 @@ public class JkzhCalculation{
                     i+1,
                     atLand,
                     i+atLand,
+                    CalculateSectionEnum.下底面,
                     JkzhConfigEnum.被动土压力,
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
@@ -128,6 +136,7 @@ public class JkzhCalculation{
                     i+1,
                     atLand,
                     i+atLand,
+                    CalculateSectionEnum.下底面,
                     JkzhConfigEnum.被动土压力,
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
@@ -221,6 +230,7 @@ public class JkzhCalculation{
                 atLand,
                 1,
                 atLand,
+                CalculateSectionEnum.下底面,
                 JkzhConfigEnum.主动土压力,
                 WaterWhichEnum.主动侧水位,
                 jkzhGetValues);
@@ -228,6 +238,7 @@ public class JkzhCalculation{
                 atLand,
                 1,
                 atLand,
+                CalculateSectionEnum.下底面,
                 JkzhConfigEnum.主动土压力,
                 WaterWhichEnum.主动侧水位,
                 jkzhGetValues);
@@ -246,6 +257,7 @@ public class JkzhCalculation{
                 atLand-depthLand+1,
                 depthLand,
                 atLand,
+                CalculateSectionEnum.下底面,
                 JkzhConfigEnum.被动土压力,
                 WaterWhichEnum.被动侧水位,
                 jkzhGetValues);
@@ -430,6 +442,7 @@ public class JkzhCalculation{
                 zoneLand,
                 1,
                 zoneLand,
+                CalculateSectionEnum.下底面,
                 JkzhConfigEnum.主动土压力,
                 WaterWhichEnum.主动侧水位,
                 jkzhGetValues);
@@ -437,6 +450,7 @@ public class JkzhCalculation{
                 zoneLand,
                 1,
                 zoneLand,
+                CalculateSectionEnum.下底面,
                 JkzhConfigEnum.主动土压力,
                 WaterWhichEnum.主动侧水位,
                 jkzhGetValues);
@@ -447,6 +461,7 @@ public class JkzhCalculation{
                 zoneLand - jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand()+1,
                 jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand(),
                 zoneLand,
+                CalculateSectionEnum.下底面,
                 JkzhConfigEnum.被动土压力,
                 WaterWhichEnum.被动侧水位,
                 jkzhGetValues);
@@ -454,6 +469,7 @@ public class JkzhCalculation{
                 zoneLand - jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand()+1,
                 jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand(),
                 zoneLand,
+                CalculateSectionEnum.下底面,
                 JkzhConfigEnum.被动土压力,
                 WaterWhichEnum.被动侧水位,
                 jkzhGetValues);
