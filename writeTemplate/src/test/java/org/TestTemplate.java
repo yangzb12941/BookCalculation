@@ -117,11 +117,4 @@ public class TestTemplate {
         };
         return table;
     }
-
-    @Test
-    public void cal(){
-        double toRadians = Math.toRadians(45+17/2.0);
-        double tan = Math.tan(toRadians);
-        log.info("toRadians:{},tan:{}",toRadians,tan);
-    }
 }

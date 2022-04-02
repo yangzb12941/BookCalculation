@@ -70,8 +70,11 @@ public class JkzhContext extends AbstractContext{
             for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
                 String hdValue = soilQualityTable.getTable()[floor][2];
                 addm += Double.valueOf(hdValue);
-                if(addm.compareTo(jkzhBasicParam.getZDWarterDepth())>=0){
+                if(addm.compareTo(jkzhBasicParam.getZDWarterDepth())>0){
                     jkzhBasicParam.getCalResult().setZDWaterLand(floor);
+                    break;
+                }else if(addm.compareTo(jkzhBasicParam.getZDWarterDepth())==0){
+                    jkzhBasicParam.getCalResult().setZDWaterLand(floor+1);
                     break;
                 }
             }
@@ -92,8 +95,11 @@ public class JkzhContext extends AbstractContext{
             for (int floor = 1; floor <= jkzhBasicParam.getAllLands(); floor++) {
                 String hdValue = soilQualityTable.getTable()[floor][2];
                 addm += Double.valueOf(hdValue);
-                if (addm.compareTo(jkzhBasicParam.getBDWarterDepth()) >= 0) {
+                if (addm.compareTo(jkzhBasicParam.getBDWarterDepth()) > 0) {
                     jkzhBasicParam.getCalResult().setBDWaterLand(floor);
+                    break;
+                }else if(addm.compareTo(jkzhBasicParam.getBDWarterDepth())==0){
+                    jkzhBasicParam.getCalResult().setBDWaterLand(floor+1);
                     break;
                 }
             }
@@ -114,8 +120,12 @@ public class JkzhContext extends AbstractContext{
         for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
             String hdValue = soilQualityTable.getTable()[floor][2];
             addm += Double.valueOf(hdValue);
-            if(addm.compareTo(jkzhBasicParam.getDepth())>=0){
+            if(addm.compareTo(jkzhBasicParam.getDepth())>0){
                 jkzhBasicParam.getCalResult().setAtDepthLand(floor);
+                break;
+            }else if(addm.compareTo(jkzhBasicParam.getDepth()) == 0){
+                //正好开挖到这层土的底面深度，那么这层土就不算，只算下层土
+                jkzhBasicParam.getCalResult().setAtDepthLand(floor+1);
                 break;
             }
         }

@@ -199,8 +199,12 @@ public class JkzhCalculation{
         int atLand = 0;
         for(int floor = 1;floor <table.length; floor++){
             sumLands += Double.valueOf(table[floor][2]);
-            if(sumLands.compareTo(depth) >= 0){
+            if(sumLands.compareTo(depth) > 0){
                 atLand = floor;
+                break;
+            }else if(sumLands.compareTo(depth) == 0){
+                //正好开挖到这层土的底面深度，那么这层土就不算，只算下层土
+                atLand = floor+1;
                 break;
             }
         }
