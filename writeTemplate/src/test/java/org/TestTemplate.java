@@ -28,7 +28,7 @@ public class TestTemplate {
         List<JkzhBasicParam> jkzhBasicParams = createJkzhBasicParam();
         final JkzhContext jkzhContext = JkzhContextFactory.getJkzhContext(jkzhBasicParams, createTable());
         JkzhCalculation jkzhCalculation = new JkzhCalculation(jkzhContext);
-        for (int i = 1; i <= 2;i++) {
+        for (int i = 1; i <= jkzhBasicParams.size()-1;i++) {
             jkzhContext.refresh(i,new CreateFixedElementHandle(
                     jkzhCalculation.getJkzhFromulaHandle(),
                     jkzhCalculation.getJkzhPrefixLayout(),
@@ -80,26 +80,26 @@ public class TestTemplate {
 
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
         jkzhBasicParam.setSurcharge(20.0);
-        jkzhBasicParam.setAxis(0.4);
-        jkzhBasicParam.setDepth(5.9);
-        jkzhBasicParam.setZDWarterDepth(2.5);
-        jkzhBasicParam.setBDWarterDepth(6.4);
-        jkzhBasicParam.setWaterConstant(20.0);
+        jkzhBasicParam.setAxis(1.4);
+        jkzhBasicParam.setDepth(4.0);
+        jkzhBasicParam.setZDWarterDepth(0.5);
+        jkzhBasicParam.setBDWarterDepth(4.5);
+        jkzhBasicParam.setWaterConstant(10.0);
         CalResult calResult = new CalResult();
         jkzhBasicParam.setCalResult(calResult);
 
         jkzhBasicParams.add(jkzhBasicParam);
 
-        JkzhBasicParam jkzhBasicParam2 = new JkzhBasicParam();
+        /**JkzhBasicParam jkzhBasicParam2 = new JkzhBasicParam();
         jkzhBasicParam2.setSurcharge(20.0);
         jkzhBasicParam2.setAxis(0.4);
         jkzhBasicParam2.setDepth(10.0);
         jkzhBasicParam2.setZDWarterDepth(2.5);
         jkzhBasicParam2.setBDWarterDepth(10.5);
-        jkzhBasicParam2.setWaterConstant(20.0);
+        jkzhBasicParam2.setWaterConstant(10.0);
         CalResult calResult2 = new CalResult();
         jkzhBasicParam2.setCalResult(calResult2);
-        jkzhBasicParams.add(jkzhBasicParam2);
+        jkzhBasicParams.add(jkzhBasicParam2);**/
         return jkzhBasicParams;
     }
 
@@ -107,15 +107,21 @@ public class TestTemplate {
         //土压力系数头
         String[][] table = {
                 {"岩土层分布（从上至下）及分布特征序号", "土层名称","厚度(m)\nh","重度(kN/m3)\nγ","黏聚力(kPa)\nc","内摩擦角(°)\nΨ","计算方式"},
-                {"1", "①2素填土","2.30","19.30","8.00","4.00","水土合算"},
-                {"2", "④1粘土","2.40","18.50","7.80","3.50","水土合算"},
-                {"3", "⑥2淤泥质粘土","3.30","17.50","3.80","3.50","水土合算"},
-                {"4", "⑥3粉质粘土","9.00","19.10","12.50","13.30","水土合算"},
-                {"5", "⑦粘土","2.00","17.90","12.40","5.50","水土合算"},
-                {"6", "⑧1粉质粘土","3.00","20.40","14.10","10.70","水土合算"},
-                {"7", "⑧2粉土","4.90","20.00","10.80","26.90","水土分算"},
-                {"8", "⑨1粉质粘土","6","19.70","14.80","16.50","水土合算"},
+                {"1","素填土","1.6","18","10.0","10.0","水土合算"},
+                {"2","粉质粘土","1.4","18.3","21.0","17.0","水土合算"},
+                {"3","淤泥质粉质粘土","1.0","17.4","13.0","16.5","水土合算"},
+                {"4","砂质粉土","2.3","18.7","4","31.5","水土分算"},
+                {"5","淤泥质粉质粘土","1.9","17.4","13.0","16.5","水土合算"},
+                {"6","淤泥质粉质粘土","7.8","16.6","12.0","10.5","水土合算"},
+                {"7","粉质粘土","5","19.3","38","17.0","水土合算"}
         };
         return table;
+    }
+
+    @Test
+    public void cal(){
+        double toRadians = Math.toRadians(45+17/2.0);
+        double tan = Math.tan(toRadians);
+        log.info("toRadians:{},tan:{}",toRadians,tan);
     }
 }

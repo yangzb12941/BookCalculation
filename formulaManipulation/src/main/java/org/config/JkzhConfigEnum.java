@@ -25,12 +25,12 @@ public enum JkzhConfigEnum {
 
 	主动土压力系数("主动土压力系数",
 			"\\tan^{2}\\left(45^{\\circ}-\\frac{\\varphi_{i}}{2}\\right)",
-			"math.pow(math.tan(math.toRadians(45-内摩擦角/2)),2)",
+			"math.tan(math.toRadians(45.0-内摩擦角/2.0))",
 			"\\tan^{2}\\left(45^{\\circ}-\\frac{内摩擦角}{2}\\right)"),
 
 	被动土压力系数("被动土压力系数",
 			"\\tan^{2}\\left(45^{\\circ}+\\frac{\\varphi_{i}}{2}\\right)",
-			"math.pow(math.tan(math.toRadians(45+内摩擦角/2)),2)",
+			"math.tan(math.toRadians(45.0+内摩擦角/2.0))",
 			"\\tan^{2}\\left(45^{\\circ}+\\frac{内摩擦角}{2}\\right)"),
 
 	土压力合力_主动上大于0_下大于0("土压力合力_主动上大于0_下大于0",
