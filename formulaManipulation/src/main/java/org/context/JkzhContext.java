@@ -65,14 +65,18 @@ public class JkzhContext extends AbstractContext{
      */
     private void calZDWaterLand(SoilQualityTable soilQualityTable,JkzhBasicParam jkzhBasicParam){
         Double addm = 0.0;
-        //计算开挖深度这层土的剩余厚度
-        for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
-            String hdValue = soilQualityTable.getTable()[floor][2];
-            addm += Double.valueOf(hdValue);
-            if(addm.compareTo(jkzhBasicParam.getZDWarterDepth())>=0){
-                jkzhBasicParam.getCalResult().setZDWaterLand(floor);
-                break;
+        //计算主动土水位在第几层土层，若是没有水位深度，则表示不用考虑水土分算
+        if(jkzhBasicParam.getZDWarterDepth().compareTo(0.0)>0){
+            for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
+                String hdValue = soilQualityTable.getTable()[floor][2];
+                addm += Double.valueOf(hdValue);
+                if(addm.compareTo(jkzhBasicParam.getZDWarterDepth())>=0){
+                    jkzhBasicParam.getCalResult().setZDWaterLand(floor);
+                    break;
+                }
             }
+        }else{
+            jkzhBasicParam.getCalResult().setZDWaterLand(Integer.MAX_VALUE);
         }
     }
 
@@ -83,14 +87,18 @@ public class JkzhContext extends AbstractContext{
      */
     private void calBDWaterLand(SoilQualityTable soilQualityTable,JkzhBasicParam jkzhBasicParam){
         Double addm = 0.0;
-        //计算开挖深度这层土的剩余厚度
-        for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
-            String hdValue = soilQualityTable.getTable()[floor][2];
-            addm += Double.valueOf(hdValue);
-            if(addm.compareTo(jkzhBasicParam.getBDWarterDepth())>=0){
-                jkzhBasicParam.getCalResult().setBDWaterLand(floor);
-                break;
+        //计算主动土水位在第几层土层，若是没有水位深度，则表示不用考虑水土分算
+        if(jkzhBasicParam.getBDWarterDepth().compareTo(0.0)>0) {
+            for (int floor = 1; floor <= jkzhBasicParam.getAllLands(); floor++) {
+                String hdValue = soilQualityTable.getTable()[floor][2];
+                addm += Double.valueOf(hdValue);
+                if (addm.compareTo(jkzhBasicParam.getBDWarterDepth()) >= 0) {
+                    jkzhBasicParam.getCalResult().setBDWaterLand(floor);
+                    break;
+                }
             }
+        }else{
+            jkzhBasicParam.getCalResult().setBDWaterLand(Integer.MAX_VALUE);
         }
     }
 
