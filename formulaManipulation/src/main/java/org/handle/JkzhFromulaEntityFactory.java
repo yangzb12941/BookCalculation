@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
 import org.constant.Constant;
 import org.entity.ExpansionParam;
+import org.enums.CalculateSectionEnum;
 import org.enums.ReviseEnum;
 import org.enums.WaterWhichEnum;
 import org.fromulaEntity.FromulaEntity;
@@ -52,6 +53,7 @@ public class JkzhFromulaEntityFactory {
 	public FromulaEntity soilPressureToCal(int time,
 										   int beginFloor,
 										   int endFloor,
+										   CalculateSectionEnum calculateSectionEnum,
 			                               JkzhGetValues jkzhGetValues,
 										   JkzhConfigEnum jkzhConfigEnum,
 										   WaterWhichEnum waterWhichEnum){
@@ -71,6 +73,7 @@ public class JkzhFromulaEntityFactory {
 						jkzhGetValues.getJkzhContext().getSoilQualityTable(),
 						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
 						waterWhichEnum,
+						calculateSectionEnum,
 						endFloor)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
@@ -104,6 +107,7 @@ public class JkzhFromulaEntityFactory {
 	public FromulaEntity calSolveEquations(int time,
 										   int beginFloor,
 										   int endFloor,
+										   CalculateSectionEnum calculateSectionEnum,
 										   JkzhGetValues jkzhGetValues,
 										   JkzhConfigEnum jkzhConfigEnum,
 										   WaterWhichEnum waterWhichEnum){
@@ -123,6 +127,7 @@ public class JkzhFromulaEntityFactory {
 						jkzhGetValues.getJkzhContext().getSoilQualityTable(),
 						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
 						waterWhichEnum,
+						calculateSectionEnum,
 						endFloor)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
@@ -145,6 +150,7 @@ public class JkzhFromulaEntityFactory {
 	 * 6、添加展开公式处理器
 	 * 7、添加值填充处理器
 	 * 8、添加值填充处理器
+	 * @param calculateSectionEnum 计算切面
 	 * @param jkzhGetValues
 	 * @param jkzhConfigEnum
 	 * @param waterWhichEnum
@@ -153,6 +159,7 @@ public class JkzhFromulaEntityFactory {
 	public FromulaEntity soilPressureToLatex(int time,
 											 int beginFloor,
 											 int endFloor,
+											 CalculateSectionEnum calculateSectionEnum,
 			                                 JkzhGetValues jkzhGetValues,
 											 JkzhConfigEnum jkzhConfigEnum,
 											 WaterWhichEnum waterWhichEnum){
@@ -172,6 +179,7 @@ public class JkzhFromulaEntityFactory {
 						jkzhGetValues.getJkzhContext().getSoilQualityTable(),
 						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
 						waterWhichEnum,
+						calculateSectionEnum,
 						endFloor)))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))

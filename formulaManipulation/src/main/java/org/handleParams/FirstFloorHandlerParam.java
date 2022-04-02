@@ -2,12 +2,14 @@ package org.handleParams;
 
 import org.calParam.JkzhBasicParam;
 import org.config.JkzhConfigEnum;
+import org.enums.CalculateSectionEnum;
 
 public class FirstFloorHandlerParam extends AbstractHandleParams {
     private int curFloor;//当前计算土层
     private int beginFloor;//首层土层
     private JkzhConfigEnum  jkzhConfigEnum;//首层土层
     private JkzhBasicParam jkzhBasicParam;
+
     public FirstFloorHandlerParam(
             JkzhBasicParam jkzhBasicParam,
             int curFloor,
