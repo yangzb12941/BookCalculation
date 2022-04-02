@@ -52,7 +52,7 @@ public class JkzhCalculation{
         //②、计算主动土压力强度
         for(int i = 1; i <= layer; i++){
             String  latexCalUp = this.jkzhFromulaHandle.soilPressureToLatex(
-                    i-1,
+                    i,
                     1,
                     i,
                     CalculateSectionEnum.上顶面,
@@ -60,7 +60,7 @@ public class JkzhCalculation{
                     WaterWhichEnum.主动侧水位,
                     jkzhGetValues);
             String  calUp = this.jkzhFromulaHandle.soilPressureToCal(
-                    i-1,
+                    i,
                     1,
                     i,
                     CalculateSectionEnum.上顶面,
@@ -104,11 +104,12 @@ public class JkzhCalculation{
         JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.被动土压力计算,this.jkzhContext);
         //获取计算层次
         int allLands = jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getAllLands();
-        for(int i = 0; i <= allLands-atLand; i++){
+        int curFloor = atLand;
+        for(int i = 1; i <= allLands-atLand+1; i++,curFloor++){
             String  latexCalUp = jkzhFromulaHandle.soilPressureToLatex(
                     i,
                     atLand,
-                    i+atLand,
+                    curFloor,
                     CalculateSectionEnum.上顶面,
                     JkzhConfigEnum.被动土压力,
                     WaterWhichEnum.被动侧水位,
@@ -116,34 +117,34 @@ public class JkzhCalculation{
             String  calUp = jkzhFromulaHandle.soilPressureToCal(
                     i,
                     atLand,
-                    i+atLand,
+                    curFloor,
                     CalculateSectionEnum.上顶面,
                     JkzhConfigEnum.被动土压力,
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
-            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土压力上"+(atLand+i),calUp);
-            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土压力上"+(atLand+i),new FormulaElement((atLand+i),this.jkzhPrefixLayout,"被动土压力上",latexCalUp+"="+calUp+"kPa"));
-            log.info("被动土压力第{}层展示公式—上:{}={}",i+atLand,latexCalUp,calUp);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土压力上"+curFloor,calUp);
+            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土压力上"+curFloor,new FormulaElement(curFloor,this.jkzhPrefixLayout,"被动土压力上",latexCalUp+"="+calUp+"kPa"));
+            log.info("被动土压力第{}层展示公式—上:{}={}",curFloor,latexCalUp,calUp);
             String latexCalDown = jkzhFromulaHandle.soilPressureToLatex(
-                    i+1,
+                    i,
                     atLand,
-                    i+atLand,
+                    curFloor,
                     CalculateSectionEnum.下底面,
                     JkzhConfigEnum.被动土压力,
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
             String  calDown = jkzhFromulaHandle.soilPressureToCal(
-                    i+1,
+                    i,
                     atLand,
-                    i+atLand,
+                    curFloor,
                     CalculateSectionEnum.下底面,
                     JkzhConfigEnum.被动土压力,
                     WaterWhichEnum.被动侧水位,
                     jkzhGetValues);
-            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土层"+(atLand+i),new TextElement(atLand+i,"被动土层",String.valueOf(atLand+i)));
-            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土压力下"+(atLand+i),calDown);
-            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土压力下"+(atLand+i),new FormulaElement((atLand+i),this.jkzhPrefixLayout,"被动土压力下",latexCalDown+"="+calDown+"kPa"));
-            log.info("被动土压力第{}层展示公式-下:{}={}",i+atLand,latexCalDown,calDown);
+            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土层"+curFloor,new TextElement(curFloor,"被动土层",String.valueOf(curFloor)));
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土压力下"+curFloor,calDown);
+            this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动土压力下"+curFloor,new FormulaElement(curFloor,this.jkzhPrefixLayout,"被动土压力下",latexCalDown+"="+calDown+"kPa"));
+            log.info("被动土压力第{}层展示公式-下:{}={}",curFloor,latexCalDown,calDown);
         }
     }
 

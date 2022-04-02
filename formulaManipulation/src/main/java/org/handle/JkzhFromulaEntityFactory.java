@@ -57,6 +57,7 @@ public class JkzhFromulaEntityFactory {
 			                               JkzhGetValues jkzhGetValues,
 										   JkzhConfigEnum jkzhConfigEnum,
 										   WaterWhichEnum waterWhichEnum){
+		time = timeSpecialHandle(calculateSectionEnum,time);
 		//用于计算结果
 		FromulaEntity calFromulaEntity = new FromulaEntity(jkzhConfigEnum.getCalculate());
 		calFromulaEntity
@@ -111,6 +112,7 @@ public class JkzhFromulaEntityFactory {
 										   JkzhGetValues jkzhGetValues,
 										   JkzhConfigEnum jkzhConfigEnum,
 										   WaterWhichEnum waterWhichEnum){
+		time = timeSpecialHandle(calculateSectionEnum,time);
 		//用于计算结果
 		FromulaEntity calFromulaEntity = new FromulaEntity(jkzhConfigEnum.getCalculate());
 		calFromulaEntity
@@ -163,6 +165,7 @@ public class JkzhFromulaEntityFactory {
 			                                 JkzhGetValues jkzhGetValues,
 											 JkzhConfigEnum jkzhConfigEnum,
 											 WaterWhichEnum waterWhichEnum){
+		time = timeSpecialHandle(calculateSectionEnum,time);
 		//用于word展示
 		FromulaEntity latexFromulaEntity = new FromulaEntity(jkzhConfigEnum.getLatexCal());
 		latexFromulaEntity
@@ -383,5 +386,9 @@ public class JkzhFromulaEntityFactory {
 				//添加值填充处理器
 				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
 		return latexFromulaEntity;
+	}
+
+	private Integer timeSpecialHandle(CalculateSectionEnum calculateSectionEnum,int time){
+		return calculateSectionEnum == CalculateSectionEnum.上顶面?time-1:time;
 	}
 }
