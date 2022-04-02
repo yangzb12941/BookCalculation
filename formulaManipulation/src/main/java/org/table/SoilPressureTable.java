@@ -59,16 +59,16 @@ public class SoilPressureTable implements ITable {
 			zdHandler.getNoExpansionParam().setCurFloor(i);
 			String zdFillingCal = zdFromulaEntity.compile();
 			log.info("被动计算:{}",zdFillingCal);
-			tableParam[i][2] = zdFillingCal;
-			tableParam[i][3] = String.format("%.2f",Math.sqrt((Double.valueOf(zdFillingCal))));
+			tableParam[i][2] = String.format("%.2f",Math.pow((Double.valueOf(zdFillingCal)),2));
+			tableParam[i][3] = zdFillingCal;
 
 			//处理计算结果的公式
 			NoExpansionHandler bdHandler = (NoExpansionHandler)bdFromulaEntity.getHandler(NoExpansionHandler.class);
 			bdHandler.getNoExpansionParam().setCurFloor(i);
 			String bdFillingCal = bdFromulaEntity.compile();
 			log.info("被动计算:{}",bdFillingCal);
-			tableParam[i][4] = bdFillingCal;
-			tableParam[i][5] = String.format("%.2f",Math.sqrt((Double.valueOf(bdFillingCal))));
+			tableParam[i][4] = String.format("%.2f",Math.pow((Double.valueOf(bdFillingCal)),2));
+			tableParam[i][5] = bdFillingCal;
 		}
 		this.table = tableParam;
 	}
