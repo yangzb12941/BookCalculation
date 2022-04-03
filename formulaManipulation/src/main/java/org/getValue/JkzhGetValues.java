@@ -89,12 +89,20 @@ public class JkzhGetValues implements GetValues {
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), floor, 2);
                             valueArray[index] = hdValue;
                         }
-                    } else if (this.model == JkzhGetValueModelEnum.土压力零点深度计算) {
+                    } else if (this.model == JkzhGetValueModelEnum.主动土压力零点深度计算 || this.model == JkzhGetValueModelEnum.被动土压力零点深度计算) {
                         if (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand()) {
                             valueArray[index] = "x";
                         } else {
-                            String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), floor, 2);
-                            valueArray[index] = hdValue;
+                            if(floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtDepthLand()
+                               && this.model == JkzhGetValueModelEnum.被动土压力零点深度计算){
+                                //当计算被动土侧压力零点计算公式的时候，被动土侧基坑所在土层，厚度不能取整层土
+                                //只能取开挖剩下的土厚度
+                                String hdValue = String.format("%.2f",getDepthSectionToDown(jkzhContext));
+                                valueArray[index] = hdValue;
+                            }else{
+                                String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), floor, 2);
+                                valueArray[index] = hdValue;
+                            }
                         }
                     } else if (this.model == JkzhGetValueModelEnum.主动土压力合力计算
                             || this.model == JkzhGetValueModelEnum.主动作用点位置
