@@ -5,4 +5,5 @@ org\java\com\yh\calsheet\YhCalSheetApplicationTests.class
 org\java\com\yh\calsheet\ReviseHandlerTest.class
 org\java\com\yh\JKZH\table\RowPileTable.class
 org\java\com\yh\calsheet\NoExpansionHandlerTest.class
+org\java\com\yh\calsheet\ZDPressureTest.class
 org\java\com\yh\calsheet\FormulaElementTest.class

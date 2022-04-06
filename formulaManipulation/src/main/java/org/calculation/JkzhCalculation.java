@@ -169,7 +169,8 @@ public class JkzhCalculation{
         JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土压力零点所在土层,this.jkzhContext);
         customCalZdPressure(atDepthLand,jkzhGetValues);
         //计算土压力零点在哪一层
-        pressureZeroAtLand(depth,atDepthLand,jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getAllLands(),jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
+        int zeroAtLand = pressureZeroAtLand(depth, atDepthLand, jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getAllLands(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
+        reCalZDPressureDown(atDepthLand,zeroAtLand);
     }
 
     /**
@@ -273,8 +274,9 @@ public class JkzhCalculation{
      * @param atDepthLand 开挖深度所在土层
      * @param allLands 总的土层
      * @param formate 中间计算结果集
+     * @return 土压力零点所在土层
      */
-    private void pressureZeroAtLand(Double depth,int atDepthLand, int allLands, HashMap<String,String> formate){
+    private int pressureZeroAtLand(Double depth,int atDepthLand, int allLands, HashMap<String,String> formate){
         //第一种情况
         int zoneLand = firstCase(atDepthLand, allLands, formate);
         if(zoneLand != 0){
@@ -287,13 +289,14 @@ public class JkzhCalculation{
             if(zoneLand != 0){
                 secondCasePressureZero(zoneLand);
             }else{
-                //第四种情况
+                //第三种情况
                 zoneLand = thirdCase(depth);
                 if(zoneLand != 0){
                     thirdCasePressureZero(depth);
                 }
             }
         }
+        return zoneLand;
     }
 
     /**
@@ -323,7 +326,7 @@ public class JkzhCalculation{
             this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土压零点位置",new TextElement(zoneLand,"土压零点位置","已开挖基坑底面以下x米处"));
         }else{
             for (int i = 1; i < zoneLand; i++) {
-                zero += Double.valueOf(this.jkzhContext.getSoilQualityTable().getTable()[i-1][2]);
+                zero += Double.valueOf(this.jkzhContext.getSoilQualityTable().getTable()[i][2]);
             }
             this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().setPressureZero(zero+pressureZero);
             this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土压零点位置",new TextElement(zoneLand,"土压零点位置","第"+zoneLand+"层土顶面以下x米处"));
@@ -359,13 +362,13 @@ public class JkzhCalculation{
         int result = 0;
         for (int i = atDepthLand; i <= allLands; i++) {
             //主动土压力上端-被动土压力上端
-            Double zdUp = Double.valueOf(formate.get("主动土压力上" + atDepthLand));
-            Double bdUp = Double.valueOf(formate.get("被动土压力上"+atDepthLand));
+            Double zdUp = Double.valueOf(formate.get("主动土压力上" + i));
+            Double bdUp = Double.valueOf(formate.get("被动土压力上"+i));
             Double one = zdUp - bdUp;
             String oneS = String.format("%.2f",one);
             //主动土压力下端-被动土压力下端
-            Double zdDown = Double.valueOf(formate.get("主动土压力下"+atDepthLand));
-            Double bdDown = Double.valueOf(formate.get("被动土压力下"+atDepthLand));
+            Double zdDown = Double.valueOf(formate.get("主动土压力下"+i));
+            Double bdDown = Double.valueOf(formate.get("被动土压力下"+i));
             Double two = zdDown - bdDown;
             String twoS = String.format("%.2f",two);
             Double tmpe = one * two;
@@ -437,7 +440,7 @@ public class JkzhCalculation{
      * @return
      */
     private Double calPressureZero(int zoneLand){
-        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土压力零点深度计算,this.jkzhContext);
+        JkzhGetValues zdJkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.主动土压力零点深度计算,this.jkzhContext);
         //主动土压力底层：
         String zdlatexCalDown = jkzhFromulaHandle.soilPressureToLatex(
                 zoneLand,
@@ -446,7 +449,7 @@ public class JkzhCalculation{
                 CalculateSectionEnum.下底面,
                 JkzhConfigEnum.主动土压力,
                 WaterWhichEnum.主动侧水位,
-                jkzhGetValues);
+                zdJkzhGetValues);
         String  zdCalDown = jkzhFromulaHandle.calSolveEquations(
                 zoneLand,
                 1,
@@ -454,10 +457,11 @@ public class JkzhCalculation{
                 CalculateSectionEnum.下底面,
                 JkzhConfigEnum.主动土压力,
                 WaterWhichEnum.主动侧水位,
-                jkzhGetValues);
+                zdJkzhGetValues);
         log.info("第{}层展示公式-下:{}={}",zoneLand,zdlatexCalDown,zdCalDown);
 
         //被动土压力底层：
+        JkzhGetValues bdJkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.被动土压力零点深度计算,this.jkzhContext);
         String bdLatexCalDown = jkzhFromulaHandle.soilPressureToLatex(
                 zoneLand - jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand()+1,
                 jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand(),
@@ -465,7 +469,7 @@ public class JkzhCalculation{
                 CalculateSectionEnum.下底面,
                 JkzhConfigEnum.被动土压力,
                 WaterWhichEnum.被动侧水位,
-                jkzhGetValues);
+                bdJkzhGetValues);
         String  bdCalDown = jkzhFromulaHandle.calSolveEquations(
                 zoneLand - jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand()+1,
                 jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand(),
@@ -473,7 +477,7 @@ public class JkzhCalculation{
                 CalculateSectionEnum.下底面,
                 JkzhConfigEnum.被动土压力,
                 WaterWhichEnum.被动侧水位,
-                jkzhGetValues);
+                bdJkzhGetValues);
         log.info("第{}层展示公式-下:{}={}",zoneLand,bdLatexCalDown,bdCalDown);
 
         this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("土压力零点求解",new FormulaElement(zoneLand,this.jkzhPrefixLayout,"土压力零点求解",zdlatexCalDown+"="+bdLatexCalDown));
@@ -828,5 +832,26 @@ public class JkzhCalculation{
         log.info("支撑轴力计算:{}={}={}",zlLatexCal,zlCalculate,zlCalculate);
         this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("支撑轴力",zlCalculate);
         this.jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("支点反力计算",new FormulaElement(this.jkzhContext.getCalTimes(),this.jkzhPrefixLayout,"支点反力计算",zlLatexCal+"="+zlCalculate+"kN"));
+    }
+
+    /**
+     * 土压力零点不与开挖深度同一土层主动土压力整层计算
+     * @param atDepthLand
+     * @param zeroAtLand
+     */
+    private void reCalZDPressureDown(int atDepthLand,int zeroAtLand){
+        if(atDepthLand!=zeroAtLand){
+            JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.主动土压力计算,this.jkzhContext);
+            String  calDown = this.jkzhFromulaHandle.soilPressureToCal(
+                    atDepthLand,
+                    1,
+                    atDepthLand,
+                    CalculateSectionEnum.下底面,
+                    JkzhConfigEnum.主动土压力,
+                    WaterWhichEnum.主动侧水位,
+                    jkzhGetValues);
+            log.info("土压力零点不与开挖深度同一土层主动土压力整层计算:{}",atDepthLand);
+            this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土压力下"+atDepthLand,calDown);
+        }
     }
 }

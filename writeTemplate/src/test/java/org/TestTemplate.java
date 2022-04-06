@@ -81,9 +81,9 @@ public class TestTemplate {
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
         jkzhBasicParam.setSurcharge(20.0);
         jkzhBasicParam.setAxis(1.4);
-        jkzhBasicParam.setDepth(4.0);
+        jkzhBasicParam.setDepth(5.9);
         jkzhBasicParam.setZDWarterDepth(0.5);
-        jkzhBasicParam.setBDWarterDepth(4.5);
+        jkzhBasicParam.setBDWarterDepth(6.4);
         jkzhBasicParam.setWaterConstant(10.0);
         CalResult calResult = new CalResult();
         jkzhBasicParam.setCalResult(calResult);
