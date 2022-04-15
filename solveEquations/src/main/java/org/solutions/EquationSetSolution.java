@@ -12,7 +12,7 @@ import java.util.List;
 ///		Currently, we might print the same solution twice... (x=2 or x=2)
 ///		Or we might print "Every real solution or x=4"...
 public class EquationSetSolution implements Solution {
-	private final String LATEX_SPACE = "\\,\\,\\,\\,";
+	private final String LATEX_SPACE = "";
 	private List<EquationSolution> solutions;
 
 	public EquationSetSolution(List<EquationSolution> solutions) {
@@ -46,12 +46,10 @@ public class EquationSetSolution implements Solution {
 
 		for (int i = 1 ; i < uniques.size(); i++) {
 			build.append(LATEX_SPACE);
-			build.append("Or");
+			build.append(" Or ");
 			build.append(LATEX_SPACE);
 			addSolution(build, idTable, uniques.get(i));
 		}
 		return build.toString();
-
 	}
-
 }

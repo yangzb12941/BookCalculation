@@ -13,7 +13,6 @@ import org.context.JkzhContextFactory;
 import org.elementHandler.ElementHandlerUtils;
 import org.junit.Test;
 import org.calParam.JkzhBasicParam;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +48,8 @@ public class TestTemplate {
             jkzhCalculation.bdPositionAction(jkzhBasicParams.get(i).getDepth());
             //支撑处水平力计算
             jkzhCalculation.calStrutForce(jkzhBasicParams.get(i).getDepth());
+            //弯矩计算
+            jkzhCalculation.maxBendingMoment();
         }
 
         XWPFTemplate compile = XWPFTemplate.compile("src\\test\\templates\\铁男基坑支护模板.docx");

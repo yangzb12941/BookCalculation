@@ -9,7 +9,9 @@ public enum ConditionEnum {
     首层土计算("首层土计算",
             "③"),
     多工况支撑计算("多工况支撑计算",
-            "④"),;
+            "④"),
+    最大弯矩位置("最大弯矩位置",
+            "⑤"),;
 
     private final String key;//公式类型
     private final String value;//存原始公式展示

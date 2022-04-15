@@ -23,6 +23,7 @@ org\handler\FirstFloorHandler.class
 org\enums\WaterWhichEnum.class
 org\handler\ReplaceSubscriptHandler.class
 org\handler\SolveEquationsHandler.class
+org\handler\SolvePowEquationsHandler.class
 org\handler\SurchargeHandler.class
 org\context\JkzhContextFactory.class
 org\show\JkzhCalTemporaryPart.class

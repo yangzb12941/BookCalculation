@@ -16,10 +16,8 @@ public class JkzhCalTemporaryPart implements ILayout {
     private HashMap<String,String> layoutMap;
     private String[] layoutChar;
 
-    public JkzhCalTemporaryPart() {
-        this.layoutMap = new HashMap<String, String>(2);
-        this.layoutChar = new String[]{
-                "支撑轴力主动",
-                "支撑轴力被动"};
+    public JkzhCalTemporaryPart(String[] layoutChar) {
+        this.layoutMap = new HashMap<String, String>(layoutChar.length);
+        this.layoutChar = layoutChar;
     }
 }

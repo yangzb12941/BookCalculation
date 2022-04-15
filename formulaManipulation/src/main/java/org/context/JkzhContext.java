@@ -47,6 +47,8 @@ public class JkzhContext extends AbstractContext{
         calBDWaterLand(soilQualityTable,this.getJkzhBasicParams().get(super.getCalTimes()));
         //计算开挖面所在第几层土
         calDepthLand(soilQualityTable,this.getJkzhBasicParams().get(super.getCalTimes()));
+        //计算支撑位置所在第几层土
+        calAxisAtLand(soilQualityTable,this.getJkzhBasicParams().get(super.getCalTimes()));
     }
 
     /**
@@ -126,6 +128,28 @@ public class JkzhContext extends AbstractContext{
             }else if(addm.compareTo(jkzhBasicParam.getDepth()) == 0){
                 //正好开挖到这层土的底面深度，那么这层土就不算，只算下层土
                 jkzhBasicParam.getCalResult().setAtDepthLand(floor+1);
+                break;
+            }
+        }
+    }
+
+    /**
+     * 计算开挖面所在第几层土
+     * @param soilQualityTable 土层参数表
+     * @param jkzhBasicParam 基础参数
+     */
+    private void calAxisAtLand(SoilQualityTable soilQualityTable,JkzhBasicParam jkzhBasicParam){
+        Double addm = 0.0;
+        //计算开挖深度这层土的剩余厚度
+        for (int floor = 1; floor <= jkzhBasicParam.getAllLands();floor++) {
+            String hdValue = soilQualityTable.getTable()[floor][2];
+            addm += Double.valueOf(hdValue);
+            if(addm.compareTo(jkzhBasicParam.getAxis())>0){
+                jkzhBasicParam.getCalResult().setAxisAtLand(floor);
+                break;
+            }else if(addm.compareTo(jkzhBasicParam.getAxis()) == 0){
+                //正好开挖到这层土的底面深度，那么这层土就不算，只算下层土
+                jkzhBasicParam.getCalResult().setAxisAtLand(floor+1);
                 break;
             }
         }
