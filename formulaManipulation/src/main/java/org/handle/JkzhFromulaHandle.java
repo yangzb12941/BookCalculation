@@ -309,6 +309,23 @@ public class JkzhFromulaHandle{
     /**
      * @param fromula 公式字符串
      * @param curTimes 当前第几工况
+     * @param iLayout 公式展示字符集
+     * @return
+     */
+    public String maxBendingMomentToLatex(int curTimes,
+                                          JkzhGetValues jkzhGetValues,
+                                          String fromula,
+                                          ILayout iLayout){
+        log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.maxBendingMomentToLatex(curTimes,jkzhGetValues,fromula,iLayout);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * @param fromula 公式字符串
+     * @param curTimes 当前第几工况
      * @param jkzhGetValues 获取值
      * @return
      */
@@ -318,6 +335,22 @@ public class JkzhFromulaHandle{
         log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
         //处理计算结果的公式
         FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.strutForceExtendToCal(curTimes,jkzhGetValues,fromula);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * @param fromula 公式字符串
+     * @param curTimes 当前第几工况
+     * @param jkzhGetValues 获取值
+     * @return
+     */
+    public String maxBendingMomentToCal(int curTimes,
+                                        String fromula,
+                                        JkzhGetValues jkzhGetValues){
+        log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.maxBendingMomentToCal(curTimes,jkzhGetValues,fromula);
         String compile = fromulaEntity.compile();
         return compile;
     }

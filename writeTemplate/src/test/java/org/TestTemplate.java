@@ -48,9 +48,10 @@ public class TestTemplate {
             jkzhCalculation.bdPositionAction(jkzhBasicParams.get(i).getDepth());
             //支撑处水平力计算
             jkzhCalculation.calStrutForce(jkzhBasicParams.get(i).getDepth());
-            //弯矩计算
-            jkzhCalculation.maxBendingMoment();
         }
+
+        //弯矩计算，以上的计算结果，有些是当作计算弯矩的参数
+        jkzhCalculation.maxBendingMoment();
 
         XWPFTemplate compile = XWPFTemplate.compile("src\\test\\templates\\铁男基坑支护模板.docx");
         List<MetaTemplate> elementTemplates = compile.getElementTemplates();
@@ -81,26 +82,26 @@ public class TestTemplate {
 
         JkzhBasicParam jkzhBasicParam = new JkzhBasicParam();
         jkzhBasicParam.setSurcharge(20.0);
-        jkzhBasicParam.setAxis(1.4);
-        jkzhBasicParam.setDepth(5.9);
-        jkzhBasicParam.setZDWarterDepth(0.5);
-        jkzhBasicParam.setBDWarterDepth(6.4);
+        jkzhBasicParam.setAxis(0.4);
+        jkzhBasicParam.setDepth(5.4);
+        jkzhBasicParam.setZDWarterDepth(0d);
+        jkzhBasicParam.setBDWarterDepth(0d);
         jkzhBasicParam.setWaterConstant(10.0);
         CalResult calResult = new CalResult();
         jkzhBasicParam.setCalResult(calResult);
 
         jkzhBasicParams.add(jkzhBasicParam);
 
-        /**JkzhBasicParam jkzhBasicParam2 = new JkzhBasicParam();
+        JkzhBasicParam jkzhBasicParam2 = new JkzhBasicParam();
         jkzhBasicParam2.setSurcharge(20.0);
-        jkzhBasicParam2.setAxis(0.4);
-        jkzhBasicParam2.setDepth(10.0);
-        jkzhBasicParam2.setZDWarterDepth(2.5);
-        jkzhBasicParam2.setBDWarterDepth(10.5);
+        jkzhBasicParam2.setAxis(4.9);
+        jkzhBasicParam2.setDepth(9.8);
+        jkzhBasicParam2.setZDWarterDepth(0d);
+        jkzhBasicParam2.setBDWarterDepth(0d);
         jkzhBasicParam2.setWaterConstant(10.0);
         CalResult calResult2 = new CalResult();
         jkzhBasicParam2.setCalResult(calResult2);
-        jkzhBasicParams.add(jkzhBasicParam2);**/
+        jkzhBasicParams.add(jkzhBasicParam2);
         return jkzhBasicParams;
     }
 
@@ -108,13 +109,11 @@ public class TestTemplate {
         //土压力系数头
         String[][] table = {
                 {"岩土层分布（从上至下）及分布特征序号", "土层名称","厚度(m)\nh","重度(kN/m3)\nγ","黏聚力(kPa)\nc","内摩擦角(°)\nΨ","计算方式"},
-                {"1","素填土","1.6","18","10.0","10.0","水土合算"},
-                {"2","粉质粘土","1.4","18.3","21.0","17.0","水土合算"},
-                {"3","淤泥质粉质粘土","1.0","17.4","13.0","16.5","水土合算"},
-                {"4","砂质粉土","2.3","18.7","4","31.5","水土分算"},
-                {"5","淤泥质粉质粘土","1.9","17.4","13.0","16.5","水土合算"},
-                {"6","淤泥质粉质粘土","7.8","16.6","12.0","10.5","水土合算"},
-                {"7","粉质粘土","5","19.3","38","17.0","水土合算"}
+                {"1","素填土","1.2","19.2","10.0","14.0","水土合算"},
+                {"2","粉质粘土","7.1","19.6","15.0","16.0","水土合算"},
+                {"3","淤泥质粉质粘土","4.2","19.7","18","18","水土合算"},
+                {"4","砂质粉土","6.6","20.1","25","14","水土合算"},
+                {"5","淤泥质粉质粘土","15","21","20","25","水土合算"}
         };
         return table;
     }

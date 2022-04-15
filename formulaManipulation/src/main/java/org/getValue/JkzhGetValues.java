@@ -143,7 +143,8 @@ public class JkzhGetValues implements GetValues {
                         }
                     } else if (this.model == JkzhGetValueModelEnum.支撑轴力计算) {
                         valueArray[index] = String.format("%.2f",Double.valueOf(getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()))));
-                    }else if(this.model == JkzhGetValueModelEnum.剪力为零处主动土底面压力强度){
+                    }else if(this.model == JkzhGetValueModelEnum.剪力为零处主动土底面压力强度
+                             || this.model == JkzhGetValueModelEnum.剪力为零这层土的土压力合力){
                         floor = Integer.valueOf(elementParam.getIndex());
                         if (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()) {
                             valueArray[index] = "x";
@@ -194,7 +195,8 @@ public class JkzhGetValues implements GetValues {
                     Integer floor = Integer.valueOf(elementParam.getIndex());
                     if(this.model == JkzhGetValueModelEnum.支点到剪力为零这层土各土层的土压力合力汇总
                     && floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()){
-                        valueArray[index] = getValuesFromMap(elementParam.getName(),this.jkzhContext.getBendingMomentValues().get(Integer.valueOf(elementParam.getIndex())));
+                        String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
+                        valueArray[index] = vMap_1;
                     }else{
                         String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                         valueArray[index] = vMap_1;
@@ -214,7 +216,8 @@ public class JkzhGetValues implements GetValues {
                     if ((this.model == JkzhGetValueModelEnum.剪力为零这层土的土压力合力
                          || this.model == JkzhGetValueModelEnum.剪力为零这层土的作用点位置)
                         && floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()) {
-                        valueArray[index] = getValuesFromMap(elementParam.getName(),this.jkzhContext.getBendingMomentValues().get(Integer.valueOf(elementParam.getIndex())));
+                        String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()));
+                        valueArray[index] = vMap_1;
                     }else{
                         String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                         valueArray[index] = vMap_1;
@@ -240,8 +243,14 @@ public class JkzhGetValues implements GetValues {
                     break;
                 }
                 case "支撑轴力":{
-                    String vMap_3 = getValuesFromMap(elementParam.getName() , jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()-1));
-                    valueArray[index] = vMap_3;
+                    if(this.model == JkzhGetValueModelEnum.两个支点之间支撑轴力汇总
+                    || this.model == JkzhGetValueModelEnum.最大弯矩支撑轴矩){
+                        String vMap_3 = getValuesFromMap(elementParam.getName() , jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
+                        valueArray[index] = vMap_3;
+                    }else{
+                        String vMap_3 = getValuesFromMap(elementParam.getName() , jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()-1));
+                        valueArray[index] = vMap_3;
+                    }
                     break;
                 }
                 case "支撑轴臂":{
@@ -269,11 +278,11 @@ public class JkzhGetValues implements GetValues {
                 case "最大主动弯矩力臂":{
                     Integer floor = Integer.valueOf(elementParam.getIndex());
                     if(floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()){
-                        String zdPointDepth = jkzhContext.getBendingMomentValues().get(index).get("主动作用点位置计算");
+                        String zdPointDepth = jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()).get("主动作用点位置计算");
                         valueArray[index] = zdPointDepth;
                     }else{
                         //获取主动土压力作用点位置
-                        String zdPointDepth = jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("被动土作用点位置"+floor);
+                        String zdPointDepth = jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("主动土作用点位置"+floor);
                         //获取剪力为零所在土层
                         Double maxTcDepth = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcDepth();
                         valueArray[index] = String.format("%.2f",maxTcDepth-Double.valueOf(zdPointDepth));

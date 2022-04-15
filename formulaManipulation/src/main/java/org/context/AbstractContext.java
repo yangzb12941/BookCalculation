@@ -26,4 +26,7 @@ public abstract class AbstractContext {
 
     //当前第几工况
     private Integer calTimes;
+
+    //当前第几个支撑
+    private Integer tcTimes;
 }

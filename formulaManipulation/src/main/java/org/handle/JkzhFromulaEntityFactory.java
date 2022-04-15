@@ -311,6 +311,35 @@ public class JkzhFromulaEntityFactory {
 	}
 
 	/**
+	 * 固定公式展示处理器：
+	 * 1、公式替换元素处理器
+	 * 2、标记元素处理器
+	 * 3、展开公式处理器
+	 * @param fromula
+	 * @param iLayout
+	 * @return
+	 */
+	public FromulaEntity maxBendingMomentToLatex(int curFloor,
+												 JkzhGetValues jkzhGetValues,
+												 String fromula,
+												 ILayout iLayout){
+		//用于计算结果
+		FromulaEntity calFromulaEntity = new FromulaEntity(fromula);
+		calFromulaEntity
+				//多工况支撑轴计算处理器
+				.addHandler(new MaxBendingMomentHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
+				//公式替换元素处理器
+				.addHandler(new ReplaceLayoutHandler().setParams(iLayout))
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor-1,1,curFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
+		return calFromulaEntity;
+	}
+
+	/**
 	 * 需扩展计算结果
 	 * @param jkzhGetValues
 	 * @param fromula
@@ -324,6 +353,31 @@ public class JkzhFromulaEntityFactory {
 		latexFromulaEntity
 				//多工况支撑轴计算处理器
 				.addHandler(new StrutForceHandler().setParams(new StrutForceHandlerParam(curFloor)))
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor-1,1,curFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
+				//添加值填充处理器
+				.addHandler(new CalHandler());
+		return latexFromulaEntity;
+	}
+
+	/**
+	 * 需扩展计算结果
+	 * @param jkzhGetValues
+	 * @param fromula
+	 * @return
+	 */
+	public FromulaEntity maxBendingMomentToCal(int curFloor,
+											   JkzhGetValues jkzhGetValues,
+											   String fromula){
+		//用于word展示
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
+				//多工况支撑轴计算处理器
+				.addHandler(new MaxBendingMomentHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
