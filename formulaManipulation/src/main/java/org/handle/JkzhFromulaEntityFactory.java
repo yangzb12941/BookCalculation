@@ -105,6 +105,60 @@ public class JkzhFromulaEntityFactory {
 	 * @param waterWhichEnum
 	 * @return
 	 */
+	public FromulaEntity soilPressureToCalX(int time,
+										   int beginFloor,
+										   int endFloor,
+										   CalculateSectionEnum calculateSectionEnum,
+										   JkzhGetValues jkzhGetValues,
+										   JkzhConfigEnum jkzhConfigEnum,
+										   WaterWhichEnum waterWhichEnum){
+		time = timeSpecialHandle(calculateSectionEnum,time);
+		//用于计算结果
+		FromulaEntity calFromulaEntity = new FromulaEntity(jkzhConfigEnum.getCalculate());
+		calFromulaEntity
+				//添加首层土判断处理器
+				.addHandler(new FirstFloorHandler().setParams(new FirstFloorHandlerParam(
+						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
+						time+beginFloor,
+						beginFloor,
+						jkzhConfigEnum)))
+				//添加地面堆载处理器
+				.addHandler(new SurchargeHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
+				//添加水土分算处理器
+				.addHandler(new WaterHandler().setParams(new WaterHandlerParams(
+						jkzhGetValues.getJkzhContext().getSoilQualityTable(),
+						jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes()),
+						waterWhichEnum,
+						calculateSectionEnum,
+						endFloor)))
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(time,beginFloor,endFloor)))
+				//公式修正处理器
+				.addHandler(new ReviseHandler().setParams(ReviseEnum.公式修正))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
+				;
+		return calFromulaEntity;
+	}
+
+	/**
+	 * 土压力计算结果：包括如下处理器
+	 * 1、添加首层土判断处理器
+	 * 2、添加地面堆载处理器
+	 * 3、添加水土分算处理器
+	 * 4、添加元素标记处理器
+	 * 5、公式修正处理器
+	 * 6、添加展开公式处理器
+	 * 7、添加值填充处理器
+	 * 8、添加值填充处理器
+	 * 9、计算过计算处理器
+	 * @param jkzhGetValues
+	 * @param jkzhConfigEnum
+	 * @param waterWhichEnum
+	 * @return
+	 */
 	public FromulaEntity calSolveEquations(int time,
 										   int beginFloor,
 										   int endFloor,
@@ -257,6 +311,35 @@ public class JkzhFromulaEntityFactory {
 	}
 
 	/**
+	 * 固定公式展示处理器：
+	 * 1、公式替换元素处理器
+	 * 2、标记元素处理器
+	 * 3、展开公式处理器
+	 * @param fromula
+	 * @param iLayout
+	 * @return
+	 */
+	public FromulaEntity maxBendingMomentToLatex(int curFloor,
+												 JkzhGetValues jkzhGetValues,
+												 String fromula,
+												 ILayout iLayout){
+		//用于计算结果
+		FromulaEntity calFromulaEntity = new FromulaEntity(fromula);
+		calFromulaEntity
+				//多工况支撑轴计算处理器
+				.addHandler(new MaxBendingMomentHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
+				//公式替换元素处理器
+				.addHandler(new ReplaceLayoutHandler().setParams(iLayout))
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor-1,1,curFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
+		return calFromulaEntity;
+	}
+
+	/**
 	 * 需扩展计算结果
 	 * @param jkzhGetValues
 	 * @param fromula
@@ -270,6 +353,31 @@ public class JkzhFromulaEntityFactory {
 		latexFromulaEntity
 				//多工况支撑轴计算处理器
 				.addHandler(new StrutForceHandler().setParams(new StrutForceHandlerParam(curFloor)))
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor-1,1,curFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
+				//添加值填充处理器
+				.addHandler(new CalHandler());
+		return latexFromulaEntity;
+	}
+
+	/**
+	 * 需扩展计算结果
+	 * @param jkzhGetValues
+	 * @param fromula
+	 * @return
+	 */
+	public FromulaEntity maxBendingMomentToCal(int curFloor,
+											   JkzhGetValues jkzhGetValues,
+											   String fromula){
+		//用于word展示
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
+				//多工况支撑轴计算处理器
+				.addHandler(new MaxBendingMomentHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
 				//添加元素标记处理器
 				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
 				//添加展开公式处理器
@@ -320,6 +428,27 @@ public class JkzhFromulaEntityFactory {
 	}
 
 	/**
+	 * 需扩展计算结果,带有未知数X
+	 * @param jkzhGetValues
+	 * @param fromula
+	 * @return
+	 */
+	public FromulaEntity extendToCalX(int curFloor,
+									 JkzhGetValues jkzhGetValues,
+									 String fromula){
+		//用于word展示
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor,curFloor,curFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
+		return latexFromulaEntity;
+	}
+
+	/**
 	 * 需扩展公式展示
 	 * @param jkzhGetValues
 	 * @param fromula
@@ -362,6 +491,29 @@ public class JkzhFromulaEntityFactory {
 				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
 				//添加值填充处理器
 				.addHandler(new CalHandler());
+		return latexFromulaEntity;
+	}
+
+	/**
+	 * 需扩展计算结果
+	 * @param jkzhGetValues
+	 * @param fromula
+	 * @return
+	 */
+	public FromulaEntity extendToCalNX(int time,
+									  int beginFloor,
+									  int endFloor,
+									  JkzhGetValues jkzhGetValues,
+									  String fromula){
+		//用于word展示
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
+				//添加元素标记处理器
+				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
+				//添加展开公式处理器
+				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(time,beginFloor,endFloor)))
+				//添加值填充处理器
+				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
 		return latexFromulaEntity;
 	}
 

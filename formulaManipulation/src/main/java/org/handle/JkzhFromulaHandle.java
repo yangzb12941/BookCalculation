@@ -46,6 +46,31 @@ public class JkzhFromulaHandle{
     }
 
     /**
+     * 土压力计算的数学表达式,带有未知数X
+     * @param time 展开次数
+     * @param beginFloor 第几层开始
+     * @param endFloor 第几层开始
+     * @param calculateSectionEnum 计算切面
+     * @param jkzhConfigEnum 被解析的基础公式
+     * @param waterWhichEnum 水土合算、水土分算
+     * @param jkzhGetValues 获取值的方式
+     * @return
+     */
+    public String soilPressureToCalX(int time,
+                                    int beginFloor,
+                                    int endFloor,
+                                    CalculateSectionEnum calculateSectionEnum,
+                                    JkzhConfigEnum jkzhConfigEnum,
+                                    WaterWhichEnum waterWhichEnum,
+                                    JkzhGetValues jkzhGetValues){
+        log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.soilPressureToCalX(time,beginFloor,endFloor,calculateSectionEnum,jkzhGetValues,jkzhConfigEnum, waterWhichEnum);
+        String fillingCal = fromulaEntity.compile();
+        return fillingCal;
+    }
+
+    /**
      * 土压力计算的数学表达式
      * @param time 展开次数
      * @param beginFloor 第几层开始
@@ -136,6 +161,23 @@ public class JkzhFromulaHandle{
     /**
      * 获取可计算的数学表达式
      * @param curFloor 当前层
+     * @param jkzhConfigEnum 被解析的基础公式
+     * @param jkzhGetValues 获取值
+     * @return
+     */
+    public String extendToCalX(int curFloor,
+                              JkzhConfigEnum jkzhConfigEnum,
+                              JkzhGetValues jkzhGetValues){
+        log.info("extendToCal入参:公式{},当前层:{}",jkzhConfigEnum,curFloor);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToCalX(curFloor,jkzhGetValues, jkzhConfigEnum.getCalculate());
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * 获取可计算的数学表达式
+     * @param curFloor 当前层
      * @param fromula 被解析的基础公式
      * @param jkzhGetValues 获取值
      * @return
@@ -214,6 +256,27 @@ public class JkzhFromulaHandle{
      * @param jkzhGetValues 获取值
      * @return
      */
+    public String extendToCalNX(int time,
+                               int beginFloor,
+                               int endFloor,
+                               JkzhConfigEnum jkzhConfigEnum,
+                               JkzhGetValues jkzhGetValues){
+        log.info("cal入参:公式{},展开次数:{},当前第{}层开始,第几{}层结束",jkzhConfigEnum,time,beginFloor,endFloor);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.extendToCalNX(time,beginFloor,endFloor,jkzhGetValues, jkzhConfigEnum.getCalculate());
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * 获取可计算的数学表达式
+     * @param time 展开次数
+     * @param beginFloor 第几层开始
+     * @param endFloor 第几层开始
+     * @param jkzhConfigEnum 被解析的基础公式
+     * @param jkzhGetValues 获取值
+     * @return
+     */
     public String extendToLatexN(int time,
                                  int beginFloor,
                                  int endFloor,
@@ -246,6 +309,23 @@ public class JkzhFromulaHandle{
     /**
      * @param fromula 公式字符串
      * @param curTimes 当前第几工况
+     * @param iLayout 公式展示字符集
+     * @return
+     */
+    public String maxBendingMomentToLatex(int curTimes,
+                                          JkzhGetValues jkzhGetValues,
+                                          String fromula,
+                                          ILayout iLayout){
+        log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.maxBendingMomentToLatex(curTimes,jkzhGetValues,fromula,iLayout);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * @param fromula 公式字符串
+     * @param curTimes 当前第几工况
      * @param jkzhGetValues 获取值
      * @return
      */
@@ -255,6 +335,22 @@ public class JkzhFromulaHandle{
         log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
         //处理计算结果的公式
         FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.strutForceExtendToCal(curTimes,jkzhGetValues,fromula);
+        String compile = fromulaEntity.compile();
+        return compile;
+    }
+
+    /**
+     * @param fromula 公式字符串
+     * @param curTimes 当前第几工况
+     * @param jkzhGetValues 获取值
+     * @return
+     */
+    public String maxBendingMomentToCal(int curTimes,
+                                        String fromula,
+                                        JkzhGetValues jkzhGetValues){
+        log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
+        //处理计算结果的公式
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.maxBendingMomentToCal(curTimes,jkzhGetValues,fromula);
         String compile = fromulaEntity.compile();
         return compile;
     }

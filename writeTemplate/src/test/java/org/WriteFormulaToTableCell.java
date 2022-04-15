@@ -1,17 +1,10 @@
 package org;
 
 import com.googlecode.aviator.AviatorEvaluator;
-import com.spire.doc.*;
-import com.spire.doc.documents.OleLinkType;
-import com.spire.doc.documents.Paragraph;
-import com.spire.doc.fields.DocPicture;
-import com.spire.doc.fields.omath.OfficeMath;
-import com.spire.doc.interfaces.ITable;
 import lombok.extern.slf4j.Slf4j;
 import org.config.JkzhConfigEnum;
 import org.enumUtils.EnumUtils;
 import org.junit.Test;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -34,10 +27,11 @@ public class WriteFormulaToTableCell {
         //word公式展示
         Map<String,String> formate = new HashMap<>(128);
         formate.put(TestConfigEnum.Tp.getKey(),result);
-        spireDocTable(formate,"src\\test\\templates\\表格写入计算公式.docx");
+        //spireDocTable(formate,"src\\test\\templates\\表格写入计算公式.docx");
     }
     //在表格写入公式
-    private void spireDocTable(Map<String,String> formate,String fileName) throws IOException {
+    /*
+      private void spireDocTable(Map<String,String> formate,String fileName) throws IOException {
         //加载Word测试文档
         Document doc = new Document();
         doc.loadFromFile(fileName);
@@ -147,4 +141,5 @@ public class WriteFormulaToTableCell {
         //另存为一个文档OleLinkType
         doc.saveToFile("EmbedDocument.docx", FileFormat.Docx_2013);
     }
+     */
 }

@@ -21,4 +21,13 @@ public class CalResult {
 
     //是否存在 主动土压力等于被动土压力
     private String zDEqualsBDKinds;
+
+    //支撑位置所在土层
+    private int axisAtLand = 0;
+
+    //弯矩为零的点所在土层
+    private int maxTcLand = 0;
+
+    //弯矩为零的点深度，是距离土顶面的距离
+    private Double maxTcDepth = 0d;
 }
