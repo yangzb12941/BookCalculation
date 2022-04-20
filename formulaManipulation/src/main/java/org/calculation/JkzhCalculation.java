@@ -233,14 +233,16 @@ public class JkzhCalculation{
                     this.jkzhContext.setTcTimes(i);
                     //获取基坑底面所在土层
                     int twoAxisAtLand = this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand();
-                    doSecondPartMaxBendingMoment(twoAxisAtLand,i);
+                    int tcAtLand = doSecondPartMaxBendingMoment(twoAxisAtLand, i);
                     isCalLastLand = Boolean.TRUE;
+                    maxTcLandNotExist(tcAtLand,i);
                 }else{
                     //设置当前第几工况
                     this.jkzhContext.setCalTimes(allAxisaCount-1);
                     //设置当前计算第几个支点
                     this.jkzhContext.setTcTimes(i);
-                    doThirdPartMaxBendingMoment(i);
+                    int tcAtLand = doThirdPartMaxBendingMoment(i);
+                    maxTcLandNotExist(tcAtLand,i);
                 }
             }else{
                 //设置当前第几工况
@@ -249,7 +251,8 @@ public class JkzhCalculation{
                 this.jkzhContext.setTcTimes(i);
                 //获取第二个支点所在土层
                 int twoAxisAtLand = this.jkzhContext.getJkzhBasicParams().get(twoAxisIndex).getCalResult().getAxisAtLand();
-                doFirstPartMaxBendingMoment(twoAxisAtLand,i);
+                int tcAtLand = doFirstPartMaxBendingMoment(twoAxisAtLand, i);
+                maxTcLandNotExist(tcAtLand,i);
             }
         }
     }
@@ -259,7 +262,7 @@ public class JkzhCalculation{
      * @param lastAtLand 后一支点所在第几层土层
      * @param index 当前计算第几个支点的弯矩
      */
-    private void doFirstPartMaxBendingMoment(int lastAtLand,int index){
+    private int doFirstPartMaxBendingMoment(int lastAtLand,int index){
         //获取计算的支撑轴力
         String tcAtSLand = calStrutForceMax(index);
         Double tcAtDVLand = Double.valueOf(tcAtSLand);
@@ -302,13 +305,14 @@ public class JkzhCalculation{
             //10、解出一元一次方程，结果既是Max
             calMaxBendingMoment(index,tcAtLand);
         }
+        return tcAtLand;
     }
 
     /**
      * 计算最后一个支点到基坑底面的弯矩
      * @param lastAtLand
      */
-    private void doSecondPartMaxBendingMoment(int lastAtLand,int index){
+    private int doSecondPartMaxBendingMoment(int lastAtLand,int index){
         //重新计算基坑底面切面，主动土压力值
         JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.重新计算基坑底面切面主动土压力,this.jkzhContext);
         reCalZdPressure(lastAtLand,jkzhGetValues,index);
@@ -356,12 +360,13 @@ public class JkzhCalculation{
             //10、解出一元一次方程，结果既是Max
             calMaxBendingMoment(index,tcAtLand);
         }
+        return tcAtLand;
     }
 
     /**
      * 计算基坑底面以下的弯矩
      */
-    private void doThirdPartMaxBendingMoment(int index){
+    private int doThirdPartMaxBendingMoment(int index){
         int tcCount = this.jkzhContext.getJkzhBasicParams().size()-1;
         //获取计算的支撑轴力
         String tcAtSLand = calStrutForceMax(tcCount);
@@ -414,6 +419,7 @@ public class JkzhCalculation{
             //14、解出一元一次方程，结果既是Max
             calMaxBendingMoment(index,tcAtLand);
         }
+        return tcAtLand;
     }
 
     /**
@@ -1742,5 +1748,16 @@ public class JkzhCalculation{
             sumLands += Double.valueOf(table[floor][2]);
         }
         return sumLands + depth;
+    }
+
+    /**
+     * 当工况不存在剪力为零的位置，那么需要在这一工况数据中插入无效数据
+     * @param tcAtLand 剪力为零的位置
+     */
+    private void maxTcLandNotExist(int tcAtLand,int index){
+        if(tcAtLand == 0){
+            this.jkzhContext.getBendingMomentTemplates().add(index,null);
+            this.jkzhContext.getBendingMomentValues().add(index,null);
+        }
     }
 }

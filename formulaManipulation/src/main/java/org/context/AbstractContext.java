@@ -9,9 +9,6 @@ import java.util.List;
 @Data
 public abstract class AbstractContext {
 
-    //模板基础元素
-    private HashMap<String, BaseElement> baseTemplates;
-
     //多工况模板元素
     private List<HashMap<String, BaseElement>> elementTemplates;
 
