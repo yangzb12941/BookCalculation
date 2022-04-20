@@ -186,10 +186,8 @@ public class JkzhCalculation{
         List<HashMap<String,String>> bendingMomentValues = new ArrayList<HashMap<String, String>>(3);
         jkzhContext.setBendingMomentValues(bendingMomentValues);
 
-        HashMap<String, BaseElement> baseElementMap = new HashMap<String, BaseElement>(0);
-        this.jkzhContext.getBendingMomentTemplates().add(baseElementMap);
-        HashMap<String,String> valuesMap = new HashMap<String, String>(0);
-        this.jkzhContext.getBendingMomentValues().add(valuesMap);
+        this.jkzhContext.getBendingMomentTemplates().add(null);
+        this.jkzhContext.getBendingMomentValues().add(null);
         calMaxBendingMoment();
     }
 

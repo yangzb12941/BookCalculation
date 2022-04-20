@@ -72,6 +72,14 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
                 List<Map<String, Object>> maps = blockElementToListMap(blockElements);
                 mapList.addAll(maps);
             }
+        }else if(iterableTemplate.getStartMark().getTagName().equals("基坑底面以上")){
+            blockElements = maxTc((JkzhContext) abstractContext,iterableTemplate);
+            List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+            mapList.addAll(maps);
+        }else if(iterableTemplate.getStartMark().getTagName().equals("基坑底面以下")){
+            blockElements = maxTc((JkzhContext) abstractContext,iterableTemplate);
+            List<Map<String, Object>> maps = blockElementToListMap(blockElements);
+            mapList.addAll(maps);
         }
         return mapList;
     }
@@ -139,6 +147,32 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
         return blockElements;
     }
 
+    private List<BlockElement> creatBlockElement(JkzhContext jkzhContext, IterableTemplate iterableTemplate){
+        List<BlockElement> blockElements = new ArrayList<BlockElement>(jkzhContext.getBendingMomentTemplates().size());
+        int tcIndex = 1;
+        for(HashMap<String, BaseElement> entry : jkzhContext.getBendingMomentTemplates()){
+            if(Objects.isNull(entry)){
+                continue;
+            }
+            List<BaseElement> baseElements = new ArrayList<BaseElement>(18);
+            for(MetaTemplate templates : iterableTemplate.getTemplates()){
+                RunTemplate temp = (RunTemplate)templates;
+                String key = temp.getTagName();
+                BaseElement value = entry.get(key);
+                if(Objects.nonNull(value)){
+                    baseElements.add(value);
+                }else{
+                    value = entry.get(temp.getTagName());
+                    baseElements.add(value);
+                }
+            }
+            BlockElement blockElement = new BlockElement(tcIndex,iterableTemplate.getStartMark().getTagName(),baseElements);
+            blockElements.add(blockElement);
+            tcIndex++;
+        }
+        return blockElements;
+    }
+
     /**
      * 多工况模板值匹配
      * @param jkzhContext
@@ -169,5 +203,11 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
         //多工况模板元素迭代完，重新设置回解析模板非多工况部分填充值
         jkzhContext.setCalTimes(0);
         return values;
+    }
+
+
+    private List<BlockElement> maxTc (JkzhContext jkzhContext, IterableTemplate iterableTemplate){
+        List<BlockElement> blockElements = creatBlockElement(jkzhContext,iterableTemplate);
+        return blockElements;
     }
 }
