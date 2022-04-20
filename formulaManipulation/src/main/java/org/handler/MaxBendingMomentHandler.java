@@ -3,13 +3,14 @@ package org.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.calParam.JkzhBasicParam;
 import org.enums.ConditionEnum;
+import org.handleParams.MaxBendingMomentParams;
 
 import java.util.ArrayDeque;
 import java.util.Stack;
 
 @Slf4j
-public class MaxBendingMomentHandler implements IHandler<JkzhBasicParam>{
-    private JkzhBasicParam jkzhBasicParam;
+public class MaxBendingMomentHandler implements IHandler<MaxBendingMomentParams>{
+    private MaxBendingMomentParams maxBendingMomentParams;
 
     @Override
     public String execute(String fromula) {
@@ -42,7 +43,7 @@ public class MaxBendingMomentHandler implements IHandler<JkzhBasicParam>{
                 if(("<"+ConditionEnum.最大弯矩位置.getValue()+">").equals(pop+">")
                 ||("<"+ConditionEnum.最大弯矩值.getValue()+">").equals(pop+">")){
                     //需要根据条件判断是否需要保留这部分公式
-                    if(jkzhBasicParam.getCalResult().getMaxTcLand()>jkzhBasicParam.getCalResult().getAtDepthLand()){
+                    if(maxBendingMomentParams.getTcAtLand()>=maxBendingMomentParams.getLastDepthLand()){
                         StringBuilder sub = new StringBuilder();
                         do{
                             Character character = deque.pollLast();
@@ -82,8 +83,8 @@ public class MaxBendingMomentHandler implements IHandler<JkzhBasicParam>{
     }
 
     @Override
-    public MaxBendingMomentHandler setParams(JkzhBasicParam jkzhBasicParam) {
-        this.jkzhBasicParam = jkzhBasicParam;
+    public MaxBendingMomentHandler setParams(MaxBendingMomentParams maxBendingMomentParams) {
+        this.maxBendingMomentParams = maxBendingMomentParams;
         return this;
     }
 }

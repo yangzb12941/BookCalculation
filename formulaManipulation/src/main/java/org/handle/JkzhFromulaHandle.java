@@ -307,18 +307,19 @@ public class JkzhFromulaHandle{
     }
 
     /**
+     * @param tcAtLand 剪力零点所在土层
+     * @param lastDepthLand 最终基坑底面所在土层
      * @param fromula 公式字符串
-     * @param curTimes 当前第几工况
      * @param iLayout 公式展示字符集
      * @return
      */
-    public String maxBendingMomentToLatex(int curTimes,
-                                          JkzhGetValues jkzhGetValues,
+    public String maxBendingMomentToLatex(int tcAtLand,
+                                          int lastDepthLand,
                                           String fromula,
                                           ILayout iLayout){
-        log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
+        log.info("extendToCal入参:公式{}",fromula);
         //处理计算结果的公式
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.maxBendingMomentToLatex(curTimes,jkzhGetValues,fromula,iLayout);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.maxBendingMomentToLatex(tcAtLand,lastDepthLand,fromula,iLayout);
         String compile = fromulaEntity.compile();
         return compile;
     }
@@ -340,17 +341,19 @@ public class JkzhFromulaHandle{
     }
 
     /**
+     * @param tcAtLand 剪力零点所在土层
+     * @param lastDepthLand 最终基坑底面所在土层
      * @param fromula 公式字符串
-     * @param curTimes 当前第几工况
-     * @param jkzhGetValues 获取值
+     * @param iLayout 公式展示字符集
      * @return
      */
-    public String maxBendingMomentToCal(int curTimes,
+    public String maxBendingMomentToCal(int tcAtLand,
+                                        int lastDepthLand,
                                         String fromula,
-                                        JkzhGetValues jkzhGetValues){
-        log.info("extendToCal入参:公式{},当前第几工况:{}",fromula,curTimes);
+                                        ILayout iLayout){
+        log.info("extendToCal入参:公式{}",fromula);
         //处理计算结果的公式
-        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.maxBendingMomentToCal(curTimes,jkzhGetValues,fromula);
+        FromulaEntity fromulaEntity = jkzhFromulaEntityFactory.maxBendingMomentToCal(tcAtLand,lastDepthLand,fromula,iLayout);
         String compile = fromulaEntity.compile();
         return compile;
     }

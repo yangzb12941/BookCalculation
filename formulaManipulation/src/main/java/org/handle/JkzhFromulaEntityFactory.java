@@ -10,6 +10,7 @@ import org.enums.WaterWhichEnum;
 import org.fromulaEntity.FromulaEntity;
 import org.getValue.JkzhGetValues;
 import org.handleParams.FirstFloorHandlerParam;
+import org.handleParams.MaxBendingMomentParams;
 import org.handleParams.StrutForceHandlerParam;
 import org.handleParams.WaterHandlerParams;
 import org.handler.*;
@@ -315,28 +316,24 @@ public class JkzhFromulaEntityFactory {
 	 * 1、公式替换元素处理器
 	 * 2、标记元素处理器
 	 * 3、展开公式处理器
-	 * @param fromula
-	 * @param iLayout
+	 * @param tcAtLand 剪力零点所在土层
+	 * @param lastDepthLand 最终基坑底面所在土层
+	 * @param fromula 公式
+	 * @param iLayout 替换公式集合
 	 * @return
 	 */
-	public FromulaEntity maxBendingMomentToLatex(int curFloor,
-												 JkzhGetValues jkzhGetValues,
+	public FromulaEntity maxBendingMomentToLatex(int tcAtLand,
+												 int lastDepthLand,
 												 String fromula,
 												 ILayout iLayout){
 		//用于计算结果
-		FromulaEntity calFromulaEntity = new FromulaEntity(fromula);
-		calFromulaEntity
+		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
+		latexFromulaEntity
 				//多工况支撑轴计算处理器
-				.addHandler(new MaxBendingMomentHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
+				.addHandler(new MaxBendingMomentHandler().setParams(new MaxBendingMomentParams(tcAtLand,lastDepthLand)))
 				//公式替换元素处理器
-				.addHandler(new ReplaceLayoutHandler().setParams(iLayout))
-				//添加元素标记处理器
-				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
-				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor-1,1,curFloor)))
-				//添加值填充处理器
-				.addHandler(new FillValueHandler().setParams(jkzhGetValues));
-		return calFromulaEntity;
+				.addHandler(new ReplaceLayoutHandler().setParams(iLayout));
+		return latexFromulaEntity;
 	}
 
 	/**
@@ -365,28 +362,28 @@ public class JkzhFromulaEntityFactory {
 	}
 
 	/**
-	 * 需扩展计算结果
-	 * @param jkzhGetValues
-	 * @param fromula
+	 * 固定公式展示处理器：
+	 * 1、公式替换元素处理器
+	 * 2、标记元素处理器
+	 * 3、展开公式处理器
+	 * @param tcAtLand 剪力零点所在土层
+	 * @param lastDepthLand 最终基坑底面所在土层
+	 * @param fromula 公式
+	 * @param iLayout 替换公式集合
 	 * @return
 	 */
-	public FromulaEntity maxBendingMomentToCal(int curFloor,
-											   JkzhGetValues jkzhGetValues,
-											   String fromula){
-		//用于word展示
-		FromulaEntity latexFromulaEntity = new FromulaEntity(fromula);
-		latexFromulaEntity
+	public FromulaEntity maxBendingMomentToCal(int tcAtLand,
+											   int lastDepthLand,
+											   String fromula,
+											   ILayout iLayout){
+		//用于计算结果
+		FromulaEntity calFromulaEntity = new FromulaEntity(fromula);
+		calFromulaEntity
 				//多工况支撑轴计算处理器
-				.addHandler(new MaxBendingMomentHandler().setParams(jkzhGetValues.getJkzhContext().getJkzhBasicParams().get(jkzhGetValues.getJkzhContext().getCalTimes())))
-				//添加元素标记处理器
-				.addHandler(new AppendSubscriptHandler().setParams(Constant.FlagString))
-				//添加展开公式处理器
-				.addHandler(new ExpansionHandler().setParams(new ExpansionParam(curFloor-1,1,curFloor)))
-				//添加值填充处理器
-				.addHandler(new FillValueHandler().setParams(jkzhGetValues))
-				//添加值填充处理器
-				.addHandler(new CalHandler());
-		return latexFromulaEntity;
+				.addHandler(new MaxBendingMomentHandler().setParams(new MaxBendingMomentParams(tcAtLand,lastDepthLand)))
+				//公式替换元素处理器
+				.addHandler(new ReplaceLayoutHandler().setParams(iLayout));
+		return calFromulaEntity;
 	}
 
 	/**
