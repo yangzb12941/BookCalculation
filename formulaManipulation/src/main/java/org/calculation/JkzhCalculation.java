@@ -270,11 +270,11 @@ public class JkzhCalculation{
         if(tcAtLand != 0){
             int befor = index;
             int after = befor +index;
-            this.jkzhContext.getBendingMomentTemplates().get(index).put("前一支撑",new SingleFormulaElement(befor,jkzhPrefixLayout,"支点反力计算",jkzhPrefixLayout.getLayoutMap().get("支点反力计算")));
-            this.jkzhContext.getBendingMomentTemplates().get(index).put("后一支撑",new SingleFormulaElement(after,jkzhPrefixLayout,"支点反力计算",jkzhPrefixLayout.getLayoutMap().get("支点反力计算")));
-            this.jkzhContext.getBendingMomentTemplates().get(index).put("第几弯矩",new SingleFormulaElement(befor,jkzhPrefixLayout,"最大弯矩",jkzhPrefixLayout.getLayoutMap().get("最大弯矩")));
+            this.jkzhContext.getBendingMomentTemplates().get(index).put("前一支撑",new SingleFormulaElement(befor,jkzhPrefixLayout,"前一支撑",jkzhPrefixLayout.getLayoutMap().get("前一支撑")));
+            this.jkzhContext.getBendingMomentTemplates().get(index).put("后一支撑",new SingleFormulaElement(after,jkzhPrefixLayout,"后一支撑",jkzhPrefixLayout.getLayoutMap().get("后一支撑")));
+            this.jkzhContext.getBendingMomentTemplates().get(index).put("第几弯矩",new SingleFormulaElement(befor,jkzhPrefixLayout,"第几弯矩",jkzhPrefixLayout.getLayoutMap().get("最大弯矩")));
             String tcSValue = this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("支撑轴力");
-            this.jkzhContext.getBendingMomentTemplates().get(index).put("支点反力值",new SingleFormulaElement(befor,jkzhPrefixLayout,"支点反力值",jkzhPrefixLayout.getLayoutMap().get("支点反力值")+"="+tcSValue+"kN/m"));
+            this.jkzhContext.getBendingMomentTemplates().get(index).put("支点反力值",new FormulaElement(befor,jkzhPrefixLayout,"支点反力值",tcSValue+"kN/m"));
             this.jkzhContext.getBendingMomentTemplates().get(index).put("剪力为零点所在土层",new TextElement(befor,"剪力为零点所在土层",String.valueOf(tcAtLand)));
             //设置当前工况，弯矩为0的点在第几层土
             this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().setMaxTcLand(tcAtLand);
@@ -325,11 +325,11 @@ public class JkzhCalculation{
         //表明存在弯矩为0的点，isExistsTc 是弯矩为零的点所在土层
         if(tcAtLand != 0){
             int befor = index;
-            this.jkzhContext.getBendingMomentTemplates().get(index).put("前一支撑",new SingleFormulaElement(befor,jkzhPrefixLayout,"支点反力计算",jkzhPrefixLayout.getLayoutMap().get("支点反力计算")));
+            this.jkzhContext.getBendingMomentTemplates().get(index).put("前一支撑",new SingleFormulaElement(befor,jkzhPrefixLayout,"前一支撑",jkzhPrefixLayout.getLayoutMap().get("前一支撑")));
             this.jkzhContext.getBendingMomentTemplates().get(index).put("后一支撑",new TextElement(0,"后一支撑","基坑底面"));
-            this.jkzhContext.getBendingMomentTemplates().get(index).put("第几弯矩",new SingleFormulaElement(befor,jkzhPrefixLayout,"最大弯矩",jkzhPrefixLayout.getLayoutMap().get("最大弯矩")));
+            this.jkzhContext.getBendingMomentTemplates().get(index).put("第几弯矩",new SingleFormulaElement(befor,jkzhPrefixLayout,"第几弯矩",jkzhPrefixLayout.getLayoutMap().get("第几弯矩")));
             String tcSValue = this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("支撑轴力");
-            this.jkzhContext.getBendingMomentTemplates().get(index).put("支点反力值",new SingleFormulaElement(befor,jkzhPrefixLayout,"支点反力值",jkzhPrefixLayout.getLayoutMap().get("支点反力值")+"="+tcSValue+"kN/m"));
+            this.jkzhContext.getBendingMomentTemplates().get(index).put("支点反力值",new FormulaElement(befor,jkzhPrefixLayout,"支点反力值",tcSValue+"kN/m"));
             this.jkzhContext.getBendingMomentTemplates().get(index).put("剪力为零点所在土层",new TextElement(befor,"剪力为零点所在土层",String.valueOf(tcAtLand)));
             //设置当前工况，弯矩为0的点在第几层土
             this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().setMaxTcLand(tcAtLand);
@@ -374,7 +374,7 @@ public class JkzhCalculation{
         //表明存在弯矩为0的点，isExistsTc 是弯矩为零的点所在土层
         if(tcAtLand != 0){
             int befor = index;
-            this.jkzhContext.getBendingMomentTemplates().get(index).put("第几弯矩",new SingleFormulaElement(befor,jkzhPrefixLayout,"最大弯矩",jkzhPrefixLayout.getLayoutMap().get("最大弯矩")));
+            this.jkzhContext.getBendingMomentTemplates().get(index).put("第几弯矩",new SingleFormulaElement(befor,jkzhPrefixLayout,"第几弯矩",jkzhPrefixLayout.getLayoutMap().get("最大弯矩")));
             this.jkzhContext.getBendingMomentTemplates().get(index).put("剪力为零点所在土层",new TextElement(befor,"剪力为零点所在土层",String.valueOf(tcAtLand)));
             //设置当前工况，弯矩为0的点在第几层土
             this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().setMaxTcLand(tcAtLand);
@@ -495,7 +495,7 @@ public class JkzhCalculation{
     private void reCalZDPressure(int index,int tcAtLand){
         //获取这一层土顶面土压力强度
         String calUp = this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("主动土压力上" + tcAtLand);
-        this.jkzhContext.getBendingMomentTemplates().get(index).put("主动土压力上",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"主动土压力上",calUp+"kPa"));
+        this.jkzhContext.getBendingMomentTemplates().get(index).put("主动土压力上",new FormulaElement(tcAtLand,jkzhPrefixLayout,"主动土压力上",calUp+"kPa"));
         //获取这一层土底面土压力强度，这是带有参数x
         JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零处主动土底面压力强度,this.jkzhContext);
         String latexCalDown = this.jkzhFromulaHandle.soilPressureToLatex(
@@ -515,7 +515,7 @@ public class JkzhCalculation{
                 WaterWhichEnum.主动侧水位,
                 jkzhGetValues);
         log.info("求弯矩主动土压力第{}层展示公式-下:{}={}",index,latexCalDown,calDown);
-        this.jkzhContext.getBendingMomentTemplates().get(index).put("主动土压力下",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"主动土压力下",latexCalDown+"="+calDown+"kPa"));
+        this.jkzhContext.getBendingMomentTemplates().get(index).put("主动土压力下",new FormulaElement(tcAtLand,jkzhPrefixLayout,"主动土压力下",latexCalDown));
         this.jkzhContext.getBendingMomentValues().get(index).put("主动土压力下",calDown);
     }
 
@@ -527,7 +527,7 @@ public class JkzhCalculation{
     private void reCalBDPressure(int index,int tcAtLand){
         //获取这一层土顶面土压力强度
         String calUp = this.jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("被动土压力上" + tcAtLand);
-        this.jkzhContext.getBendingMomentTemplates().get(index).put("被动土压力上",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"被动土压力上",calUp+"kPa"));
+        this.jkzhContext.getBendingMomentTemplates().get(index).put("被动土压力上",new FormulaElement(tcAtLand,jkzhPrefixLayout,"被动土压力上",calUp+"kPa"));
         //获取这一层土底面土压力强度，这是带有参数x
         JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零处被动土底面压力强度,this.jkzhContext);
         int depthLand = this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getAtDepthLand();
@@ -548,7 +548,7 @@ public class JkzhCalculation{
                 WaterWhichEnum.被动侧水位,
                 jkzhGetValues);
         log.info("求弯矩被动土压力第{}层展示公式-下:{}={}",index,latexCalDown,calDown);
-        this.jkzhContext.getBendingMomentTemplates().get(index).put("被动土压力下",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"被动土压力下",latexCalDown+"="+calDown+"kPa"));
+        this.jkzhContext.getBendingMomentTemplates().get(index).put("被动土压力下",new FormulaElement(tcAtLand,jkzhPrefixLayout,"被动土压力下",latexCalDown));
         this.jkzhContext.getBendingMomentValues().get(index).put("被动土压力下",calDown);
     }
 
@@ -811,7 +811,7 @@ public class JkzhCalculation{
                 partCal);
         log.info("支撑轴力计算:{}={}",zlLatexCal,zlCalculate);
         jkzhContext.getBendingMomentValues().get(index).put("解方程公式",zlCalculate);
-        jkzhContext.getBendingMomentTemplates().get(index).put("解方程公式",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"解方程公式",zlLatexCal));
+        jkzhContext.getBendingMomentTemplates().get(index).put("解方程公式",new FormulaElement(tcAtLand,jkzhPrefixLayout,"解方程公式",zlLatexCal));
 
         //解方程
         SolvePowEquationsHandler solvePowEquationsHandler = new SolvePowEquationsHandler();
@@ -844,7 +844,7 @@ public class JkzhCalculation{
 
         log.info("重新计算某一土层的土压力合力:{}={}",maxPointZdLatex,calculate);
         jkzhContext.getBendingMomentValues().get(index).put("主动土压力合力计算",calculate);
-        jkzhContext.getBendingMomentTemplates().get(index).put("主动土压力合力计算",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"主动土压力合力计算",maxPointZdLatex+"="+calculate+"kN/m"));
+        jkzhContext.getBendingMomentTemplates().get(index).put("主动土压力合力计算",new FormulaElement(tcAtLand,jkzhPrefixLayout,"主动土压力合力计算",maxPointZdLatex+"="+calculate+"kN/m"));
     }
 
     /**
@@ -868,7 +868,7 @@ public class JkzhCalculation{
 
         log.info("重新计算某一土层的土压力合力:{}={}",maxPointZdLatex,calculate);
         jkzhContext.getBendingMomentValues().get(index).put("被动土压力合力计算",calculate);
-        jkzhContext.getBendingMomentTemplates().get(index).put("被动土压力合力计算",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"被动土压力合力计算",maxPointZdLatex+"="+calculate+"kN/m"));
+        jkzhContext.getBendingMomentTemplates().get(index).put("被动土压力合力计算",new FormulaElement(tcAtLand,jkzhPrefixLayout,"被动土压力合力计算",maxPointZdLatex+"="+calculate+"kN/m"));
     }
 
     /**
@@ -893,7 +893,7 @@ public class JkzhCalculation{
 
         log.info("求某一土层的土压力作用点位置:{}={}",maxPointZdLatex,calculate);
         jkzhContext.getBendingMomentValues().get(index).put("主动作用点位置计算",calculate);
-        jkzhContext.getBendingMomentTemplates().get(index).put("主动作用点位置计算",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"主动作用点位置计算",maxPointZdLatex+"="+calculate+"m"));
+        jkzhContext.getBendingMomentTemplates().get(index).put("主动作用点位置计算",new FormulaElement(tcAtLand,jkzhPrefixLayout,"主动作用点位置计算",maxPointZdLatex+"="+calculate+"m"));
     }
 
     /**
@@ -917,7 +917,7 @@ public class JkzhCalculation{
 
         log.info("求某一土层的土压力作用点位置:{}={}",maxPointZdLatex,calculate);
         jkzhContext.getBendingMomentValues().get(index).put("被动作用点位置计算",calculate);
-        jkzhContext.getBendingMomentTemplates().get(index).put("被动作用点位置计算",new SingleFormulaElement(tcAtLand,jkzhPrefixLayout,"被动作用点位置计算",maxPointZdLatex+"="+calculate+"m"));
+        jkzhContext.getBendingMomentTemplates().get(index).put("被动作用点位置计算",new FormulaElement(tcAtLand,jkzhPrefixLayout,"被动作用点位置计算",maxPointZdLatex+"="+calculate+"m"));
     }
 
     /**
@@ -1034,11 +1034,11 @@ public class JkzhCalculation{
                 JkzhConfigEnum.最大弯矩.getCalculate(),
                 partCal);
         log.info("最大弯矩计算:{}={}",zlLatexCal,zlCalculate);
-        jkzhContext.getBendingMomentTemplates().get(index).put("求矩计算",new SingleFormulaElement(index,jkzhPrefixLayout,"求矩计算",zlLatexCal));
+        jkzhContext.getBendingMomentTemplates().get(index).put("求矩计算",new FormulaElement(index,jkzhPrefixLayout,"求矩计算",zlLatexCal));
         SolveEquationsHandler solveEquationsHandler = new SolveEquationsHandler();
         String execute = solveEquationsHandler.execute(zlCalculate);
         jkzhContext.getBendingMomentValues().get(index).put("矩值",execute);
-        jkzhContext.getBendingMomentTemplates().get(index).put("矩值",new SingleFormulaElement(index,jkzhPrefixLayout,"矩值",execute));
+        jkzhContext.getBendingMomentTemplates().get(index).put("矩值",new FormulaElement(index,jkzhPrefixLayout,"矩值",execute+"kN·m"));
     }
 
     /**

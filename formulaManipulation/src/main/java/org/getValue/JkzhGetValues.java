@@ -2,6 +2,7 @@ package org.getValue;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.config.GetValueModelEnum;
 import org.config.JkzhGetValueModelEnum;
 import org.context.JkzhContext;
 import org.entity.ElementParam;
@@ -26,13 +27,23 @@ public class JkzhGetValues implements GetValues {
     private JkzhContext jkzhContext;
 
     /**
+     * 只获取模式
+     */
+    private GetValueModelEnum getValueModelEnum;
+
+    /**
      * 参数
      */
     private List<ElementParam> elementParams;
 
-    public JkzhGetValues(JkzhGetValueModelEnum model,JkzhContext jkzhContext) {
+    public JkzhGetValues(JkzhGetValueModelEnum model,JkzhContext jkzhContext,GetValueModelEnum getValueModelEnum) {
         this.model = model;
         this.jkzhContext = jkzhContext;
+        this.getValueModelEnum = getValueModelEnum;
+    }
+
+    public JkzhGetValues(JkzhGetValueModelEnum model,JkzhContext jkzhContext) {
+        new JkzhGetValues(model,jkzhContext, GetValueModelEnum.Cal模式);
     }
 
     /**

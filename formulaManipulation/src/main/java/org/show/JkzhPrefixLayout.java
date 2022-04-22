@@ -131,6 +131,18 @@ public class JkzhPrefixLayout implements ILayout{
         //支点反力计算
         this.layoutMap.put("支点反力计算","T_{cn}");
 
+        //前一支撑
+        this.layoutMap.put("前一支撑","T_{cn}");
+
+        //后一支撑
+        this.layoutMap.put("后一支撑","T_{cn}");
+
+        //支点反力值
+        this.layoutMap.put("支点反力值","T_{cn}");
+
+        //第几弯矩
+        this.layoutMap.put("第几弯矩","M_{maxn}");
+
         //最大弯矩
         this.layoutMap.put("最大弯矩","M_{maxn}");
     }

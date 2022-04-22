@@ -154,21 +154,39 @@ public class JkzhBlockElementHandler extends BlockElementHandler{
             if(Objects.isNull(entry)){
                 continue;
             }
-            List<BaseElement> baseElements = new ArrayList<BaseElement>(18);
-            for(MetaTemplate templates : iterableTemplate.getTemplates()){
-                RunTemplate temp = (RunTemplate)templates;
-                String key = temp.getTagName();
-                BaseElement value = entry.get(key);
-                if(Objects.nonNull(value)){
-                    baseElements.add(value);
-                }else{
-                    value = entry.get(temp.getTagName());
-                    baseElements.add(value);
+            if(iterableTemplate.getStartMark().getTagName().equals("基坑底面以上") && Objects.nonNull(entry.get("前一支撑"))){
+                List<BaseElement> baseElements = new ArrayList<BaseElement>(12);
+                for(MetaTemplate templates : iterableTemplate.getTemplates()){
+                    RunTemplate temp = (RunTemplate)templates;
+                    String key = temp.getTagName();
+                    BaseElement value = entry.get(key);
+                    if(Objects.nonNull(value)){
+                        baseElements.add(value);
+                    }else{
+                        value = entry.get(temp.getTagName());
+                        baseElements.add(value);
+                    }
                 }
+                BlockElement blockElement = new BlockElement(tcIndex,iterableTemplate.getStartMark().getTagName(),baseElements);
+                blockElements.add(blockElement);
+                tcIndex++;
+            }else if(iterableTemplate.getStartMark().getTagName().equals("基坑底面以下") && Objects.nonNull(entry.get("被动土压力上"))){
+                List<BaseElement> baseElements = new ArrayList<BaseElement>(18);
+                for(MetaTemplate templates : iterableTemplate.getTemplates()){
+                    RunTemplate temp = (RunTemplate)templates;
+                    String key = temp.getTagName();
+                    BaseElement value = entry.get(key);
+                    if(Objects.nonNull(value)){
+                        baseElements.add(value);
+                    }else{
+                        value = entry.get(temp.getTagName());
+                        baseElements.add(value);
+                    }
+                }
+                BlockElement blockElement = new BlockElement(tcIndex,iterableTemplate.getStartMark().getTagName(),baseElements);
+                blockElements.add(blockElement);
+                tcIndex++;
             }
-            BlockElement blockElement = new BlockElement(tcIndex,iterableTemplate.getStartMark().getTagName(),baseElements);
-            blockElements.add(blockElement);
-            tcIndex++;
         }
         return blockElements;
     }
