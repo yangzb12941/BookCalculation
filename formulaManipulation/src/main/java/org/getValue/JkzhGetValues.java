@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.config.GetValueModelEnum;
 import org.config.JkzhGetValueModelEnum;
 import org.context.JkzhContext;
+import org.element.BaseElement;
 import org.entity.ElementParam;
 import org.table.SoilPressureTable;
 import org.table.SoilQualityTable;
@@ -43,7 +44,7 @@ public class JkzhGetValues implements GetValues {
     }
 
     public JkzhGetValues(JkzhGetValueModelEnum model,JkzhContext jkzhContext) {
-        new JkzhGetValues(model,jkzhContext, GetValueModelEnum.Cal模式);
+        this(model,jkzhContext, GetValueModelEnum.Cal模式);
     }
 
     /**
@@ -229,8 +230,13 @@ public class JkzhGetValues implements GetValues {
                        && (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getAtDepthLand()
                            ||floor == jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()
                     )){
-                        String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
-                        valueArray[index] = vMap_1;
+                        if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
+                            String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(this.jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }else{
+                            String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }
                     }else if(this.model == JkzhGetValueModelEnum.最大弯矩主动土合矩
                             && floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()){
                         String vMap_1 = jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()).get("主动土压力合力");
@@ -249,8 +255,13 @@ public class JkzhGetValues implements GetValues {
                             && (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getAtDepthLand()
                             ||floor == jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()
                     )){
-                        String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
-                        valueArray[index] = vMap_1;
+                        if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
+                            String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(this.jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }else{
+                            String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }
                     }else if(this.model == JkzhGetValueModelEnum.最大弯矩被动土合矩
                             && floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()){
                         String vMap_1 = jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()).get("被动土压力合力");
@@ -272,8 +283,13 @@ public class JkzhGetValues implements GetValues {
                     if((this.model == JkzhGetValueModelEnum.剪力为零这层土的被动土压力合力
                        || this.model == JkzhGetValueModelEnum.剪力为零这层土的被动作用点位置)
                        && floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()){
-                        String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()));
-                        valueArray[index] = vMap_1;
+                        if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
+                            String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }else{
+                            String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }
                     }else{
                         String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                         valueArray[index] = vMap_1;
@@ -283,13 +299,23 @@ public class JkzhGetValues implements GetValues {
                 case "主动土压力下":{
                     Integer floor = Integer.valueOf(elementParam.getIndex());
                     if(this.model == JkzhGetValueModelEnum.最后一个支点到基坑底面重算主动土压力合力){
-                        String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()));
-                        valueArray[index] = vMap_1;
+                        if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
+                            String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }else{
+                            String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }
                     }else if ((this.model == JkzhGetValueModelEnum.剪力为零这层土的主动土压力合力
                          || this.model == JkzhGetValueModelEnum.剪力为零这层土的主动作用点位置)
                         && floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()) {
-                        String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()));
-                        valueArray[index] = vMap_1;
+                        if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
+                            String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }else{
+                            String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(jkzhContext.getTcTimes()));
+                            valueArray[index] = vMap_1;
+                        }
                     }
                     else{
                         String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
@@ -429,6 +455,20 @@ public class JkzhGetValues implements GetValues {
      */
     private String getValuesFromMap(String key, Map<String,String> valueMap){
         String value = valueMap.get(key);
+        return value;
+    }
+
+    /**
+     * 从Map中获取值
+     * @param key
+     * @param valueMap
+     * @return
+     */
+    private String getLatexFromMap(String key, Map<String, BaseElement> valueMap){
+        String value = (String)valueMap.get(key).getValue();
+        if(value.indexOf("=")>=0){
+            value = value.substring(value.indexOf("=")+1, value.length()-1);
+        }
         return value;
     }
 

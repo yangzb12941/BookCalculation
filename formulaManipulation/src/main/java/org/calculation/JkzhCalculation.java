@@ -4,6 +4,7 @@ import com.googlecode.aviator.AviatorEvaluator;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.calParam.JkzhBasicParam;
+import org.config.GetValueModelEnum;
 import org.config.JkzhConfigEnum;
 import org.config.JkzhGetValueModelEnum;
 import org.context.JkzhContext;
@@ -558,11 +559,12 @@ public class JkzhCalculation{
      * @param tcAtLand 当前支点对应剪力为0位置所在土层
      */
     private void reCalZDZeroStrutForce(int index,int tcAtLand){
-        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的主动土压力合力,this.jkzhContext);
+        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的主动土压力合力,this.jkzhContext,GetValueModelEnum.Latex模式);
         String latexCal = jkzhFromulaHandle.extendToLatex(
                 tcAtLand,
                 JkzhConfigEnum.土压力合力_主动上大于0_下大于0,
                 jkzhZDGetValues);
+        jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的主动土压力合力,this.jkzhContext);
         String calculate = jkzhFromulaHandle.extendToCalX(
                 tcAtLand,
                 JkzhConfigEnum.土压力合力_主动上大于0_下大于0,
@@ -578,11 +580,12 @@ public class JkzhCalculation{
      * @param tcAtLand 当前支点对应剪力为0位置所在土层
      */
     private void reCalBDZeroStrutForce(int index,int tcAtLand){
-        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的被动土压力合力,this.jkzhContext);
+        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的被动土压力合力,this.jkzhContext,GetValueModelEnum.Latex模式);
         String latexCal = jkzhFromulaHandle.extendToLatex(
                 tcAtLand,
                 JkzhConfigEnum.土压力合力_被动上大于0_下大于0,
                 jkzhZDGetValues);
+        jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的被动土压力合力,this.jkzhContext);
         String calculate = jkzhFromulaHandle.extendToCalX(
                 tcAtLand,
                 JkzhConfigEnum.土压力合力_被动上大于0_下大于0,
@@ -598,11 +601,12 @@ public class JkzhCalculation{
      * @param tcAtLand 当前支点对应剪力为0位置所在土层
      */
     private void reZeroZDPositionAction(int index,int tcAtLand){
-        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的主动作用点位置,this.jkzhContext);
+        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的主动作用点位置,this.jkzhContext,GetValueModelEnum.Latex模式);
         String latexCal = jkzhFromulaHandle.extendToLatex(
                 tcAtLand,
                 JkzhConfigEnum.作用点位置_主动上大于0_下大于0,
                 jkzhZDGetValues);
+        jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的主动作用点位置,this.jkzhContext);
         String calculate = jkzhFromulaHandle.extendToCalX(
                 tcAtLand,
                 JkzhConfigEnum.作用点位置_主动上大于0_下大于0,
@@ -618,11 +622,12 @@ public class JkzhCalculation{
      * @param tcAtLand 当前支点对应剪力为0位置所在土层
      */
     private void reZeroBDPositionAction(int index,int tcAtLand){
-        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的被动作用点位置,this.jkzhContext);
+        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的被动作用点位置,this.jkzhContext,GetValueModelEnum.Latex模式);
         String latexCal = jkzhFromulaHandle.extendToLatex(
                 tcAtLand,
                 JkzhConfigEnum.作用点位置_被动上大于0_下大于0,
                 jkzhZDGetValues);
+        jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.剪力为零这层土的被动作用点位置,this.jkzhContext);
         String calculate = jkzhFromulaHandle.extendToCalX(
                 tcAtLand,
                 JkzhConfigEnum.作用点位置_被动上大于0_下大于0,
@@ -639,13 +644,15 @@ public class JkzhCalculation{
      */
     private void calZDEarthPressuresSum(int index,int tcAtLand){
         //等式右边部分
-        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土层之上各主动土压力合力之和,this.jkzhContext);
+        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土层之上各主动土压力合力之和,this.jkzhContext, GetValueModelEnum.Latex模式);
         String latexCal = jkzhFromulaHandle.extendToLatexN(
                 tcAtLand,
                 1,
                 tcAtLand,
                 JkzhConfigEnum.土层之上各主动土压力合力之和,
                 jkzhGetValues);
+
+        jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土层之上各主动土压力合力之和,this.jkzhContext);
         String calculate = jkzhFromulaHandle.extendToCalNX(
                 tcAtLand,
                 1,
@@ -664,7 +671,7 @@ public class JkzhCalculation{
      */
     private void calBDEarthPressuresSum(int index,int tcAtLand){
         //等式右边部分
-        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土层之上各被动土压力合力之和,this.jkzhContext);
+        JkzhGetValues jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土层之上各被动土压力合力之和,this.jkzhContext,GetValueModelEnum.Latex模式);
         int depthLand = this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getAtDepthLand();
         String latexCal = jkzhFromulaHandle.extendToLatexN(
                 tcAtLand-depthLand+1,
@@ -672,6 +679,7 @@ public class JkzhCalculation{
                 tcAtLand,
                 JkzhConfigEnum.土层之上各被动土压力合力之和,
                 jkzhGetValues);
+        jkzhGetValues = new JkzhGetValues(JkzhGetValueModelEnum.土层之上各被动土压力合力之和,this.jkzhContext);
         String calculate = jkzhFromulaHandle.extendToCalNX(
                 tcAtLand-depthLand+1,
                 depthLand,
@@ -801,8 +809,8 @@ public class JkzhCalculation{
 
         JkzhCalTemporaryPart partCal = new JkzhCalTemporaryPart(replaces);
         for(String item:replaces){
-            BaseElement zdLatexCal = jkzhContext.getBendingMomentTemplates().get(index).get(item);
-            partCal.getLayoutMap().put(item,zdLatexCal.getValue().toString());
+            String s = jkzhContext.getBendingMomentValues().get(index).get(item);
+            partCal.getLayoutMap().put(item,s);
         }
         String zlCalculate = jkzhFromulaHandle.maxBendingMomentToLatex(
                 tcAtLand,
