@@ -1257,6 +1257,13 @@ public class JkzhCalculation{
             String twoS = String.format("%.2f",two);
             Double tmpe = one * two;
 
+            if(tmpe.compareTo(0.0)>0){
+                bdDown = Double.valueOf(formate.get("被动土压力上"+i));
+                two = zdDown - bdDown;
+                twoS = String.format("%.2f",two);
+                tmpe = one * two;
+            }
+
             if(tmpe.compareTo(0.0)<=0){
                 result = i;
                 jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().setAtZoneLand(i);

@@ -105,7 +105,12 @@ public class JkzhGetValues implements GetValues {
                         }
                     } else if (this.model == JkzhGetValueModelEnum.主动土压力零点深度计算 || this.model == JkzhGetValueModelEnum.被动土压力零点深度计算) {
                         if (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand()) {
-                            valueArray[index] = "x";
+                            if(this.model == JkzhGetValueModelEnum.被动土压力零点深度计算){
+                                valueArray[index] = "x";
+                            }else if(this.model == JkzhGetValueModelEnum.主动土压力零点深度计算){
+                                Double hdValue = getDepthUpToSection(jkzhContext);
+                                valueArray[index] = "(x"+"+"+hdValue+")";
+                            }
                         } else {
                             if(floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtDepthLand()
                                && this.model == JkzhGetValueModelEnum.被动土压力零点深度计算){
@@ -131,8 +136,8 @@ public class JkzhGetValues implements GetValues {
                     } else if (this.model == JkzhGetValueModelEnum.主动支撑轴力计算) {
                         Double addm = 0.0;
                         if (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand()) {
-                            //若是在土压力零点这层土，那么主动合力至反弯点的距离，就按这层土顶面到零点的土层厚度
-                            valueArray[index] = String.format("%.2f",getPressureZeroThickness(jkzhContext, this.model));
+                            //若是在土压力零点这层土，直接取重算过后的作用点位置
+                            valueArray[index] = jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("主动土作用点位置"+floor);
                         } else {
                             for (int i = 1; i <= floor; i++) {
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), i, 2);
@@ -142,13 +147,9 @@ public class JkzhGetValues implements GetValues {
                         }
                     } else if (this.model == JkzhGetValueModelEnum.被动支撑轴力计算) {
                         Double addm = 0.0;
-                        if (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtDepthLand()
-                            && floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand()) {
+                        if (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand()) {
                             //若是在土压力零点这层土，那么主动合力至反弯点的距离，就按这层土顶面到零点的土层厚度
-                            valueArray[index] = String.format("%.2f",getPressureZeroThickness(jkzhContext, this.model));
-                        } else if (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand()) {
-                            //若是在土压力零点这层土，那么主动合力至反弯点的距离，就按这层土顶面到零点的土层厚度
-                            valueArray[index] = String.format("%.2f",getPressureZeroThickness(jkzhContext, this.model));
+                            valueArray[index] = jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("被动土作用点位置"+floor);
                         } else {
                             for (int i = 1; i <= floor; i++) {
                                 String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), i, 2);
@@ -179,6 +180,8 @@ public class JkzhGetValues implements GetValues {
                             valueArray[index] = "(x-"+String.format("%.2f",depthUpToSection)+")";
                         }else if(floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getMaxTcLand()){
                             valueArray[index] = "x";
+                        }else if(floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getAtDepthLand()){
+                            valueArray[index] = String.format("%.2f",getDepthSectionToDown(jkzhContext));
                         }
                         else{
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), floor, 2);
@@ -226,15 +229,17 @@ public class JkzhGetValues implements GetValues {
                     Integer floor = Integer.valueOf(elementParam.getIndex());
                     // 在开挖深度这一土层,为了估算最后一个支点到基坑底面之间是否存在剪力为零的点，
                     // 需要重新计算这一层的主动土压力合力。在估算的时候，这一层土压力合力，以重算的代入。
-                    if(this.model == JkzhGetValueModelEnum.土层之上各主动土压力合力之和
-                       && (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getAtDepthLand()
-                           ||floor == jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()
-                    )){
-                        if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
-                            String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(this.jkzhContext.getTcTimes()));
-                            valueArray[index] = vMap_1;
+                    if(this.model == JkzhGetValueModelEnum.土层之上各主动土压力合力之和){
+                       if(floor == jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()){
+                            if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
+                                String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(this.jkzhContext.getTcTimes()));
+                                valueArray[index] = vMap_1;
+                            }else{
+                                String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
+                                valueArray[index] = vMap_1;
+                            }
                         }else{
-                            String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
+                            String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                             valueArray[index] = vMap_1;
                         }
                     }else if(this.model == JkzhGetValueModelEnum.最大弯矩主动土合矩
@@ -251,15 +256,17 @@ public class JkzhGetValues implements GetValues {
                     Integer floor = Integer.valueOf(elementParam.getIndex());
                     // 在开挖深度这一土层,为了估算最后一个支点到基坑底面之间是否存在剪力为零的点，
                     // 需要重新计算这一层的主动土压力合力。在估算的时候，这一层土压力合力，以重算的代入。
-                    if(this.model == JkzhGetValueModelEnum.土层之上各被动土压力合力之和
-                            && (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getAtDepthLand()
-                            ||floor == jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()
-                    )){
-                        if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
-                            String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(this.jkzhContext.getTcTimes()));
-                            valueArray[index] = vMap_1;
+                    if(this.model == JkzhGetValueModelEnum.土层之上各被动土压力合力之和){
+                        if(floor == jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getMaxTcLand()){
+                            if(this.getGetValueModelEnum() == GetValueModelEnum.Latex模式){
+                                String vMap_1 = getLatexFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentTemplates().get(this.jkzhContext.getTcTimes()));
+                                valueArray[index] = vMap_1;
+                            }else{
+                                String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
+                                valueArray[index] = vMap_1;
+                            }
                         }else{
-                            String vMap_1 = getValuesFromMap(elementParam.getName(), this.jkzhContext.getBendingMomentValues().get(this.jkzhContext.getTcTimes()));
+                            String vMap_1 = getValuesFromMap(elementParam.getName() + elementParam.getIndex(), jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()));
                             valueArray[index] = vMap_1;
                         }
                     }else if(this.model == JkzhGetValueModelEnum.最大弯矩被动土合矩
@@ -383,7 +390,7 @@ public class JkzhGetValues implements GetValues {
                         valueArray[index] = vMap_1;
                     }else{
                         //获取主动土压力作用点值
-                        String zdPointValue = jkzhContext.getTemporaryValues().get(floor).get("主动土作用点位置"+floor);
+                        String zdPointValue = jkzhContext.getTemporaryValues().get(jkzhContext.getCalTimes()).get("主动土作用点位置"+floor);
                         Double maxTcDepth = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcDepth();
                         Double vMap_1 = getMaxDepthToZdPointer(maxTcDepth, Double.parseDouble(zdPointValue), floor);
                         valueArray[index] = String.format("%.2f",vMap_1);
@@ -397,7 +404,7 @@ public class JkzhGetValues implements GetValues {
                         valueArray[index] = vMap_1;
                     }else{
                         //获取被动土压力作用点值
-                        String bdPointValue = jkzhContext.getTemporaryValues().get(floor).get("被动土作用点位置"+floor);
+                        String bdPointValue = jkzhContext.getTemporaryValues().get(jkzhContext.getCalTimes()).get("被动土作用点位置"+floor);
                         Double maxTcDepth = jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getMaxTcDepth();
                         Double vMap_1 = getMaxDepthToZdPointer(maxTcDepth, Double.parseDouble(bdPointValue), floor);
                         valueArray[index] = String.format("%.2f",vMap_1);
