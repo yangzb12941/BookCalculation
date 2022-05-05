@@ -219,7 +219,6 @@ public class JkzhCalculation{
             this.jkzhContext.getBendingMomentTemplates().add(i,baseElementMap);
             HashMap<String,String> valuesMap = new HashMap<String, String>(64);
             this.jkzhContext.getBendingMomentValues().add(i,valuesMap);
-
             //下一个支点
             int twoAxisIndex = i+1;
             //最后一个支点到基坑底面 或者 基坑底面一下
@@ -230,6 +229,8 @@ public class JkzhCalculation{
                     this.jkzhContext.setCalTimes(i);
                     //设置当前计算第几个支点
                     this.jkzhContext.setTcTimes(i);
+                    //重新土压力零点所在土层，主动土、被动土下底面的土压力强度
+                    recalculateZdAndBdAtZoneLand();
                     //获取基坑底面所在土层
                     int twoAxisAtLand = this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand();
                     int tcAtLand = doSecondPartMaxBendingMoment(twoAxisAtLand, i);
@@ -240,6 +241,8 @@ public class JkzhCalculation{
                     this.jkzhContext.setCalTimes(allAxisaCount-1);
                     //设置当前计算第几个支点
                     this.jkzhContext.setTcTimes(i);
+                    //重新土压力零点所在土层，主动土、被动土下底面的土压力强度
+                    recalculateZdAndBdAtZoneLand();
                     int tcAtLand = doThirdPartMaxBendingMoment(i);
                     maxTcLandNotExist(tcAtLand,i);
                 }
@@ -248,12 +251,34 @@ public class JkzhCalculation{
                 this.jkzhContext.setCalTimes(i);
                 //设置当前计算第几个支点
                 this.jkzhContext.setTcTimes(i);
+                //重新土压力零点所在土层，主动土、被动土下底面的土压力强度
+                recalculateZdAndBdAtZoneLand();
                 //获取第二个支点所在土层
                 int twoAxisAtLand = this.jkzhContext.getJkzhBasicParams().get(twoAxisIndex).getCalResult().getAxisAtLand();
                 int tcAtLand = doFirstPartMaxBendingMoment(twoAxisAtLand, i);
                 maxTcLandNotExist(tcAtLand,i);
             }
         }
+    }
+
+    /**
+     * 重新土压力零点所在土层，主动土、被动土下底面的土压力强度
+     */
+    private void recalculateZdAndBdAtZoneLand(){
+        //重新计算土压力零点所在土层的主动土下底面土压力强度；
+        int atZoneLand = this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtZoneLand();
+        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.主动土压力计算,this.jkzhContext);
+        //重新计算土压力土压力零点这层土的主动土压力底
+        customCalZdPressure(atZoneLand,jkzhZDGetValues);
+        //计算主动土压力合力
+        recalZdResultantEarthPressures(atZoneLand);
+        //主动土压力合力作用点位置
+        recalZdPositionAction(atZoneLand);
+        //重新计算土压力零点所在土层的被动土下底面土压力强度；
+        int atDepthLand = this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand();
+        JkzhGetValues jkzhBDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.被动土压力计算,this.jkzhContext);
+        customCalBdPressure(atZoneLand,atDepthLand,jkzhBDGetValues);
+
     }
 
     /**
@@ -1475,6 +1500,52 @@ public class JkzhCalculation{
     }
 
     /**
+     * 重新计算某一层土的主动土压力合力，这层土需按实际的
+     * 土层厚度计算
+     * @param land 重算的第几层土
+     */
+    private void recalZdResultantEarthPressures(int land) {
+        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.主动土压力合力满算, this.jkzhContext);
+        Double zdUpPressure = Double.valueOf(jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("主动土压力上" + land));
+        Double zdDownPressure = Double.valueOf(jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("主动土压力下" + land));
+        String latexCal = "", calculate = "";
+        if (zdUpPressure.compareTo(0.0) > 0 && zdDownPressure.compareTo(0.0) > 0) {
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.土压力合力_主动上大于0_下大于0,
+                    jkzhZDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.土压力合力_主动上大于0_下大于0,
+                    jkzhZDGetValues);
+            log.info("主动土压力合力第{}层展示公式-下:{}={}", land, latexCal, calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土压力合力" + land, calculate);
+        } else if (zdUpPressure.compareTo(0.0) < 0 && zdDownPressure.compareTo(0.0) > 0) {
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.土压力合力_主动上小于0_下大于0,
+                    jkzhZDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.土压力合力_主动上小于0_下大于0,
+                    jkzhZDGetValues);
+            log.info("主动土压力合力第{}层展示公式-下:{}={}", land, latexCal, calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土压力合力" + land, calculate);
+        } else if (zdUpPressure.compareTo(0.0) > 0 && zdDownPressure.compareTo(0.0) < 0) {
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.土压力合力_主动上大于0_下小于0,
+                    jkzhZDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.土压力合力_主动上大于0_下小于0,
+                    jkzhZDGetValues);
+            log.info("主动土压力合力第{}层展示公式-下:{}={}", land, latexCal, calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土压力合力" + land, calculate);
+        }
+    }
+
+    /**
      * ⑥、主动作用点位置计算
      */
     public void zdPositionAction(){
@@ -1526,6 +1597,53 @@ public class JkzhCalculation{
             }
             jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动作用点位置计算公式"+land,new FormulaElement(land,this.jkzhPrefixLayout,"主动作用点位置计算公式",replaceChar));
             jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("主动作用点位置计算"+land,new FormulaElement(land,this.jkzhPrefixLayout,"主动作用点位置计算",latexCal+"="+calculate+"m"));
+        }
+    }
+
+    /**
+     * 重新计算某一层土的主动土压力合力作用点位置，这层土需按实际的
+     * 土层厚度计算
+     * @param land 重算的第几层土
+     */
+    public void recalZdPositionAction(int land){
+        //土压力零点在所在土层第几层
+        JkzhGetValues jkzhZDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.主动作用点位置满算,this.jkzhContext);
+        String latexCal = "",calculate = "";
+        Double zdUpPressure = Double.valueOf(jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("主动土压力上"+land));
+        Double zdDownPressure = Double.valueOf(jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("主动土压力下"+land));
+        if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)>0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.作用点位置_主动上大于0_下大于0,
+                    jkzhZDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.作用点位置_主动上大于0_下大于0,
+                    jkzhZDGetValues);
+            log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土作用点位置"+land,calculate);
+        }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.作用点位置_主动上小于0_下大于0,
+                    jkzhZDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.作用点位置_主动上小于0_下大于0,
+                    jkzhZDGetValues);
+            log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土作用点位置"+land,calculate);
+        }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.作用点位置_主动上大于0_下小于0,
+                    jkzhZDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.作用点位置_主动上大于0_下小于0,
+                    jkzhZDGetValues);
+            log.info("主动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("主动土作用点位置"+land,calculate);
         }
     }
 

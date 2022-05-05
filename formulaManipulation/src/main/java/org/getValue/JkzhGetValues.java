@@ -133,6 +133,10 @@ public class JkzhGetValues implements GetValues {
                             String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), floor, 2);
                             valueArray[index] = hdValue;
                         }
+                    }else if(this.model == JkzhGetValueModelEnum.主动土压力合力满算
+                             ||this.model == JkzhGetValueModelEnum.主动作用点位置满算){
+                        String hdValue = getValuesFromSoilQualityTable(jkzhContext.getSoilQualityTable(), floor, 2);
+                        valueArray[index] = hdValue;
                     } else if (this.model == JkzhGetValueModelEnum.主动支撑轴力计算) {
                         Double addm = 0.0;
                         if (floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtZoneLand()) {
