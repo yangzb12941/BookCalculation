@@ -1081,7 +1081,7 @@ public class JkzhCalculation{
         SolveEquationsHandler solveEquationsHandler = new SolveEquationsHandler();
         String execute = solveEquationsHandler.execute(zlCalculate);
         jkzhContext.getBendingMomentValues().get(index).put("矩值",execute);
-        jkzhContext.getBendingMomentTemplates().get(index).put("矩值",new FormulaElement(index,jkzhPrefixLayout,"矩值",execute+"kN·m"));
+        jkzhContext.getBendingMomentTemplates().get(index).put("矩值",new FormulaElement(index,jkzhPrefixLayout,"矩值",execute+"kN \\cdot m"));
     }
 
     /**
