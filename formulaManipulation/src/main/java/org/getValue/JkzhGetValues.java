@@ -109,7 +109,7 @@ public class JkzhGetValues implements GetValues {
                                 valueArray[index] = "x";
                             }else if(this.model == JkzhGetValueModelEnum.主动土压力零点深度计算){
                                 Double hdValue = getDepthUpToSection(jkzhContext);
-                                valueArray[index] = "(x"+"+"+hdValue+")";
+                                valueArray[index] = "(x+"+String.format("%.2f",hdValue)+")";
                             }
                         } else {
                             if(floor == jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().getAtDepthLand()

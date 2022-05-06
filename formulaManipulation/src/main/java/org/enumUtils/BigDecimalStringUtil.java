@@ -25,7 +25,7 @@ public class BigDecimalStringUtil {
              * 若double d=0.6566，输出结果为0.66；
              * 若double d=0，输出结果为0.00;
              */
-            String keepTwoDecimalPlaces=String.format("%.2f",doubleNum);
+            String keepTwoDecimalPlaces=String.format("%.2f",Math.abs(doubleNum));
             return keepTwoDecimalPlaces;
         }
     }

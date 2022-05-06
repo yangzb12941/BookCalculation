@@ -43,7 +43,7 @@ public class TableElementHandler implements IElementHandler<TableRenderData>{
             RowRenderData t1row = null;
             for (int j = 0; j< table[i].length; j++) {
                 if(Objects.nonNull(t1row)){
-                    CellRenderData cellRenderData = Cells.of(table[i][j]).create();
+                    CellRenderData cellRenderData = Cells.of(table[i][j]).horizontalLeft().create();
                     t1row.addCell(cellRenderData);
                 }else{
                     t1row = Rows.create(table[i][j]);
