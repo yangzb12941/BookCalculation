@@ -243,7 +243,7 @@ public class JkzhCalculation{
                     this.jkzhContext.setTcTimes(i);
                     //重新土压力零点所在土层，主动土、被动土下底面的土压力强度
                     recalculateZdAndBdAtZoneLand();
-                    int tcAtLand = doThirdPartMaxBendingMoment(i);
+                    int tcAtLand = doThirdPartMaxBendingMoment(i,0);
                     maxTcLandNotExist(tcAtLand,i);
                 }
             }else{
@@ -393,13 +393,15 @@ public class JkzhCalculation{
     /**
      * 计算基坑底面以下的弯矩
      */
-    private int doThirdPartMaxBendingMoment(int index){
+    private int doThirdPartMaxBendingMoment(int index,int tcAtLand){
         int tcCount = this.jkzhContext.getJkzhBasicParams().size()-1;
         //获取计算的支撑轴力
         String tcAtSLand = calStrutForceMax(tcCount);
         Double tcAtDVLand = Double.parseDouble(tcAtSLand);
         //试算一下剪力为零的点在第几层土
-        int tcAtLand = isThirdExistsTc(tcAtDVLand);
+        if(tcAtLand == 0){
+            tcAtLand = isThirdExistsTc(tcAtDVLand);
+        }
         //表明存在弯矩为0的点，isExistsTc 是弯矩为零的点所在土层
         if(tcAtLand != 0){
             int befor = index;
@@ -427,7 +429,11 @@ public class JkzhCalculation{
             //9、两个支点之间支撑轴力汇总
             calStrutForceMax(index,tcCount);
             //10、两个支点之间支撑轴力汇总+被动土压力合力=土压力合力合力汇总 求解一元二次方程。
-            solveEquationsX(index,tcAtLand);
+            Double solveEquations = solveEquationsX(index, tcAtLand);
+            if(isOutsideLand(tcAtLand,solveEquations)){
+                doThirdPartMaxBendingMoment(index,++tcAtLand);
+                return tcAtLand;
+            }
             //11、把解出的方程值，代入剪力为零这层土的主动土压力合力和作用点位置公式求出结果。
             reZdCalStrutForceSubstituteX(index,tcAtLand);
             //12、把解出的方程值，代入剪力为零这层土的被动土压力合力和作用点位置公式求出结果。
@@ -811,7 +817,7 @@ public class JkzhCalculation{
      * @param index 当前第几个支点
      * @param tcAtLand 当前支点对应剪力为零的位置，在哪一个土层
      */
-    private void solveEquationsX(int index,int tcAtLand){
+    private Double solveEquationsX(int index,int tcAtLand){
         //表明这个最大弯矩是在基坑底面，是需要加上被动土压力合力
         String[] replaces = null;
         if(tcAtLand >= jkzhContext.getJkzhBasicParams().get(jkzhContext.getJkzhBasicParams().size()-1).getCalResult().getAtDepthLand()){
@@ -854,9 +860,10 @@ public class JkzhCalculation{
         String result = solvePowEquationsHandler.execute(zlCalculate);
         jkzhContext.getBendingMomentValues().get(index).put("剪力为零位置值",result);
         jkzhContext.getBendingMomentTemplates().get(index).put("剪力为零位置值",new TextElement(index,"剪力为零位置值",result));
-
-        Double maxTcDepth = betweenLandDepth(1,tcAtLand,Double.valueOf(result));
+        Double aDouble = Double.valueOf(result);
+        Double maxTcDepth = betweenLandDepth(1,tcAtLand,aDouble);
         jkzhContext.getJkzhBasicParams().get(jkzhContext.getCalTimes()).getCalResult().setMaxTcDepth(maxTcDepth);
+        return aDouble;
     }
 
     /**
@@ -1986,5 +1993,21 @@ public class JkzhCalculation{
             this.jkzhContext.getBendingMomentTemplates().add(index,null);
             this.jkzhContext.getBendingMomentValues().add(index,null);
         }
+    }
+
+    /**
+     * 判断计算出的结果，是否在某一土层内
+     * @param atLand 土层
+     * @param depth 深度
+     * @return
+     */
+    private Boolean isOutsideLand(int atLand,Double depth){
+        //判断开挖深度在第几层土层
+        String[][] table = this.jkzhContext.getSoilQualityTable().getTable();
+        Double aLandDepth = Double.valueOf(table[atLand][2]);
+        if(depth.compareTo(aLandDepth)>=0){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 }
