@@ -278,7 +278,10 @@ public class JkzhCalculation{
         int atDepthLand = this.jkzhContext.getJkzhBasicParams().get(this.jkzhContext.getCalTimes()).getCalResult().getAtDepthLand();
         JkzhGetValues jkzhBDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.被动土压力计算,this.jkzhContext);
         customCalBdPressure(atZoneLand,atDepthLand,jkzhBDGetValues);
-
+        //计算被动土压力合力
+        recalBdResultantEarthPressures(atDepthLand);
+        //被动土压力合力作用点位置
+        recalBdPositionAction(atDepthLand);
     }
 
     /**
@@ -1719,6 +1722,52 @@ public class JkzhCalculation{
     }
 
     /**
+     * 重新计算某一层土的被动土压力合力，这层土需按实际的
+     * 土层厚度计算
+     * @param land
+     */
+    private void recalBdResultantEarthPressures(int land){
+        JkzhGetValues jkzhBDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.被动土压力合力满算,this.jkzhContext);
+        Double zdUpPressure = Double.valueOf(jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("被动土压力上"+land));
+        Double zdDownPressure = Double.valueOf(jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("被动土压力下"+land));
+        String latexCal = "",calculate = "";
+        if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)>0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.土压力合力_被动上大于0_下大于0,
+                    jkzhBDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.土压力合力_被动上大于0_下大于0,
+                    jkzhBDGetValues);
+            log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土压力合力"+land,calculate);
+        }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.土压力合力_被动上小于0_下大于0,
+                    jkzhBDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.土压力合力_被动上小于0_下大于0,
+                    jkzhBDGetValues);
+            log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土压力合力"+land,calculate);
+        }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.土压力合力_被动上大于0_下小于0,
+                    jkzhBDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.土压力合力_被动上大于0_下小于0,
+                    jkzhBDGetValues);
+            log.info("被动土压力合力第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土压力合力"+land,calculate);
+        }
+    }
+
+    /**
      * 被动作用点位置计算
      * @param depth 当前开挖深度
      */
@@ -1773,6 +1822,53 @@ public class JkzhCalculation{
             }
             jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动作用点位置计算公式"+land,new FormulaElement(land,this.jkzhPrefixLayout,"被动作用点位置计算公式",replaceChar));
             jkzhContext.getElementTemplates().get(this.jkzhContext.getCalTimes()).put("被动作用点位置计算"+land,new FormulaElement(land,this.jkzhPrefixLayout,"被动作用点位置计算",latexCal+"="+calculate+"m"));
+        }
+    }
+
+    /**
+     * 被动作用点位置计算
+     * @param land 当前开挖所在土层
+     */
+    public void recalBdPositionAction(int land){
+        //土压力零点在所在土层第几层
+        //重新计算土压力土压力零点这层土的被动土压力底
+        JkzhGetValues jkzhBDGetValues = new JkzhGetValues(JkzhGetValueModelEnum.被动作用点位置满算,this.jkzhContext);
+        Double zdUpPressure = Double.valueOf(jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("被动土压力上"+land));
+        Double zdDownPressure = Double.valueOf(jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).get("被动土压力下"+land));
+        String latexCal = "",calculate = "";
+        if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)>0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.作用点位置_被动上大于0_下大于0,
+                    jkzhBDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.作用点位置_被动上大于0_下大于0,
+                    jkzhBDGetValues);
+            log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土作用点位置"+land,calculate);
+        }else if(zdUpPressure.compareTo(0.0)<0 && zdDownPressure.compareTo(0.0)>0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.作用点位置_被动上小于0_下大于0,
+                    jkzhBDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.作用点位置_被动上小于0_下大于0,
+                    jkzhBDGetValues);
+            log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土作用点位置"+land,calculate);
+        }else if(zdUpPressure.compareTo(0.0)>0 && zdDownPressure.compareTo(0.0)<0){
+            latexCal = jkzhFromulaHandle.extendToLatex(
+                    land,
+                    JkzhConfigEnum.作用点位置_被动上大于0_下小于0,
+                    jkzhBDGetValues);
+            calculate = jkzhFromulaHandle.extendToCal(
+                    land,
+                    JkzhConfigEnum.作用点位置_被动上大于0_下小于0,
+                    jkzhBDGetValues);
+            log.info("被动土作用点位置第{}层展示公式-下:{}={}",land,latexCal,calculate);
+            jkzhContext.getTemporaryValues().get(this.jkzhContext.getCalTimes()).put("被动土作用点位置"+land,calculate);
         }
     }
 

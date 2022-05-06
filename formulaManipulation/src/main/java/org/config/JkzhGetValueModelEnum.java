@@ -45,6 +45,8 @@ public enum JkzhGetValueModelEnum {
 
     主动土压力合力满算(32,"主动土压力合力满算"),
     主动作用点位置满算(33,"主动作用点位置满算"),
+    被动土压力合力满算(34,"被动土压力合力满算"),
+    被动作用点位置满算(35,"被动作用点位置满算"),
     ;
     private Integer type;
     private String typeName;
