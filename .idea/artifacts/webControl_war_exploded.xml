@@ -1,0 +1,94 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="webControl:war exploded">
+    <output-path>$PROJECT_DIR$/webControl/target/webControl</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>webControl</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="webControl" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:5.1.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:5.1.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-jcl:5.1.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-web:5.3.15" />
+          <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.16.10" />
+          <element id="library" level="project" name="Maven: io.swagger:swagger-annotations:1.6.0" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context:5.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aop:5.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-expression:5.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.2.6" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.2.3" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.2.3" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.13.2" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.13.2" />
+          <element id="archive" name="formulaManipulation-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="formulaManipulation" />
+          </element>
+          <element id="library" level="project" name="Maven: org.apache.poi:poi:5.2.0" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.15" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.4" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-math3:3.6.1" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.11.0" />
+          <element id="library" level="project" name="Maven: com.zaxxer:SparseBitSet:1.2" />
+          <element id="library" level="project" name="Maven: com.googlecode.aviator:aviator:5.0.0" />
+          <element id="library" level="project" name="Maven: commons-beanutils:commons-beanutils:1.9.3" />
+          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
+          <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.2" />
+          <element id="library" level="project" name="Maven: com.github.gbenroscience:parser-ng:0.1.5" />
+          <element id="library" level="project" name="Maven: e-iceblue:spire.doc:5.2.3" />
+          <element id="library" level="project" name="Maven: com.deepoove:poi-tl:1.11.1" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.3.2" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml:5.2.0" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml-lite:5.2.0" />
+          <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:5.0.3" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.21" />
+          <element id="library" level="project" name="Maven: com.github.virtuald:curvesapi:1.06" />
+          <element id="library" level="project" name="Maven: com.deepoove:poi-ooxml-schemas-extra:5.1.0" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-transcoder:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-anim:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-css:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-ext:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-parser:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-svg-dom:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-awt-util:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:xmlgraphics-commons:2.6" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-bridge:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-script:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-dom:1.14" />
+          <element id="library" level="project" name="Maven: xalan:xalan:2.7.2" />
+          <element id="library" level="project" name="Maven: xalan:serializer:2.7.2" />
+          <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.4.01" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-gvt:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-shared-resources:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-svggen:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-util:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-constants:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-i18n:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-xml:1.14" />
+          <element id="library" level="project" name="Maven: xml-apis:xml-apis-ext:1.3.04" />
+          <element id="library" level="project" name="Maven: org.apache.xmlgraphics:batik-codec:1.14" />
+          <element id="library" level="project" name="Maven: org.apache.ant:ant:1.10.12" />
+          <element id="library" level="project" name="Maven: org.apache.ant:ant-launcher:1.10.12" />
+          <element id="archive" name="solveEquations-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="solveEquations" />
+          </element>
+          <element id="archive" name="writeTemplate-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="writeTemplate" />
+          </element>
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/webControl/target/webControl/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="webControl/web/Web" />
+    </root>
+  </artifact>
+</component>
